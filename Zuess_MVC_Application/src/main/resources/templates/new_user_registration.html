@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head th:replace="fragments :: header">
+<title>New User Account Creation</title>
+</head>
+
+<body>
+   <div style="text-align: center">
+    <h3> <span class="text-muted" style="font-size: 2em; text-shadow: 2px 2px 2px rgba(0,0,0,0.2);">Zuess</span> <br />
+    Create a new User Account</h3>
+    <hr />
+        
+      <form action="/submitNewUserRegistration" method="post">
+         <label for="firstName"> First Name:  </label><br />  
+         <input type="text" id="firstName" name="first_name" placeholder="John"><br />  
+         <label for="lastName"> Last Name:  </label><br>
+         <input type="text" id="lastName" name="last_name" placeholder="Smith"><br />  
+         <label for="email"> Email address:  </label><br>
+         <input type="text" id="email" name="email" placeholder="username@zuess.com"><br />  
+         <label for="password"> Password:  </label><br>
+         <input type="text" id="password" name="password" placeholder="password"><br /> <br />  
+         <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+      <br>
+      <p>Already have an account? <a href="/login"> Login</a></p>
+      <br><br>
+    </div>
+      
+</body>
+</html>
+
+<!--References:
+https://www.thymeleaf.org/doc/articles/layouts.html -->
