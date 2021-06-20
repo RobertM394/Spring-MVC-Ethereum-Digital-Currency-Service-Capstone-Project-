@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.concurrent.ExecutionException;
+
 import javax.servlet.http.HttpSession;
 
-import zuess_mvc_application.services.UserService;
+import zuess_mvc_application.services.*;
 import zuess_mvc_application.domain.*;
 
 @Controller
@@ -20,11 +22,17 @@ public class ZuessWebController {
 	UserService userService;
 	
 	@Autowired
+	BlockchainService blockchainService;
+	
+	@Autowired
 	HttpSession session;
 	
-	/***HTTP Routes***/
+	/***HTTP Routes
+	 * @throws ExecutionException 
+	 * @throws InterruptedException ***/
 	@GetMapping("/registration")
-	public String getUserRegistrationForm() {
+	public String getUserRegistrationForm() throws InterruptedException, ExecutionException {
+		
 		return "new_user_registration";
 	}
 	
