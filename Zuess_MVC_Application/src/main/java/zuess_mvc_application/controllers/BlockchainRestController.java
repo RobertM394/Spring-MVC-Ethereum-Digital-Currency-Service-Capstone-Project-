@@ -21,7 +21,7 @@ public class BlockchainRestController {
 		/***Deploy Smart Contract and test call methods on deployed Smart Contract***/
 		try
 		{
-			blockchainService.deployOtterCoin("");
+			blockchainService.deploySmartContract("");
 			blockchainService.getContractBalance();
 			blockchainService.transferFunds("0xdaEc996523902b545BF564155FCdC1F235C7de6A", 10);
 		} catch (Exception e)

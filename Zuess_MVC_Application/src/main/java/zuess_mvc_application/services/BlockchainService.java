@@ -35,7 +35,7 @@ public class BlockchainService {
 	//deployOtterCoin()
 	//
 	//Deploys OtterCoin instance to blockchain network using account equal to private key holder
-	public void deployOtterCoin(String ethPrivateKey) throws Exception {
+	public void deploySmartContract(String ethPrivateKey) throws Exception {
 	BigInteger initialSupply = BigInteger.valueOf(1000);
 	String privateKey = "e618eb6d3f99750892fe50dd554eaa754d356ed8fe7da12e9b1ba0ce04c5b17b"; //private key of account 0 on Ganache blockchain
 	credentials = Credentials.create(privateKey);
