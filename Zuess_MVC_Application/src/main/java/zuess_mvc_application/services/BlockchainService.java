@@ -37,12 +37,11 @@ public class BlockchainService {
 	//Deploys OtterCoin instance to blockchain network using account equal to private key holder
 	public void deploySmartContract(String ethPrivateKey) throws Exception {
 	BigInteger initialSupply = BigInteger.valueOf(1000);
-	String privateKey = "e618eb6d3f99750892fe50dd554eaa754d356ed8fe7da12e9b1ba0ce04c5b17b"; //private key of account 0 on Ganache blockchain
-	credentials = Credentials.create(privateKey);
+	credentials = Credentials.create(ethPrivateKey);
 	otterCoin = OtterCoin.deploy(web3j, credentials, new DefaultGasProvider(), initialSupply).send();
 	}
 	
-	/***Method calls to Deployed Smart Contract***/
+	/***Method calls to Deployed ERC-20 Smart Contract***/
 	//getContractBalance()
 	//
 	//Returns balance of deployed Smart Contract
@@ -52,9 +51,36 @@ public class BlockchainService {
 	return balance;
 	}
 	
+	//getContractName()
+	//
+	//Returns the name of the Smart Contract as a String
+	public String getContractName() throws Exception {
+		String contractName = otterCoin.name().send();
+		System.out.println("\n Smart Contract Name: " + contractName);
+		return contractName;
+	}
+	
+	//getContractName()
+	//
+	//Returns the symbol of the Smart Contract as a String
+	public String getContractSymbol() throws Exception {
+		String contractSymbol = otterCoin.symbol().send();
+		System.out.println("\n Smart Contract Symbol: " + contractSymbol);
+		return contractSymbol;
+	}
+	
+	//getContractName()
+	//
+	//Returns the standard/version of the Smart Contract as a String
+	public String getContractStandard() throws Exception {
+		String contractStandard = otterCoin.standard().send();
+		System.out.println("\n Smart Contract Standard: " + contractStandard);
+		return contractStandard;
+	}
+	
 	//transferFunds()
 	//
-	//Calls OtterCoin transfer() function
+	//Calls Smart Contract transfer() function
 	//Transfers funds from one account to another and returns TransactionReceipt
 	public TransactionReceipt transferFunds(String to_address, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
@@ -62,7 +88,40 @@ public class BlockchainService {
 		System.out.print("\n TransactionReceipt: " + receipt + "\n");
 		return receipt;
 	}
+	
+	//approveAllowance()
+	//
+	//Calls Smart Contract approve() function
+	//Approves an allowance on caller's account to spender account
+	public TransactionReceipt approveAllowance (String spenderAddress, int amount) throws Exception {
+		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
+		TransactionReceipt receipt = otterCoin.approve(spenderAddress, bigIntegerAmount).send();
+		System.out.print("\n TransactionReceipt: " + receipt + "\n");
+		return receipt;
+	}
+	
+	
+	//transferAllowanceFunds()
+	//
+	//Calls Smart Contract transferFrom() function
+	//Transfers funds in allowance from allowance holder to to_account
+	public TransactionReceipt transferAllowanceFunds (String fromAddress, String toAddress, int amount) throws Exception {
+		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
+		TransactionReceipt receipt = otterCoin.transferFrom(fromAddress, toAddress, bigIntegerAmount).send();
+		System.out.print("\n TransactionReceipt: " + receipt + "\n");
+		return receipt;
+	}
 
+	//getBalance()
+	//
+	//Calls Smart Contract balanceOf() function
+	//Returns balance of account at address as BigInteger
+	public BigInteger getBalance(String ethAccountAddress) throws Exception {
+		BigInteger balance = otterCoin.balanceOf(ethAccountAddress).send();
+		System.out.print("\n Balance of account at address: " + ethAccountAddress + " is " + balance + "\n");
+		return balance;
+	}
+	
 	/***Direct Calls to Ganache Blockchain
 	 * These methods do not call the Smart Contract***/
 	public EthBlockNumber getBlockNumber() throws InterruptedException, ExecutionException {
@@ -105,9 +164,7 @@ public class BlockchainService {
        }
        
        System.out.print("\n Accounts: " + result.getAccounts() + "\n");
-       
        return result.getAccounts();
-	
 	 }
 }
 
