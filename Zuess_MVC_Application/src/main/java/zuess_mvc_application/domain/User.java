@@ -1,6 +1,9 @@
 package zuess_mvc_application.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,13 +12,28 @@ import javax.persistence.Table;
 public class User {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
+	
+	@Column(nullable = false, unique = true, length = 50)
 	private String email;
+	
+	@Column(nullable = false, length = 100)
 	private String password;
+	
+	@Column(nullable = false, length = 50, name = "first_name")
 	private String first_name;
+	
+	@Column(nullable = false, length = 50, name = "last_name")
 	private String last_name;
+	
+	@Column
 	private int eth_account_id;
+	
+	@Column
 	private double eth_account_balance;
+	
+	@Column
 	private int organization_id;
 	
 	public User () { }

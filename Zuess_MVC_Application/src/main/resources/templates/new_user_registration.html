@@ -10,15 +10,15 @@
     Create a new User Account</h3>
     <hr />
         
-      <form action="/submitNewUserRegistration" method="post">
+      <form th:action="@{/submitNewUserRegistration}" th:object="${user}" method="post">
          <label for="firstName"> First Name:  </label><br />  
-         <input type="text" id="firstName" name="first_name" placeholder="John"><br />  
+         <input type="text" id="firstName" name="first_name" placeholder="John" th:field="*{first_name}"><br />  
          <label for="lastName"> Last Name:  </label><br>
-         <input type="text" id="lastName" name="last_name" placeholder="Smith"><br />  
+         <input type="text" id="lastName" name="last_name" placeholder="Smith" th:field="*{last_name}"><br />  
          <label for="email"> Email address:  </label><br>
-         <input type="text" id="email" name="email" placeholder="username@zuess.com"><br />  
+         <input type="text" id="email" name="email" placeholder="username@zuess.com" th:field="*{email}"><br />  
          <label for="password"> Password:  </label><br>
-         <input type="text" id="password" name="password" placeholder="password"><br /> <br />  
+         <input type="text" id="password" name="password" placeholder="password" th:field="*{password}"><br /> <br />  
          <button type="submit" class="btn btn-primary">Create Account</button>
       </form>
       <br>

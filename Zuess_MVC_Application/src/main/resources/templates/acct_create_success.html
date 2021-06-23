@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+	<head th:replace="fragments :: header">
+		<meta charset="ISO-8859-1">
+		<title>Successful Account Creation</title>
+	</head>
+	<body>
+		Your account has been created please <a th:href="@{/login}">login</a>.
+	</body>
+</html>
