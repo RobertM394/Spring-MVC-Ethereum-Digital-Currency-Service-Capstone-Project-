@@ -1,12 +1,11 @@
 package zuess_mvc_application.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.concurrent.ExecutionException;
 
@@ -14,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import zuess_mvc_application.services.*;
 import zuess_mvc_application.domain.*;
+import zuess_mvc_application.repository.UserRepository;
 
 @Controller
 public class ZuessWebController {
@@ -27,35 +27,38 @@ public class ZuessWebController {
 	@Autowired
 	HttpSession session;
 	
+	@Autowired
+	UserRepository userRepo;
+	
 	/***HTTP Routes
 	 * @throws ExecutionException 
 	 * @throws InterruptedException ***/
 	@GetMapping("/registration")
-	public String getUserRegistrationForm() throws InterruptedException, ExecutionException {
-		
+	public String getUserRegistrationForm(Model model) throws InterruptedException, ExecutionException {
+		model.addAttribute("user", new User());
 		return "new_user_registration";
 	}
 	
+// TODO: Prevent repeated information signups (ensure email is unique, return error if already present)
 	@PostMapping("/submitNewUserRegistration")
-	public String persistNewUser(Model model, HttpSession session,
-			@RequestParam("email") String email,
-			@RequestParam("password") String password,
-			@RequestParam("first_name") String first_name,
-			@RequestParam("last_name") String last_name
-			) {
+	public String persistNewUser(Model model, User user) {
 			
-			model.addAttribute("first_name", first_name);
-			model.addAttribute("last_name", last_name);
-			
-			//persist new user to database
-			User user = new User();
-			user.setEmail(email);
-			user.setPassword(password);
-			user.setFirst_name(first_name);
-			user.setLast_name(last_name);
-			userService.persistNewUser(user);
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		
+		userRepo.save(user);
+		
+		return "acct_create_success";
+	}
+	
+	@GetMapping("/accountInfo")
+	public String acctInfo() {
 		return "standard_user_account";
+	}
+	
+	@GetMapping("")
+	public String homePage() {
+		return "index.html";
 	}
 	
 }

@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
-<meta charset="ISO-8859-1">
-<title>User Account Page</title>
-<head th:replace="fragments :: header"> </head>
-
-<body>
-<h4> User Account Details </h4>
-<h3> Welcome <span th:text="${first_name}"></span>!</h3>
-
-</body>
+<html xmlns:th="www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+	<head th:replace="fragments :: header">
+	<meta charset="ISO-8859-1">
+	<title>User Account Page</title>
+	
+	</head>
+	
+	<body>
+		<h4> User Account Details </h4>
+		<div>
+	        <form th:action="@{/logout}" method="post">
+	        	<h3> Welcome [[${#request.userPrincipal.principal.fullName}]] !</h3>
+	            <input type="submit" value="Sign Out" />
+	        </form>
+	    </div>
+	</body>
 </html>
