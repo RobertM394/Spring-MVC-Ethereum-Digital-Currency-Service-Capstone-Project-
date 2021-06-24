@@ -1,6 +1,7 @@
 package zuess_mvc_application.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -31,6 +34,8 @@ public class ZuessWebController {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	OtterCoin otterCoin;
 	
 	/***HTTP Routes
 	 * @throws ExecutionException 
@@ -61,26 +66,44 @@ public class ZuessWebController {
 	}
 	
 	@GetMapping("/adminPortal")
-	public String getAdminPortal() {
+	public String getAdminPortal(HttpSession session, Model model) throws Exception {
+		List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
+		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		return "admin_portal";
 	}
 	
 	@PostMapping("/deploySmartContract")
-	public String deploySmartContract(Model model,
+	public String deploySmartContract(HttpSession session,
 			@RequestParam("contractType") String contractType,
 			@RequestParam("initialContractFunds") int initialContractFunds,
 			@RequestParam("ethPrivateKey") String ethPrivateKey
-			) {
+			) throws Exception {
 		
-		try {
-		blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
-		List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
-		model.addAttribute("deployed", true);
-		model.addAttribute("contractType", contractType);
-		model.addAttribute("ethereumAccountsList", ethereumAccountsList);
-		} catch (Exception ex) {
-			model.addAttribute("deployed", false);
-			ex.printStackTrace();
+		otterCoin = blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
+		session.setAttribute("deployed", true);
+		session.setAttribute("contractType", contractType);
+		return "admin_portal";
+	}
+	
+	@PostMapping("/transferFunds")
+	public String transferFundsToEthAccounts(HttpSession session,
+			@RequestParam("accounts") List<String> accounts,
+			@RequestParam("transferAmount") int transferAmount
+			) throws Exception {
+		blockchainService.transferFunds(otterCoin, accounts, transferAmount);
+		return "admin_portal";
+	}
+	
+	//If feasible, this should eventually replace all above PostMapping routes by using Optional Request Params
+	//Or we could look at using Ajax
+	@PostMapping("/adminActions")
+	public String administratorActions(HttpSession session,
+			@RequestParam("getBalanceOfAddress") Optional<String> balanceAddress
+			) throws Exception {
+		
+		if (balanceAddress != null) {
+		BigInteger accountBalance = blockchainService.getBalance(otterCoin, balanceAddress.get());
+		session.setAttribute("accountBalance", accountBalance);
 		}
 		return "admin_portal";
 	}

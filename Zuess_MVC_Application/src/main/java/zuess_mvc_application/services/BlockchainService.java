@@ -6,6 +6,7 @@
 package zuess_mvc_application.services;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -26,27 +27,24 @@ import zuess_mvc_application.domain.OtterCoin;
 @Service
 public class BlockchainService {
 	
-	/***Global Variables***/
 	Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:7545"));
-	OtterCoin otterCoin;
 	Credentials credentials;
 	
-	/***Deploy OtterCoin Contract to Network***/
 	//deployOtterCoin()
 	//
 	//Deploys OtterCoin instance to blockchain network using account equal to private key holder and returns bool success
-	public boolean deploySmartContract(String contractType, String ethPrivateKey, int amount) throws Exception {
+	public OtterCoin deploySmartContract(String contractType, String ethPrivateKey, int amount) throws Exception {
 		BigInteger initialSupply = BigInteger.valueOf(amount);
 		credentials = Credentials.create(ethPrivateKey);
-		otterCoin = OtterCoin.deploy(web3j, credentials, new DefaultGasProvider(), initialSupply).send();
-		return true;
+		OtterCoin otterCoin = OtterCoin.deploy(web3j, credentials, new DefaultGasProvider(), initialSupply).send();
+		return otterCoin;
 	}
 	
-	/***Method calls to Deployed ERC-20 Smart Contract***/
+	/***ERC-20 Methods***/
 	//getContractBalance()
 	//
 	//Returns balance of deployed Smart Contract
-	public BigInteger getContractBalance() throws Exception {
+	public BigInteger getContractBalance(OtterCoin otterCoin) throws Exception {
 		BigInteger balance = otterCoin.balanceOf(credentials.getAddress()).send();
 		System.out.println("\n Balance of Contract: " + balance);
 		return balance;
@@ -55,7 +53,7 @@ public class BlockchainService {
 	//getContractName()
 	//
 	//Returns the name of the Smart Contract as a String
-	public String getContractName() throws Exception {
+	public String getContractName(OtterCoin otterCoin) throws Exception {
 		String contractName = otterCoin.name().send();
 		System.out.println("\n Smart Contract Name: " + contractName);
 		return contractName;
@@ -64,7 +62,7 @@ public class BlockchainService {
 	//getContractName()
 	//
 	//Returns the symbol of the Smart Contract as a String
-	public String getContractSymbol() throws Exception {
+	public String getContractSymbol(OtterCoin otterCoin) throws Exception {
 		String contractSymbol = otterCoin.symbol().send();
 		System.out.println("\n Smart Contract Symbol: " + contractSymbol);
 		return contractSymbol;
@@ -73,7 +71,7 @@ public class BlockchainService {
 	//getContractName()
 	//
 	//Returns the standard/version of the Smart Contract as a String
-	public String getContractStandard() throws Exception {
+	public String getContractStandard(OtterCoin otterCoin) throws Exception {
 		String contractStandard = otterCoin.standard().send();
 		System.out.println("\n Smart Contract Standard: " + contractStandard);
 		return contractStandard;
@@ -83,30 +81,30 @@ public class BlockchainService {
 	//
 	//Calls Smart Contract transfer() function
 	//Transfers funds from one account to another and returns TransactionReceipt
-	public TransactionReceipt transferFunds(String to_address, int amount) throws Exception {
+	public void transferFunds(OtterCoin otterCoin, List<String> addressList, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
-		TransactionReceipt receipt = otterCoin.transfer(to_address, bigIntegerAmount).send();
+		for (String address : addressList) {
+		TransactionReceipt receipt = otterCoin.transfer(address, bigIntegerAmount).send();
 		System.out.print("\n TransactionReceipt: " + receipt + "\n");
-		return receipt;
+		}
 	}
 	
 	//approveAllowance()
 	//
 	//Calls Smart Contract approve() function
 	//Approves an allowance on caller's account to spender account
-	public TransactionReceipt approveAllowance (String spenderAddress, int amount) throws Exception {
+	public TransactionReceipt approveAllowance (OtterCoin otterCoin, String spenderAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.approve(spenderAddress, bigIntegerAmount).send();
 		System.out.print("\n TransactionReceipt: " + receipt + "\n");
 		return receipt;
 	}
 	
-	
 	//transferAllowanceFunds()
 	//
 	//Calls Smart Contract transferFrom() function
 	//Transfers funds in allowance from allowance holder to to_account
-	public TransactionReceipt transferAllowanceFunds (String fromAddress, String toAddress, int amount) throws Exception {
+	public TransactionReceipt transferAllowanceFunds (OtterCoin otterCoin, String fromAddress, String toAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.transferFrom(fromAddress, toAddress, bigIntegerAmount).send();
 		System.out.print("\n TransactionReceipt: " + receipt + "\n");
@@ -115,12 +113,28 @@ public class BlockchainService {
 
 	//getBalance()
 	//
-	//Calls Smart Contract balanceOf() function
-	//Returns balance of account at address as BigInteger
-	public BigInteger getBalance(String ethAccountAddress) throws Exception {
-		BigInteger balance = otterCoin.balanceOf(ethAccountAddress).send();
-		System.out.print("\n Balance of account at address: " + ethAccountAddress + " is " + balance + "\n");
+	//Calls Smart Contract balanceOf() function using account address
+	//Returns single account balance as BigInteger
+	public BigInteger getBalance(OtterCoin otterCoin, String address) throws Exception {
+		BigInteger balance = otterCoin.balanceOf(address).send();
+		System.out.println("\n Balance of: " + balance + "\n");
 		return balance;
+	}
+	
+	//getBalances()
+	//
+	//Calls Smart Contract balanceOf() function
+	//Returns List<BigInteger> of balances of accounts list
+	public List<BigInteger> getBalances(OtterCoin otterCoin, List<String> addressList) throws Exception {
+		List<BigInteger> balanceList = new ArrayList<>();
+		
+		for (String address : addressList) {
+		BigInteger balance = otterCoin.balanceOf(address).send();
+		balanceList.add(balance);
+		System.out.print("\n Balance of account at address: " + address + " is " + balance + "\n");
+		}
+
+		return balanceList;
 	}
 	
 	/***Direct Calls to Ganache Blockchain
@@ -163,7 +177,6 @@ public class BlockchainService {
        } catch (Exception e) {
            e.printStackTrace();
        }
-       System.out.print("\n Accounts: " + accounts.getAccounts() + "\n");
        return accounts.getAccounts();
 	 }
 }

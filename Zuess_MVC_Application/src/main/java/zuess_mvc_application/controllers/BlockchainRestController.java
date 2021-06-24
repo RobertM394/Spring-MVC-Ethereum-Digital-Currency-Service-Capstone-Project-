@@ -22,8 +22,10 @@ public class BlockchainRestController {
 			) throws InterruptedException, ExecutionException {
 		
 		/***Deploy Smart Contract and test call methods on deployed Smart Contract***/
+		/***
 		try
 		{
+			
 			String ADMIN_ACCOUNT = "0x68c176f609F41A62D3473c6bdD279f47d0508E6e";
 			String TEST_ACCOUNT = "0x31866788BaE0df59B11f93e48aA9e896b3A53A5D";
 			int STARTING_BALANCE = 1000;
@@ -45,14 +47,7 @@ public class BlockchainRestController {
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		/*** blockchainService.getBlockNumber();
-		blockchainService.getEthAccounts();
-		blockchainService.ethGetBalance(ethAddress);
+		}		
 		***/
-		
-	
-	}
-
+	}	
 }
