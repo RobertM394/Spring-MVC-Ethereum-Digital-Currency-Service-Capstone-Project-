@@ -34,11 +34,12 @@ public class BlockchainService {
 	/***Deploy OtterCoin Contract to Network***/
 	//deployOtterCoin()
 	//
-	//Deploys OtterCoin instance to blockchain network using account equal to private key holder
-	public void deploySmartContract(String ethPrivateKey) throws Exception {
-	BigInteger initialSupply = BigInteger.valueOf(1000);
-	credentials = Credentials.create(ethPrivateKey);
-	otterCoin = OtterCoin.deploy(web3j, credentials, new DefaultGasProvider(), initialSupply).send();
+	//Deploys OtterCoin instance to blockchain network using account equal to private key holder and returns bool success
+	public boolean deploySmartContract(String contractType, String ethPrivateKey, int amount) throws Exception {
+		BigInteger initialSupply = BigInteger.valueOf(amount);
+		credentials = Credentials.create(ethPrivateKey);
+		otterCoin = OtterCoin.deploy(web3j, credentials, new DefaultGasProvider(), initialSupply).send();
+		return true;
 	}
 	
 	/***Method calls to Deployed ERC-20 Smart Contract***/
@@ -46,9 +47,9 @@ public class BlockchainService {
 	//
 	//Returns balance of deployed Smart Contract
 	public BigInteger getContractBalance() throws Exception {
-	BigInteger balance = otterCoin.balanceOf(credentials.getAddress()).send();
-	System.out.println("\n Balance of Contract: " + balance);
-	return balance;
+		BigInteger balance = otterCoin.balanceOf(credentials.getAddress()).send();
+		System.out.println("\n Balance of Contract: " + balance);
+		return balance;
 	}
 	
 	//getContractName()
@@ -153,18 +154,17 @@ public class BlockchainService {
 		return result;
 	}
 	
-	 public List<String> getEthAccounts() {
-       EthAccounts result = new EthAccounts();
+	 public List<String> getEthereumUserAccounts() {
+       EthAccounts accounts = new EthAccounts();
        try {
-           result = this.web3j.ethAccounts()
+           accounts = this.web3j.ethAccounts()
                    .sendAsync()
                    .get();
        } catch (Exception e) {
            e.printStackTrace();
        }
-       
-       System.out.print("\n Accounts: " + result.getAccounts() + "\n");
-       return result.getAccounts();
+       System.out.print("\n Accounts: " + accounts.getAccounts() + "\n");
+       return accounts.getAccounts();
 	 }
 }
 

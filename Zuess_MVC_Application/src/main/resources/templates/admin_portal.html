@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head th:replace="fragments :: header">
+<title>Administrator Portal</title>
+</head>
+<body>
+
+<div class="jumbotron" style="text-align: center"> 
+   <h3> <span class="text-muted" style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);">Zuess Administrator Portal </span> <br /></h3>
+</div>
+
+<div style="padding: 1em">
+   <h3> Deploy a Smart Contract</h3>
+   <hr />
+
+<!-- Styling @Antonio: A single Bootstrap of type <class="btn btn-primary"> button should be on the page saying "Deploy New Contract"
+When the user clicks that button, a modal should appear with the following form. This is industry standard and saves space on the page -->
+
+ <!-- Begin content that should appear in "Deploy New Contract" modal -->
+<form th:action="@{/deploySmartContract}" method="post">
+<label for="contractType"> Select a Smart Contract to Deploy to the Ethereum Blockchain</label> <br />
+   <select name="contractType" id="contractType">
+   <option value="OtterCoin"> OtterCoin </option>
+   <option value="FutureOption"> Future Custom Contract </option>
+   </select> <br /> <br /> 
+<label for="initialContractFunds"> Initial Contracts Funds </label> <br />
+   <input type="number" name="initialContractFunds" placeholder="1000"> <br /> <br /> 
+<label for="ethPrivateKey"> Ethereum Private Key </label> <br />
+   <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br /> 
+   <button type="submit" class="btn btn-primary"> Deploy Contract </button>
+</form>
+</div>
+ <!-- End content that should appear in "Deploy New Contract" modal -->
+
+<div th:if="${deployed}" style="padding: 1em">
+  <h3> Transfer Funds to User Accounts </h3>
+  <!-- @Antonio "Transfer Funds" button here pops modal with accounts checkbox list and transfer amount form -->
+   <hr />
+ 
+ <!-- Begin content that should appear in "Transfer Funds" modal -->
+ <h4 style="text-decoration: underline"> Select Account(s): </h4>
+ 
+ <form th:action="@{/deploySmartContract}" method="post">
+<table>
+<th:block th:each="account : ${ethereumAccountsList}">
+   <tr>
+      <td>  
+         <input type="checkbox" name="accounts" th:value="${account}">
+         <label for="accounts" th:text="${account}"> </label>
+      </td>
+   </tr>
+</th:block>
+</table>
+<!--  End contact that should appear in Transfer Funds modal -->
+
+</div>
+
+</body>
+</html>

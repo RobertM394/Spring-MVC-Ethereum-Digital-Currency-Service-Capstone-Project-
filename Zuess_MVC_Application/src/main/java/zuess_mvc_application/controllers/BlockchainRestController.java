@@ -24,11 +24,12 @@ public class BlockchainRestController {
 		/***Deploy Smart Contract and test call methods on deployed Smart Contract***/
 		try
 		{
-			String ADMIN_ACCOUNT = "0x738F657A0e9F102528c1160E04554a89747aAa1e";
-			String TEST_ACCOUNT = "0xc37F977738df1bC264D26FF2e906471Bf222Ea63";
+			String ADMIN_ACCOUNT = "0x68c176f609F41A62D3473c6bdD279f47d0508E6e";
+			String TEST_ACCOUNT = "0x31866788BaE0df59B11f93e48aA9e896b3A53A5D";
+			int STARTING_BALANCE = 1000;
 			
 			//Contract info functions
-			blockchainService.deploySmartContract(adminPrivateKey);
+			blockchainService.deploySmartContract(null, adminPrivateKey, STARTING_BALANCE);
 			blockchainService.getContractName();
 			blockchainService.getContractSymbol();
 			blockchainService.getContractStandard();
