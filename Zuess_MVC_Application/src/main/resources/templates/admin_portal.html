@@ -34,13 +34,14 @@ When the user clicks that button, a modal should appear with the following form.
 
 <div th:if="${session.deployed}" style="padding: 1em">
   <h3> Transfer Funds to User Accounts </h3>
-  <!-- @Antonio "Transfer Funds" button here pops modal with accounts checkbox list and transfer amount form -->
+  <!-- @Antonio: "Transfer Funds" button here pops modal with accounts checkbox list and transfer amount form -->
    <hr />
  
- <!-- Begin content that should appear in "Transfer Funds" modal -->
- 
+ <!-- @Antonio: when the user clicks "Get Balance of Account" the actual balance should pop in it's own modal. Ok button in modal should close the modal. -->
   <div>
+  <!-- Begin content that should appear in "Account Balance" modal -->
  <th:block th:if="${session.accountBalance != null}"> <h3> This account has a balance of <span th:text="${session.accountBalance}"> </span> </h3> </th:block>
+ <!-- End content that should appear in "Account Balance" modal -->  
    <form th:action="@{/adminActions}" method="post">
    <label for="getBalanceOfAddress"> Display Account Balance: </label>
       <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e"> <br />
@@ -48,6 +49,7 @@ When the user clicks that button, a modal should appear with the following form.
    </form>
  </div> <br />
  
+ <!-- Begin content that should appear in "Transfer Funds" modal -->
  <h4> Select Account(s) </h4>
 <form th:action="@{/transferFunds}" method="post">
 <table>
