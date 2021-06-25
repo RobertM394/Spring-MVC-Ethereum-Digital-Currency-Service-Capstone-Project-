@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +25,7 @@ import zuess_mvc_application.repository.UserRepository;
 public class ZuessWebController {
 	
 	@Autowired
-	UserService userService;
+	CustomUserDetailsService customUserDetailsService;
 	
 	@Autowired
 	BlockchainService blockchainService;
@@ -54,9 +55,13 @@ public class ZuessWebController {
 		userRepo.save(user);
 		return "acct_create_success";
 	}
-	
+	 
 	@GetMapping("/accountInfo")
-	public String getUserAccountDetails() {
+	public String getUserAccountDetails(Principal principal) {
+		String email = principal.getName();
+		System.out.println("\n Email is: " + email + "\n");
+		User user = customUserDetailsService.retrieveUserByEmail(email);
+		session.setAttribute("user", user);
 		return "standard_user_account";
 	}
 	

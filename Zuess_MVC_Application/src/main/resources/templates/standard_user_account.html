@@ -4,16 +4,55 @@
 	<head th:replace="fragments :: header">
 	<meta charset="ISO-8859-1">
 	<title>User Account Page</title>
-	
 	</head>
 	
 	<body>
-		<h4> User Account Details </h4>
-		<div>
-	        <form th:action="@{/logout}" method="post">
-	        	<h3> Welcome [[${#request.userPrincipal.principal.fullName}]] !</h3>
-	            <input type="submit" value="Sign Out" />
-	        </form>
-	    </div>
+<div class="jumbotron" style="text-align: center"> 
+   <h3> <span class="text-muted" style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);">Zuess User Portal </span> <br /></h3>
+</div>
+<!-- @Antonio, please polish the styling here using these Bootstrap cards
+I've already added in the basics. 
+Reference: https://getbootstrap.com/docs/4.0/components/card/
+ -->
+ <div class="container">
+<div class="row">
+ <div class="col-sm-4">
+<div class="card" style="width: 18rem; border: none;">
+  <div class="card-body">
+    <h5 class="card-title"> Account Details</h5>
+    <p class="card-text">
+    Name: [[${session.user.getFirst_name()}]] [[${session.user.getLast_name()}]] <br />
+    Email: [[${session.user.getEmail()}]] <br />
+    Account Balance: [[${session.user.getEth_account_id()}]] <br />
+    Ethereum ID: [[${session.user.getEth_account_balance()}]] <br />
+    Organizational ID: [[${session.user.getOrganization_id()}]] <br />
+    </p>
+    <!-- Antonio, let's have this button pop a modal with the user's account details as the default th:value in text boxes. They can then edit the details 
+    within the text box and click a submit button, which will update their details in the database. -->
+    <a href="#" class="btn btn-primary">Edit Account Details </a>
+  </div>
+</div>
+ </div>
+ </div>
+ <div class="row">
+ <div class="col-sm-4">
+<div class="card" style="width: 18rem; border: none;">
+  <div class="card-body">
+    <h5 class="card-title"> Transfer Funds </h5>
+    <p class="card-text">
+    </p>
+    <!-- Antonio, let's have a "Transfer Funds" modal pop up here. Just a blank modal with Submit and Cancel buttons is OK for now. -->
+    <a href="#" class="btn btn-primary">Transfer Funds </a>
+  </div>
+</div>
+ </div>
+  </div>
+   </div>
+    </div>
 	</body>
 </html>
+
+
+<!-- 
+References:
+https://getbootstrap.com/docs/4.0/components/card/ -->
