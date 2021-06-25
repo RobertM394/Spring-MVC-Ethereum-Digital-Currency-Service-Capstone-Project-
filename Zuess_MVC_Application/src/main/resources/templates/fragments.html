@@ -6,9 +6,18 @@
 <!-- scripts and stylesheets -->
 <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js}"></script>
 <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js}"></script>
-<link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css}" />
 </head>
-<body>
 
+</head>
+<header th:fragment="nav_bar">
+<nav class="navbar navbar-light bg-light">
+  <span class="navbar-brand mb-0 h1" > <span style="text-shadow: 2px 2px 2px rgba(0,0,0,0.2);"> Zuess Digital Currency Service</span> </span>
+  <h3 style="text-align: center;"> Welcome [[${#request.userPrincipal.principal.fullName}]] </h3> 
+  <a href="/logout" class="btn btn-primary">Logout </a> 
+</nav>
+</header>
+
+<body>
 </body>
 </html>
