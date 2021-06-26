@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -28,39 +30,40 @@ public class ZuessWebController {
 	CustomUserDetailsService customUserDetailsService;
 	
 	@Autowired
-	BlockchainService blockchainService;
-	
-	@Autowired
 	HttpSession session;
 	
 	@Autowired
 	UserRepository userRepo;
 	
-	OtterCoin otterCoin;
+	private static BlockchainService blockchainService = new BlockchainService(); //This must be declared as an static or instance variable -- do not @Autowire.
+	private static List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
+	private static EthereumAccounts ethereumAccounts = new EthereumAccounts(ethereumAccountsList);
+	private static OtterCoin otterCoin;
 	
-	/***HTTP Routes
-	 * @throws ExecutionException 
-	 * @throws InterruptedException ***/
+	/***HTTP Routes***/
 	@GetMapping("/registration")
-	public String getUserRegistrationForm(Model model) throws InterruptedException, ExecutionException {
-		model.addAttribute("user", new User());
+	public String getUserRegistrationForm(User user) throws InterruptedException, ExecutionException {
 		return "new_user_registration";
 	}
 	
-// TODO: Prevent repeated information signups (ensure email is unique, return error if already present)
+// TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
 	@PostMapping("/submitNewUserRegistration")
-	public String persistNewUser(Model model, User user) {
+	public String persistNewUser(HttpSession session, User user) {
+		
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
+		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
 		userRepo.save(user);
+		session.setAttribute("user", user);
 		return "acct_create_success";
 	}
 	 
 	@GetMapping("/accountInfo")
-	public String getUserAccountDetails(Principal principal) {
+	public String getUserAccountDetails(Principal principal) throws Exception {
 		String email = principal.getName();
-		System.out.println("\n Email is: " + email + "\n");
 		User user = customUserDetailsService.retrieveUserByEmail(email);
+		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
 		session.setAttribute("user", user);
 		return "standard_user_account";
 	}
@@ -71,8 +74,7 @@ public class ZuessWebController {
 	}
 	
 	@GetMapping("/adminPortal")
-	public String getAdminPortal(HttpSession session, Model model) throws Exception {
-		List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
+	public String getAdminPortal(HttpSession session) throws Exception {
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		return "admin_portal";
 	}
@@ -85,6 +87,7 @@ public class ZuessWebController {
 			) throws Exception {
 		
 		otterCoin = blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
+		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		session.setAttribute("deployed", true);
 		session.setAttribute("contractType", contractType);
 		return "admin_portal";
@@ -111,6 +114,20 @@ public class ZuessWebController {
 		session.setAttribute("accountBalance", accountBalance);
 		}
 		return "admin_portal";
+	}
+	
+	@PostMapping("/userFundsTransfer")
+	public String userActions(
+			@RequestParam("transferToAddress") String ethTransferToAddress,
+			@RequestParam("transferAmount") int transferAmount
+			) throws Exception {
+	
+			List<String> addressList = new ArrayList<>();
+			addressList.add(ethTransferToAddress);
+			System.out.println("\n Transfer was called: \n");
+			blockchainService.transferFunds(otterCoin, addressList, transferAmount);
+
+		return "/";
 	}
 	
 }
