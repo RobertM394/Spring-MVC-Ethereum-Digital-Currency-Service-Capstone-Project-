@@ -22,7 +22,7 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
-import zuess_mvc_application.domain.OtterCoin;
+import zuess_mvc_application.domain.*;
 
 @Service
 public class BlockchainService {
@@ -43,9 +43,10 @@ public class BlockchainService {
 	/***ERC-20 Methods***/
 	//getContractBalance()
 	//
-	//Returns balance of deployed Smart Contract
-	public BigInteger getContractBalance(OtterCoin otterCoin) throws Exception {
-		BigInteger balance = otterCoin.balanceOf(credentials.getAddress()).send();
+	//Returns balance of deployed Smart Contract as double
+	public double getContractBalance(OtterCoin otterCoin) throws Exception {
+		BigInteger bigIntegerBalance = otterCoin.balanceOf(credentials.getAddress()).send();
+		Double balance = bigIntegerBalance.doubleValue();
 		System.out.println("\n Balance of Contract: " + balance);
 		return balance;
 	}
@@ -138,36 +139,7 @@ public class BlockchainService {
 	}
 	
 	/***Direct Calls to Ganache Blockchain
-	 * These methods do not call the Smart Contract***/
-	public EthBlockNumber getBlockNumber() throws InterruptedException, ExecutionException {
-	    EthBlockNumber result = new EthBlockNumber();
-	    result = this.web3j.ethBlockNumber()
-	      .sendAsync()
-	      .get();
-	    
-	    System.out.print("\n Blocknumber: " + result + "\n");
-	    return result;
-	}	
-	
-	//Get balance of specified account
-	//Returns error currently, needs debugging
-	public EthGetBalance ethGetBalance(String address) {
-		EthGetBalance result = new EthGetBalance();
-		
-		try {
-		this.web3j.ethGetBalance(address, DefaultBlockParameter.valueOf("latest"))
-		.sendAsync()
-		.get();
-		}	catch (Exception ex) {
-			System.out.print("\n ***Exception: " + ex + "\n");
-			}
-		
-		BigInteger wei = result.getBalance();
-		System.out.print("\n Balance: " + wei + "\n");
-		
-		return result;
-	}
-	
+	 * These methods do not call the Smart Contract***/	
 	 public List<String> getEthereumUserAccounts() {
        EthAccounts accounts = new EthAccounts();
        try {

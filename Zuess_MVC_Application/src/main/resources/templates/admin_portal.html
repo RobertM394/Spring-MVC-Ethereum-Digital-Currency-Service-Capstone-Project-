@@ -24,7 +24,7 @@ When the user clicks that button, a modal should appear with the following form.
    <option value="FutureOption"> Future Custom Contract </option>
    </select> <br /> <br /> 
 <label for="initialContractFunds"> Initial Contracts Funds </label> <br />
-   <input type="number" name="initialContractFunds" placeholder="1000"> <br /> <br /> 
+   <input type="number" name="initialContractFunds" value=1000> <br /> <br /> 
 <label for="ethPrivateKey"> Ethereum Private Key </label> <br />
    <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br /> 
    <button type="submit" class="btn btn-primary"> Deploy Contract </button>
@@ -32,7 +32,8 @@ When the user clicks that button, a modal should appear with the following form.
 </div>
  <!-- End content that should appear in "Deploy New Contract" modal -->
 
-<div th:if="${session.deployed}" style="padding: 1em">
+<th:block th:if="${session.deployed}"> 
+<div style="padding: 1em">
   <h3> Transfer Funds to User Accounts </h3>
   <!-- @Antonio: "Transfer Funds" button here pops modal with accounts checkbox list and transfer amount form -->
    <hr />
@@ -68,5 +69,6 @@ When the user clicks that button, a modal should appear with the following form.
 </form>
 <!--  End contact that should appear in Transfer Funds modal -->
 
+</th:block>
 </body>
 </html>

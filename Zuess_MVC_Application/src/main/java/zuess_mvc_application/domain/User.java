@@ -28,7 +28,7 @@ public class User {
 	private String last_name;
 	
 	@Column
-	private int eth_account_id;
+	private String eth_account_id;
 	
 	@Column
 	private double eth_account_balance;
@@ -37,8 +37,8 @@ public class User {
 	private int organization_id;
 	
 	public User () { }
-	
-	public User(String email, String password, String first_name, String last_name, int eth_account_id,
+
+	public User(String email, String password, String first_name, String last_name, String eth_account_id,
 	      double eth_account_balance, int organization_id)
 	{
 		super();
@@ -50,71 +50,87 @@ public class User {
 		this.eth_account_balance = eth_account_balance;
 		this.organization_id = organization_id;
 	}
-	
+
 	public int getId()
 	{
 		return id;
 	}
+
 	public void setId(int id)
 	{
 		this.id = id;
 	}
+
 	public String getEmail()
 	{
 		return email;
 	}
+
 	public void setEmail(String email)
 	{
 		this.email = email;
 	}
+
 	public String getPassword()
 	{
 		return password;
 	}
+
 	public void setPassword(String password)
 	{
 		this.password = password;
 	}
+
 	public String getFirst_name()
 	{
 		return first_name;
 	}
+
 	public void setFirst_name(String first_name)
 	{
 		this.first_name = first_name;
 	}
+
 	public String getLast_name()
 	{
 		return last_name;
 	}
+
 	public void setLast_name(String last_name)
 	{
 		this.last_name = last_name;
 	}
-	public int getEth_account_id()
+
+	public String getEth_account_id()
 	{
 		return eth_account_id;
 	}
-	public void setEth_account_id(int eth_account_id)
+
+	public void setEth_account_id(String eth_account_id)
 	{
 		this.eth_account_id = eth_account_id;
 	}
+
 	public double getEth_account_balance()
 	{
 		return eth_account_balance;
 	}
+
 	public void setEth_account_balance(double eth_account_balance)
 	{
 		this.eth_account_balance = eth_account_balance;
 	}
+
 	public int getOrganization_id()
 	{
 		return organization_id;
 	}
+
 	public void setOrganization_id(int organization_id)
 	{
 		this.organization_id = organization_id;
 	}
+
 	@Override
 	public int hashCode()
 	{
@@ -124,7 +140,7 @@ public class User {
 		long temp;
 		temp = Double.doubleToLongBits(eth_account_balance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + eth_account_id;
+		result = prime * result + ((eth_account_id == null) ? 0 : eth_account_id.hashCode());
 		result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
 		result = prime * result + id;
 		result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
@@ -132,6 +148,7 @@ public class User {
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -150,7 +167,11 @@ public class User {
 			return false;
 		if (Double.doubleToLongBits(eth_account_balance) != Double.doubleToLongBits(other.eth_account_balance))
 			return false;
-		if (eth_account_id != other.eth_account_id)
+		if (eth_account_id == null)
+		{
+			if (other.eth_account_id != null)
+				return false;
+		} else if (!eth_account_id.equals(other.eth_account_id))
 			return false;
 		if (first_name == null)
 		{

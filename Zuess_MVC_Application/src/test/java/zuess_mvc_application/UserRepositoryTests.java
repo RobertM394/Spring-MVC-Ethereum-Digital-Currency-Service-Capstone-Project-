@@ -27,7 +27,7 @@ public class UserRepositoryTests {
 	public void testCreateEntry() {
 //		User(String email, String password, String first_name, String last_name, int eth_account_id,
 //			      double eth_account_balance, int organization_id)
-		User user = new User("test@email.com", "testPass", "testFName", "testLName", 1234, 1.4, 1);
+		User user = new User("test@email.com", "testPass", "testFName", "testLName", "EthereumHash", 1.4, 1);
 		
 		User savedUser = userRepo.save(user);
 		
