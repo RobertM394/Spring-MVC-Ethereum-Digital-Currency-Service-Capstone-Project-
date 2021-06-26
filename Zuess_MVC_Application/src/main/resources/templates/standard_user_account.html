@@ -44,9 +44,9 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
     <p class="card-text">
     </p>
     <!-- @Antonio: Begin code to add to Transfer Funds Modal-->
-    <form action="/userFundsTransfer" method="post">
-    <label for="transferToAddress"> Recipient Address </label>
-      <input type="text" name="transferToAddress" placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f"> 
+    <form action="/testTransfer" method="post">
+    <label for="ethToAddress"> Recipient Address </label>
+      <input type="text" name="ethToAddress" placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f"> 
       <label for="transferAmount"> Transfer Amount </label>
       <input type="number" name="transferAmount" value=0> <br /> <br />
     <button type="submit" class="btn btn-primary"> Transfer Funds </button>

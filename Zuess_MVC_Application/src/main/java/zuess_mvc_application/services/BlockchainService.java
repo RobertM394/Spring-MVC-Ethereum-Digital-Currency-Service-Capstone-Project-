@@ -5,19 +5,32 @@
  */
 package zuess_mvc_application.services;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.stereotype.Service;
+import org.web3j.abi.FunctionEncoder;
+import org.web3j.abi.TypeReference;
+import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Function;
+import org.web3j.abi.datatypes.Type;
+import org.web3j.abi.datatypes.Uint;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
+import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
+import org.web3j.protocol.core.methods.response.EthSendTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
@@ -30,9 +43,7 @@ public class BlockchainService {
 	Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:7545"));
 	Credentials credentials;
 	
-	//deployOtterCoin()
-	//
-	//Deploys OtterCoin instance to blockchain network using account equal to private key holder and returns bool success
+	//deployOtterCoin() Deploys OtterCoin instance to blockchain network using account equal to private key holder and returns bool success
 	public OtterCoin deploySmartContract(String contractType, String ethPrivateKey, int amount) throws Exception {
 		BigInteger initialSupply = BigInteger.valueOf(amount);
 		credentials = Credentials.create(ethPrivateKey);
@@ -41,9 +52,6 @@ public class BlockchainService {
 	}
 	
 	/***ERC-20 Methods***/
-	//getContractBalance()
-	//
-	//Returns balance of deployed Smart Contract as double
 	public double getContractBalance(OtterCoin otterCoin) throws Exception {
 		BigInteger bigIntegerBalance = otterCoin.balanceOf(credentials.getAddress()).send();
 		Double balance = bigIntegerBalance.doubleValue();
@@ -51,37 +59,25 @@ public class BlockchainService {
 		return balance;
 	}
 	
-	//getContractName()
-	//
-	//Returns the name of the Smart Contract as a String
 	public String getContractName(OtterCoin otterCoin) throws Exception {
 		String contractName = otterCoin.name().send();
 		System.out.println("\n Smart Contract Name: " + contractName);
 		return contractName;
 	}
 	
-	//getContractName()
-	//
-	//Returns the symbol of the Smart Contract as a String
 	public String getContractSymbol(OtterCoin otterCoin) throws Exception {
 		String contractSymbol = otterCoin.symbol().send();
 		System.out.println("\n Smart Contract Symbol: " + contractSymbol);
 		return contractSymbol;
 	}
 	
-	//getContractName()
-	//
-	//Returns the standard/version of the Smart Contract as a String
 	public String getContractStandard(OtterCoin otterCoin) throws Exception {
 		String contractStandard = otterCoin.standard().send();
 		System.out.println("\n Smart Contract Standard: " + contractStandard);
 		return contractStandard;
 	}
 	
-	//transferFunds()
-	//
-	//Calls Smart Contract transfer() function
-	//Transfers funds from one account to another and returns TransactionReceipt
+	//transferFunds() transfers funds. Sender is equal to account of private key holder who deployed OtterCoin
 	public void transferFunds(OtterCoin otterCoin, List<String> addressList, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		for (String address : addressList) {
@@ -90,10 +86,7 @@ public class BlockchainService {
 		}
 	}
 	
-	//approveAllowance()
-	//
-	//Calls Smart Contract approve() function
-	//Approves an allowance on caller's account to spender account
+	//approveAllowance() Approves an allowance on caller's account to spender account
 	public TransactionReceipt approveAllowance (OtterCoin otterCoin, String spenderAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.approve(spenderAddress, bigIntegerAmount).send();
@@ -101,10 +94,7 @@ public class BlockchainService {
 		return receipt;
 	}
 	
-	//transferAllowanceFunds()
-	//
-	//Calls Smart Contract transferFrom() function
-	//Transfers funds in allowance from allowance holder to to_account
+	//transferAllowanceFunds() Transfers funds in allowance from allowance holder to to_account
 	public TransactionReceipt transferAllowanceFunds (OtterCoin otterCoin, String fromAddress, String toAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.transferFrom(fromAddress, toAddress, bigIntegerAmount).send();
@@ -112,20 +102,14 @@ public class BlockchainService {
 		return receipt;
 	}
 
-	//getBalance()
-	//
-	//Calls Smart Contract balanceOf() function using account address
-	//Returns single account balance as BigInteger
+	//getBalance() returns balance of account at address
 	public BigInteger getBalance(OtterCoin otterCoin, String address) throws Exception {
 		BigInteger balance = otterCoin.balanceOf(address).send();
 		System.out.println("\n Balance of: " + balance + "\n");
 		return balance;
 	}
 	
-	//getBalances()
-	//
-	//Calls Smart Contract balanceOf() function
-	//Returns List<BigInteger> of balances of accounts list
+	//getBalances() returns List<BigInteger> of balances of accounts list
 	public List<BigInteger> getBalances(OtterCoin otterCoin, List<String> addressList) throws Exception {
 		List<BigInteger> balanceList = new ArrayList<>();
 		
@@ -138,8 +122,28 @@ public class BlockchainService {
 		return balanceList;
 	}
 	
-	/***Direct Calls to Ganache Blockchain
-	 * These methods do not call the Smart Contract***/	
+	/***Custom Transactions
+	 * @throws IOException ***/
+	//transferFundsAsStandardUser() calls a Smart Contract method using a specified from address 
+	public void transferFundsAsStandardUser(String fromAddress, String toAddress, int transferAmount) throws IOException{
+		
+		BigInteger gasPrice = getCurrentGasPrice();
+		
+		//Determine number of transactions from a particular address to retrieve nonce (prevents replay attacks)
+		EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
+		BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+				
+		Function function = new Function("transfer", // Function name
+		    Arrays.asList(new Address(toAddress), new Uint(BigInteger.valueOf(transferAmount))), // Function input parameters
+		    Collections.emptyList());
+	
+		String encodedFunction = FunctionEncoder.encode(function);
+		Transaction transaction = Transaction.createContractTransaction(fromAddress, nonce, gasPrice, encodedFunction);
+		System.out.println("\n Transfer was called: \n");
+		web3j.ethSendTransaction(transaction);
+	}
+	
+	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	
 	 public List<String> getEthereumUserAccounts() {
        EthAccounts accounts = new EthAccounts();
        try {
@@ -151,13 +155,19 @@ public class BlockchainService {
        }
        return accounts.getAccounts();
 	 }
-}
+	 
+	public BigInteger getCurrentGasPrice() throws IOException{
+		EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
+		return ethGasPrice.getGasPrice();
+	}
 
-//
+}
 
 /***References:
  * https://www.baeldung.com/web3j
  * https://hackernoon.com/ethereum-token-development-using-java-and-web3j-an-overview-spas324r
+ * https://github.com/web3j/web3j/issues/833
+ * https://www.codota.com/code/java/methods/org.web3j.protocol.Web3j/ethGasPrice
  * 
  ***/
  
