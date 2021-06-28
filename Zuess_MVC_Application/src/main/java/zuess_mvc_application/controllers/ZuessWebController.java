@@ -72,6 +72,12 @@ public class ZuessWebController {
 	public String getHomepage() {
 		return "index.html";
 	}
+	//This allows our custom page to be implemented with spring security
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
+	}
+	
 	
 	@GetMapping("/adminPortal")
 	public String getAdminPortal(HttpSession session) throws Exception {
