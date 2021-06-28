@@ -1,12 +1,13 @@
 package zuess_mvc_application.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
@@ -14,7 +15,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
+
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
@@ -71,6 +72,10 @@ public class ZuessWebController {
 	@GetMapping("")
 	public String getHomepage() {
 		return "index.html";
+	}
+	@RequestMapping("/login")
+	public String login() {
+		return "login";
 	}
 	
 	@GetMapping("/adminPortal")

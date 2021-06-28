@@ -46,17 +46,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		authy.authenticationProvider(authenticationProvider());
 	}
 	
-	@Override
-	protected void configure (HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/users").authenticated()
-	        .anyRequest().permitAll()
-	        .and()
-	        .formLogin()
-	            .usernameParameter("email")
-	            .defaultSuccessUrl("/accountInfo")
-	            .permitAll()
-	        .and()
-	        .logout().logoutSuccessUrl("/").permitAll();
-	}
+	  @Override
+	    protected void configure (HttpSecurity http) throws Exception {
+	        http.authorizeRequests()
+	            .antMatchers("/register","/login").authenticated()
+	            .anyRequest().permitAll()
+	            .and()
+	            .formLogin()
+	                .usernameParameter("email")
+	                .defaultSuccessUrl("/adminPortal")
+	                .loginPage("/login")
+	                .permitAll()
+	            .and()
+	            .logout().logoutSuccessUrl("/").permitAll()
+	            .and()
+	            .csrf().disable();
+	    }
 }

@@ -1,74 +1,139 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org">
 <head th:replace="fragments :: header">
+
 <title>Administrator Portal</title>
 </head>
 <body>
-
 <div class="jumbotron" style="text-align: center"> 
-   <h3> <span class="text-muted" style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);">Zuess Administrator Portal </span> <br /></h3>
+   <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo">Zuess Administrator Portal </span> <br /></h3>
 </div>
-
+    
 <div style="padding: 1em">
    <h3> Deploy a Smart Contract</h3>
-   <hr />
+   <hr/>
 
-<!-- Styling @Antonio: A single Bootstrap of type <class="btn btn-primary"> button should be on the page saying "Deploy New Contract"
-When the user clicks that button, a modal should appear with the following form. This is industry standard and saves space on the page -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deployModal" id= "butM">
+  Deploy Contract
+</button>
 
- <!-- Begin content that should appear in "Deploy New Contract" modal -->
-<form th:action="@{/deploySmartContract}" method="post">
-<label for="contractType"> Select a Smart Contract to Deploy to the Ethereum Blockchain</label> <br />
-   <select name="contractType" id="contractType">
-   <option value="OtterCoin"> OtterCoin </option>
-   <option value="FutureOption"> Future Custom Contract </option>
-   </select> <br /> <br /> 
-<label for="initialContractFunds"> Initial Contracts Funds </label> <br />
-   <input type="number" name="initialContractFunds" value=1000> <br /> <br /> 
-<label for="ethPrivateKey"> Ethereum Private Key </label> <br />
-   <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br /> 
-   <button type="submit" class="btn btn-primary"> Deploy Contract </button>
-</form>
+<!-- Modal -->
+<div class="modal fade" id="deployModal" tabindex="-1" aria-labelledby="deployModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Deploy Contract</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      <form th:action="@{/deploySmartContract}" method="post">
+       <label for="contractType"> Select a Smart Contract to Deploy to the Ethereum Blockchain</label> <br />
+          <select name="contractType" id="contractType">
+          <option value="OtterCoin"> OtterCoin </option>
+          <option value="FutureOption"> Future Custom Contract </option>
+          </select> <br /> <br />
+       <label for="initialContractFunds"> Initial Contracts Funds </label> <br />
+          <input type="number" name="initialContractFunds" placeholder="1000"> <br /> <br />
+       <label for="ethPrivateKey"> Ethereum Private Key </label> <br />
+          <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b 0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br />
+          <button type="submit" class="btn btn-primary"> Deploy Contract </button>
+     </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
 </div>
- <!-- End content that should appear in "Deploy New Contract" modal -->
+</div>
+ 
+
 
 <th:block th:if="${session.deployed}"> 
 <div style="padding: 1em">
   <h3> Transfer Funds to User Accounts </h3>
   <!-- @Antonio: "Transfer Funds" button here pops modal with accounts checkbox list and transfer amount form -->
-   <hr />
- 
- <!-- @Antonio: when the user clicks "Get Balance of Account" the actual balance should pop in it's own modal. Ok button in modal should close the modal. -->
-  <div>
+   <hr/>
+ <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferModal" id= "butMa">
+ Transfer Funds
+</button>
+ <!-- Begin content that should appear in "Transfer Funds" modal -->
+<!-- Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Transfer Funds</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+                <h4> Select Account(s) </h4>
+          <form th:action="@{/transferFunds}" method="post">
+          <table>
+          <th:block th:each="account : ${session.ethereumAccountsList}">
+          <tr>
+             <td>  
+                <input type="checkbox" name="accounts" th:value="${account}">
+                <label for="accounts" th:text="${account}"> </label>
+             </td>
+          </tr>
+          </th:block>
+          </table>
+          <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
+          <input type="number" name="transferAmount" placeholder="50"> <br /> <br /> 
+          <button type="submit" class="btn btn-primary"> Add Funds </button>
+          </form>
+	      </div>
+	    </div>
+	  </div>
+	  </div>
+	</div>
+		
+
+<!--  End contact that should appear in Transfer Funds modal -->	
+  <!-- @Antonio: when the user clicks "Get Balance of Account" the actual balance should pop in it's own modal. Ok button in modal should close the modal. -->
   <!-- Begin content that should appear in "Account Balance" modal -->
- <th:block th:if="${session.accountBalance != null}"> <h3> This account has a balance of <span th:text="${session.accountBalance}"> </span> </h3> </th:block>
+	<!-- Modal -->
+	<div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true" >
+	 <div class="modal-dialog">
+	   <div class="modal-content">
+	     <div class="modal-header">
+	       <h5 class="modal-title" id="exampleModalLabel">Account Balance</h5>
+	       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	     </div>
+	     <div class="modal-body">
+	          <th:block th:if="${session.accountBalance != null}"> <h3> This account has a balance of <span th:text="${session.accountBalance}"> </span> </h3> </th:block>    
+	     </div>
+	     <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+	   </div>
+	 </div>
+	</div>
+</div>
  <!-- End content that should appear in "Account Balance" modal -->  
+ <div>
    <form th:action="@{/adminActions}" method="post">
    <label for="getBalanceOfAddress"> Display Account Balance: </label>
       <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e"> <br />
-      <button type="submit" class="btn btn-primary"> Get Account Balance </button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#balanceModal" id ="butMc">
+		 Account Balance
+		</button>	
    </form>
- </div> <br />
- 
- <!-- Begin content that should appear in "Transfer Funds" modal -->
- <h4> Select Account(s) </h4>
-<form th:action="@{/transferFunds}" method="post">
-<table>
-<th:block th:each="account : ${session.ethereumAccountsList}">
-   <tr>
-      <td>  
-         <input type="checkbox" name="accounts" th:value="${account}">
-         <label for="accounts" th:text="${account}"> </label>
-      </td>
-   </tr>
-</th:block>
-</table>
-   <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
-   <input type="number" name="transferAmount" placeholder="50"> <br /> <br /> 
-   <button type="submit" class="btn btn-primary"> Add Funds </button>
-</form>
-<!--  End contact that should appear in Transfer Funds modal -->
+  </div>
 
-</th:block>
+ 
+ 
+
+	<div id="bottom">
+    	<img src="../images/otter.png" alt="" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
+    	<p>Zeuss Inc.&#169;</p>
+    </div>	
+
 </body>
 </html>
+
+<!--References:
+https://www.thymeleaf.org/doc/articles/layouts.html -->
