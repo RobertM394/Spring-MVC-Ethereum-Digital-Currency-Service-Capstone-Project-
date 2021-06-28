@@ -122,8 +122,7 @@ public class BlockchainService {
 		return balanceList;
 	}
 	
-	/***Custom Transactions
-	 * @throws IOException ***/
+	/***Custom Transactions***/
 	//transferFundsAsStandardUser() calls a Smart Contract method using a specified from address 
 	public void transferFundsAsStandardUser(String fromAddress, String toAddress, int transferAmount) throws IOException{
 		

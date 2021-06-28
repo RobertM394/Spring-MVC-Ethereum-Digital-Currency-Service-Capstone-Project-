@@ -35,7 +35,7 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
 						</p>
 						<!-- Antonio, let's have this button pop a modal with the user's account details as the default th:value in text boxes. They can then edit the details 
     within the text box and click a submit button, which will update their details in the database. -->
-						<a href="#" class="btn btn-primary">Edit Account Details </a>
+						<button type="button" class="btn btn-primary">Edit Account Details </button>
 					</div>
 				</div>
 			</div>
@@ -61,25 +61,24 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-											<h5 class="modal-title" id="exampleModalLabel">Transfer
+											<h5 class="modal-title">Transfer
 												Funds</h5>
 											<button type="button" class="btn-close"
 												data-bs-dismiss="modal" aria-label="Close"></button>
 										</div>
 										<div class="modal-body">
 											<form action="/userFundsTransfer" method="post">
-												<label for="transferToAddress"> Recipient Address </label> <input
-													type="text" name="transferToAddress"
-													placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f">
+												<label for="ethToAddress"> Recipient Address </label> <input
+													type="text" style="margin: 0.2em" name="ethToAddress"
+													placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f"> <br />
 												<label for="transferAmount"> Transfer Amount </label> <input
 													type="number" name="transferAmount" value="0"> <br />
 												<br />
 												<button type="submit" class="btn btn-primary">
 													Transfer Funds</button>
+                                    <button type="button" class="btn btn-danger"
+                                       data-bs-dismiss="modal">Cancel</button>
 											</form>
-											<div class="modal-footer">
-												<button type="button" class="btn btn-secondary"
-													data-bs-dismiss="modal">OK</button>
 											</div>
 										</div>
 									</div>
@@ -91,11 +90,11 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
 				</div>
 			</div>
 		</div>
-	</div>
 </body>
 </html>
 
 
 <!-- 
 References:
-https://getbootstrap.com/docs/4.0/components/card/ -->
+https://getbootstrap.com/docs/4.0/components/card/
+https://getbootstrap.com/docs/4.0/components/modal/ -->

@@ -23,13 +23,13 @@
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 			<!-- @Jesse, can you have this only show with a TL if statement only when the user is logged in/authenticated? -->
 				<li>
-					<a th:href="@{/accountInfo}" class="btn btn-primary"> User Info </a>
+					<a th:href="@{/accountInfo}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary"> My Account </a>
 				</li>
 				<li>
-					<a th:href="@{/adminPortal}" class="btn btn-primary"> Admin Portal </a>
+					<a th:href="@{/adminPortal}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary"> Admin Portal </a>
 				</li>
 				<li>
-					<a th:href="@{/logout}" class="btn btn-primary"> Logout </a>
+					<a th:href="@{/logout}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary"> Logout </a>
 				</li>
 			</ul>
 			<!-- 	solution for google fonts, added org.webjars.bower dependency and utilized div to add styles -->
