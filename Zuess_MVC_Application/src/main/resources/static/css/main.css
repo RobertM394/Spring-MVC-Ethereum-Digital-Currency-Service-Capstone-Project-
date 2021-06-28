@@ -10,6 +10,7 @@
 	Text-Transform: uppercase;
 }
 
+/*
 body {
 	background-color: #dbdecc;
 }
@@ -18,6 +19,7 @@ body {
 	color: #777435;
 	text-transform: uppercase;
 }
+*/
 
 #disbox {
 	font-size: 150%;
@@ -39,7 +41,7 @@ body {
 }
 
 #jumbo {
-	color: #C2A756;
+	color: #112E51;
 }
 
 #bottom {
@@ -48,6 +50,7 @@ body {
 	text-align: center;
 }
 
+/* Looks more professional without the box
 .login {
 	padding: 0;
 	margin: 0;
@@ -56,6 +59,7 @@ body {
 	border-radius: 30px;
 	box-shadow: 12px 12px 22px;
 }
+*/
 
 img.resize {
 	max-width: 50%;
@@ -63,8 +67,8 @@ img.resize {
 }
 
 .login img {
-	border-top-left-radius: 30px;
-	border-bottom-left-radius: 30px;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
 }
 
 .login h1 {

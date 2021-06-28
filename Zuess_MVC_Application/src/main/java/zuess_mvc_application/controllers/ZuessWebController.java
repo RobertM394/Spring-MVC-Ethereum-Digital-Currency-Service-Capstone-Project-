@@ -129,9 +129,9 @@ public class ZuessWebController {
 		return "admin_portal";
 	}
 	
-	@PostMapping("/testTransfer")
+	@PostMapping("/userFundsTransfer")
 	public String userActions(Principal principal,
-			@RequestParam("transferToAddress") String ethToAddress,
+			@RequestParam("ethToAddress") String ethToAddress,
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		
