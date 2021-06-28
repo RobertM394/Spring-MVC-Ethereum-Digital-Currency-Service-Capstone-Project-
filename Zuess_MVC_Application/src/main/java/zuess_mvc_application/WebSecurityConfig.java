@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .formLogin()
 	                .usernameParameter("email")
 	                .defaultSuccessUrl("/adminPortal")
-	                .loginPage("/login")
+	                .loginPage("/login")//this is implements our custom login page 
 	                .permitAll()
 	            .and()
 	            .logout().logoutSuccessUrl("/").permitAll()
