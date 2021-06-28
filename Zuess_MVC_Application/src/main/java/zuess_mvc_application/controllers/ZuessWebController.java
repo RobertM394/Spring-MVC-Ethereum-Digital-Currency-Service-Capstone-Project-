@@ -99,10 +99,7 @@ public class ZuessWebController {
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		blockchainService.transferFunds(otterCoin, accounts, transferAmount);
-		
-		/*** @Jesse: I can call this function from this URL and it works. If I call it from "/testTransfer" I get a "403 Unauthorized Error" message from Spring Security ***/ 
-		blockchainService.transferFundsAsStandardUser("0xcA4273b2f988f680292439500fe7191d6aCDe64f", "0x29534Ce80E65B0921426Ac63a8aD158A0c65B5D6", 10);
-		
+
 		return "admin_portal";
 	}
 	
@@ -128,8 +125,7 @@ public class ZuessWebController {
 		
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
-			/*** @Jesse: When calling the method here (as a logged in standard user? perhaps the issue?) I get a "403 Unauthorized Error" message from Spring Security ***/ 
-			blockchainService.transferFundsAsStandardUser("0xcA4273b2f988f680292439500fe7191d6aCDe64f", "0x29534Ce80E65B0921426Ac63a8aD158A0c65B5D6", 10);
+			blockchainService.transferFundsAsStandardUser(user.getEth_account_id(), ethToAddress, transferAmount);
 			
 		return "admin_portal";
 	}
