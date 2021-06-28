@@ -1,64 +1,98 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org"
-	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
-	<head th:replace="fragments :: header">
-	<meta charset="ISO-8859-1">
-	<title>User Account Page</title>
-	</head>
-	
-	<body>
-<div class="jumbotron" style="text-align: center"> 
-   <h3> <span class="text-muted" style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);">Zuess User Portal </span> <br /></h3>
-</div>
-<!-- @Antonio, please polish the styling here using these Bootstrap cards
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments :: header">
+<meta charset="ISO-8859-1">
+<title>User Account Page</title>
+</head>
+
+<body>
+	<div class="jumbotron" style="text-align: center">
+		<h3>
+			<span
+				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+				id="jumbo">Zuess User Portal </span> <br />
+		</h3>
+	</div>
+	<!-- @Antonio, please polish the styling here using these Bootstrap cards
 I've already added in the basics. 
 Reference: https://getbootstrap.com/docs/4.0/components/card/
  -->
- <div class="container">
-<div class="row">
- <div class="col-sm-4">
-<div class="card" style="width: 18rem; border: none;">
-  <div class="card-body">
-    <h5 class="card-title"> Account Details</h5>
-    <hr />
-    <p class="card-text">
-    Name: [[${session.user.getFirst_name()}]] [[${session.user.getLast_name()}]] <br />
-    Email: [[${session.user.getEmail()}]] <br />
-    Account Balance: [[${session.user.getEth_account_balance()}]]  <br />
-    Ethereum ID: [[${session.user.getEth_account_id()}]] <br />
-    Organizational ID: [[${session.user.getOrganization_id()}]] <br />
-    </p>
-    <!-- Antonio, let's have this button pop a modal with the user's account details as the default th:value in text boxes. They can then edit the details 
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="card" style="width: 18rem; border: none;">
+					<div class="card-body">
+						<h5 class="card-title">Account Details</h5>
+						<hr />
+						<p class="card-text">
+							Name: [[${session.user.getFirst_name()}]]
+							[[${session.user.getLast_name()}]] <br /> Email:
+							[[${session.user.getEmail()}]] <br /> Account Balance:
+							[[${session.user.getEth_account_balance()}]] <br /> Ethereum ID:
+							[[${session.user.getEth_account_id()}]] <br /> Organizational
+							ID: [[${session.user.getOrganization_id()}]] <br />
+						</p>
+						<!-- Antonio, let's have this button pop a modal with the user's account details as the default th:value in text boxes. They can then edit the details 
     within the text box and click a submit button, which will update their details in the database. -->
-    <a href="#" class="btn btn-primary">Edit Account Details </a>
-  </div>
-</div>
- </div>
- </div>
- <div class="row">
- <div class="col-sm-4">
-<div class="card" style="width: 18rem; border: none;">
-  <div class="card-body">
-    <h5 class="card-title"> Transfer Funds </h5>
-    <hr />
-    <p class="card-text">
-    </p>
-    <!-- @Antonio: Begin code to add to Transfer Funds Modal-->
-    <form action="/testTransfer" method="post">
-    <label for="ethToAddress"> Recipient Address </label>
-      <input type="text" name="ethToAddress" placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f"> 
-      <label for="transferAmount"> Transfer Amount </label>
-      <input type="number" name="transferAmount" value=0> <br /> <br />
-    <button type="submit" class="btn btn-primary"> Transfer Funds </button>
-    </form>
-    <!-- End Transfer Funds modal code -->
-  </div>
-</div>
- </div>
-  </div>
-   </div>
-    </div>
-	</body>
+						<a href="#" class="btn btn-primary">Edit Account Details </a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<div class="row">
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body">
+							<h5 class="card-title">Transfer Funds</h5>
+							<hr />
+							<p class="card-text"></p>
+							<!-- @Antonio: Begin code to add to Transfer Funds Modal-->
+							<!-- Button trigger modal -->
+							<button type="button" class="btn btn-primary"
+								data-bs-toggle="modal" data-bs-target="#transferFundsModal"
+								id="butM">Transfer Funds</button>
+							<!-- Begin content that should appear in "Transfer Funds" modal -->
+							<!-- Modal -->
+							<div class="modal fade" id="transferFundsModal" tabindex="-1"
+								aria-labelledby="transferFundsModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalLabel">Transfer
+												Funds</h5>
+											<button type="button" class="btn-close"
+												data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<form action="/userFundsTransfer" method="post">
+												<label for="transferToAddress"> Recipient Address </label> <input
+													type="text" name="transferToAddress"
+													placeholder="0xcA4273b2f988f680292439500fe7191d6aCAe64f">
+												<label for="transferAmount"> Transfer Amount </label> <input
+													type="number" name="transferAmount" value="0"> <br />
+												<br />
+												<button type="submit" class="btn btn-primary">
+													Transfer Funds</button>
+											</form>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">OK</button>
+											</div>
+										</div>
+									</div>
+									<!-- End Transfer Funds modal code -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
 </html>
 
 
