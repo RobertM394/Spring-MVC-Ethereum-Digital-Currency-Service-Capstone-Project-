@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head th:replace="fragments :: header">
+  <title>Login Page</title>
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <section class = "login">
+      <div class = " container">
+        <div class = "row">
+          <div class = "col-lg-5">
+          <img src="../images/otter.png"  class="img-fluid" alt="">
+            </div>
+            <div class="col-lg-7 text-center py-5">
+
+              <h1 class = "animate__animated animate__tada">Welcome</h1>
+
+
+              <form th:action="@{/login}" method = "post">
+                <div class ="form-row py-3 pt-5">
+                  <div class ="offset-1 col-lg-10">
+                    <input type ="text" id = "email" name = "email" class = "inp" placeholder = "username">
+                </div>
+              </div>
+              <div class ="form-row py-3 pt-5">
+                <div class ="offset-1 col-lg-10">
+                  <input type ="password" id = "password" name="password" class = "inp" placeholder = "password">
+                </div>
+               </div>
+               <div class="form-row">
+                 <div class="offset-1 col-lg-10">
+                   <button type="submit" value ="Submit" class="btn btn-primary">Sign In</button>
+                 </div>
+
+               </div>
+              </form>
+             
+            </div>
+
+            </div>
+          </div>
+
+    </section>
+   
+
+  </body>
+</html>
