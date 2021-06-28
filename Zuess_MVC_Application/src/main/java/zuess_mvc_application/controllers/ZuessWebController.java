@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigInteger;
@@ -80,8 +81,11 @@ public class ZuessWebController {
 	
 	
 	@GetMapping("/adminPortal")
-	public String getAdminPortal(HttpSession session) throws Exception {
+	public String getAdminPortal(HttpSession session, Principal principal) throws Exception {
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
+		String email = principal.getName();
+		User user = customUserDetailsService.retrieveUserByEmail(email);
+		session.setAttribute("user", user);
 		return "admin_portal";
 	}
 	
@@ -96,6 +100,8 @@ public class ZuessWebController {
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		session.setAttribute("deployed", true);
 		session.setAttribute("contractType", contractType);
+		User user = (User) session.getAttribute("user");
+		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
 		return "admin_portal";
 	}
 	
