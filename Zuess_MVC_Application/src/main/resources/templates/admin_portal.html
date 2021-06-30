@@ -71,8 +71,8 @@
  <!-- End content that should appear in "Account Balance" modal -->  
  <div style="padding: 1em">
    <form th:action="@{/adminActions}" method="post">
-   <h5> <label for="getBalanceOfAddress"> Display Account Balance </label> </h5>
-      <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e"> 
+   <h5> Display Account Balance <label for="getBalanceOfAddress"> </label> </h5>
+      <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e">  
       <th:block th:if="${session.accountBalance} != null"> Balance is: <span th:text="${session.accountBalance}"> </span> </th:block>
       <br />
       <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMc">
