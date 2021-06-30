@@ -38,22 +38,18 @@
        <label for="ethPrivateKey"> Ethereum Private Key </label> <br />
           <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b 0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br />
           <button type="submit" class="btn btn-primary"> Deploy Contract </button>
-                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-        
+                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>    
      </form>
       </div>
-
       </div>
     </div>
   </div>
 </div>
-</div>
- 
-<th:block th:if="${session.deployed}"> 
 
-  <!-- @Antonio: when the user clicks "Get Balance of Account" the actual balance should pop in it's own modal. Ok button in modal should close the modal. -->
+<th:block th:if="${session.deployed}"> 
+ 
   <!-- Begin content that should appear in "Account Balance" modal -->
-   <!-- Modal -->
+    <!-- Commenting out modal that does not pop
    <div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true" >
     <div class="modal-dialog">
       <div class="modal-content">
@@ -62,7 +58,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-             <th:block th:if="${session.user.getEth_account_balance() != null}"> <h3> This account has a balance of <span th:text="${session.user.getEth_account_balance()}"> </span> </h3> </th:block>    
+          <h3> Just Testing </h3> 
         </div>
         <div class="modal-footer">
            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
@@ -70,12 +66,16 @@
     </div>
    </div>
 </div>
+   -->
+
  <!-- End content that should appear in "Account Balance" modal -->  
  <div style="padding: 1em">
    <form th:action="@{/adminActions}" method="post">
-   <label for="getBalanceOfAddress"> <h5> Display Account Balance </h5> </label>
-      <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e"> <br />
-      <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#balanceModal" id ="butMc">
+   <h5> <label for="getBalanceOfAddress"> Display Account Balance </label> </h5>
+      <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e"> 
+      <th:block th:if="${session.accountBalance} != null"> Balance is: <span th:text="${session.accountBalance}"> </span> </th:block>
+      <br />
+      <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMc">
        Account Balance
       </button>   
    </form>
