@@ -31,10 +31,13 @@ public class ZuessWebController {
 	CustomUserDetailsService customUserDetailsService;
 	
 	@Autowired
-	HttpSession session;
+	ScholarshipService scholarshipService;
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	HttpSession session;
 	
 	private static BlockchainService blockchainService = new BlockchainService(); //This must be declared as an static or instance variable -- do not @Autowire.
 	private static List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
@@ -132,7 +135,36 @@ public class ZuessWebController {
 		}
 		return "admin_portal";
 	}
+
+	@PostMapping("/grantScholarship")
+	public String grantScholarship(HttpSession session,
+			@RequestParam("recipientEmail") String email,
+			@RequestParam("scholarshipAmount") int amount) throws Exception {
+		
+		User user = customUserDetailsService.retrieveUserByEmail(email);
+		if (user == null) {
+			session.setAttribute("userFound", false);
+		} else {
+			
+			int recipient_id = user.getId();
+			String recipient_eth_id = user.getEth_account_id();
+			int scholarshipAmount = amount;
+			Scholarship scholarship = scholarshipService.grantNewScholarship(otterCoin, recipient_id, recipient_eth_id, scholarshipAmount, null);
+		}
+		
+		return "admin_portal";
+	}
 	
+	@PostMapping("/viewScholarships")
+	public String viewScholarships(HttpSession session) throws Exception {
+		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
+		session.setAttribute("scholarshipsList", scholarshipsList);
+		session.setAttribute("userFound", true);
+		return "admin_portal";
+	}
+	
+	
+	/***User Account Routes***/
 	@PostMapping("/userFundsTransfer")
 	public String userActions(Principal principal,
 			@RequestParam("ethToAddress") String ethToAddress,
@@ -146,7 +178,8 @@ public class ZuessWebController {
 			User user = customUserDetailsService.retrieveUserByEmail(email);
 			blockchainService.transferFundsAsStandardUser(FROM_ADDRESS, TO_ADDRESS, 10);
 			
-		return "admin_portal";
+		return "standard_user_account";
 	}
+	
 	
 }

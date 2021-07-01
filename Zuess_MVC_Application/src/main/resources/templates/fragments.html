@@ -20,7 +20,7 @@
 				Welcome <span th:text="${session.user.getFirst_name()}"></span>!
 			</h3>
 			
-			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navButtons">
 			<!-- @Jesse, can you have this only show with a TL if statement only when the user is logged in/authenticated? -->
 				<li>
 					<a th:href="@{/accountInfo}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary"> My Account </a>

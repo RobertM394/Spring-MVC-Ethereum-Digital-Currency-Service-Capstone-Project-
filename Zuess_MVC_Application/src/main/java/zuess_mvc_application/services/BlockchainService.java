@@ -12,7 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.sql.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
@@ -40,9 +42,13 @@ import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
 import zuess_mvc_application.domain.*;
+import zuess_mvc_application.repository.*;
 
 @Service
 public class BlockchainService {
+	
+	@Autowired
+	ScholarshipRepository scholarshipRepository;
 	
 	Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:7545"));
 	Credentials credentials;
@@ -81,7 +87,8 @@ public class BlockchainService {
 		return contractStandard;
 	}
 	
-	//transferFunds() transfers funds. Sender is equal to account of private key holder who deployed OtterCoin
+	//transferFunds() transfers funds. Sender is account of private key holder who deployed OtterCoin
+	//calls Smart Contract transfer(address _to, uint256 _value)
 	public void transferFunds(OtterCoin otterCoin, List<String> addressList, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		for (String address : addressList) {
@@ -90,7 +97,10 @@ public class BlockchainService {
 		}
 	}
 	
-	//approveAllowance() Approves an allowance on caller's account to spender account
+	//approveAllowance() Approves an allowance (called a "scholarship" in this application) on caller's account to spender account
+	//the approved amount can be spent from the caller's funds by the recipient. no funds transfer occurs until the recipient spends the funds
+	//see grantScholarship() method in this file
+	//calls Smart Contract approve(address _spender, uint256 _value)
 	public TransactionReceipt approveAllowance (OtterCoin otterCoin, String spenderAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.approve(spenderAddress, bigIntegerAmount).send();
@@ -99,6 +109,7 @@ public class BlockchainService {
 	}
 	
 	//transferAllowanceFunds() Transfers funds in allowance from allowance holder to to_account
+	//calls Smart Contract transferFrom(address _from, address _to, uint256 _value) 
 	public TransactionReceipt transferAllowanceFunds (OtterCoin otterCoin, String fromAddress, String toAddress, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
 		TransactionReceipt receipt = otterCoin.transferFrom(fromAddress, toAddress, bigIntegerAmount).send();
@@ -124,6 +135,15 @@ public class BlockchainService {
 		}
 
 		return balanceList;
+	}
+	
+	//getAllowance() returns current allowance
+	//calls Smart Contract allowance(mapping(address => mapping(address => uint256))
+	public int getAllowance(OtterCoin otterCoin, String granterAddress, String recipientAddress) throws Exception {
+		BigInteger allowanceAmount = otterCoin.allowance(granterAddress, recipientAddress).send();
+		int allowance = allowanceAmount.intValue();
+		
+		return allowance;
 	}
 	
 	/***Custom Transactions***/
