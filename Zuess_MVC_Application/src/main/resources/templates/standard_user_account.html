@@ -100,15 +100,17 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title"> My Active Scholarships </h3> <br />
-        <p style="size: 0.9em"> Scholarship Amount Shows Current Available Balance </p>
+        <h3 class="modal-title"> My Active Scholarships </h3> 
       </div>
       <div class="modal-body">
+      <p style="size: 0.7em"> Shows Current Scholarship Balance. 
+      For more information on how Scholarships work visit our <a href="/help" target="_blank"> Help Page </a></p>
+      <hr />
           <table class="table">
           <th:block th:each="scholarship : ${session.scholarshipsList}">
           <tr>
              <td>  
-              <p> Amount:   <span th:text="${scholarship.getAmount}"></span> </p>
+              <p> Available Balance:   <span th:text="${scholarship.getAmount}"></span> </p>
              </td>
              <td>  
               <p> Granted:   <span th:text="${scholarship.getDate_granted()}"></span> </p>
