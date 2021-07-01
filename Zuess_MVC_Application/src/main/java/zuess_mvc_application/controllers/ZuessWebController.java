@@ -97,9 +97,11 @@ public class ZuessWebController {
 			) throws Exception {
 		
 		otterCoin = blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
+		double contractBalance = blockchainService.getContractBalance(otterCoin);
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		session.setAttribute("deployed", true);
 		session.setAttribute("contractType", contractType);
+		session.setAttribute("contractBalance", contractBalance);
 		User user = (User) session.getAttribute("user");
 		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
 		return "admin_portal";
@@ -111,6 +113,8 @@ public class ZuessWebController {
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		blockchainService.transferFunds(otterCoin, accounts, transferAmount);
+		double contractBalance = blockchainService.getContractBalance(otterCoin);
+		session.setAttribute("contractBalance", contractBalance);
 
 		return "admin_portal";
 	}
@@ -135,9 +139,12 @@ public class ZuessWebController {
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		
+			String FROM_ADDRESS = "0x6653089355F411b2eEb7ba45912317a4b2F57a40";
+			String TO_ADDRESS = "0x0343A271bA0D711975C5AEb1EB97EEB9eCc8d0b7";
+			
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
-			blockchainService.transferFundsAsStandardUser(user.getEth_account_id(), ethToAddress, transferAmount);
+			blockchainService.transferFundsAsStandardUser(FROM_ADDRESS, TO_ADDRESS, 10);
 			
 		return "admin_portal";
 	}
