@@ -23,7 +23,7 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
 			<div class="col-sm-4">
 				<div class="card" style="width: 18rem; border: none;">
 					<div class="card-body">
-						<h5 class="card-title">[[${session.user.getFirst_name()}]]'s Account Information </h5>
+						<h5 class="card-title"><span th:text="${session.user.getFirst_name()}"></span>'s Account Information </h5>
 						<hr />
 						<p class="card-text">
 							Name: [[${session.user.getFirst_name()}]]
