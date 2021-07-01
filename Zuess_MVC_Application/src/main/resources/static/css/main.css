@@ -29,9 +29,11 @@ body {
 	color: #dbdecc;
 }
 
+/*Use default Bootstrap background
 #deployModal, #transferModal, #balanceModal, #scholarshipModal {
 	background-color: #dbdecc;
 }
+*/
 
 .center {
 	display: block;

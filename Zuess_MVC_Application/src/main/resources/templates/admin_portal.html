@@ -7,9 +7,6 @@
 <!-- Custom Javascript Functions -->
 <script>
 $( document ).ready(function(){
-	   $("#viewScholarships").on("click", function(){
-		   $("#getScholarshipsList").submit();
-	   });
 });
 </script>
 
@@ -106,19 +103,19 @@ $( document ).ready(function(){
 <!-- Modal -->
 <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true" >
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="min-width: 600px !important;">
       <div class="modal-header">
         <h3 class="modal-title">Transfer Funds</h3>
       </div>
       <div class="modal-body">
-                <h4> Select Account(s) </h4>
+                <h5> Select Account(s) by Ethereum ID </h5>
           <form th:action="@{/transferFunds}" method="post">
-          <table>
+          <table class="table">
           <th:block th:each="account : ${session.ethereumAccountsList}">
           <tr>
-             <td>  
+             <td>
                 <input type="checkbox" name="accounts" th:value="${account}">
-                <label for="accounts" th:text="${account}"> </label>
+                <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> </label>  
              </td>
           </tr>
           </th:block>
@@ -159,7 +156,7 @@ $( document ).ready(function(){
        account. No funds are transferred from the account until the recipient spends the funds. For more information on Scholarships, see our <a href="/help"> Help Page </a>
         <hr />
           <form th:action="@{/grantScholarship}" method="post">
-          <table>
+          <table class="table">
           <tr>
              <td>  
                   <h5> Recipient Email <label for="recipientEmail"> </label> </h5>
@@ -191,23 +188,24 @@ $( document ).ready(function(){
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title"> Current Active Scholarships </h3>
+        <h3 class="modal-title"> Currently Active Scholarships </h3>
       </div>
       <div class="modal-body">
-          <table>
+          <table class="table">
           <th:block th:each="scholarship : ${session.scholarshipsList}">
           <tr>
              <td>  
-              <p> Recipient ID:   <span th:text="${scholarship.getRecipient_id()}"></span> </p>
+              <p> Recipient ID:  <span th:text="${scholarship.getRecipient_id()}"></span> </p>
              </td>
              <td>  
-              <p> Scholarship Amount:   <span th:text="${scholarship.getAmount}"></span> </p>
+              <p> Amount:   <span th:text="${scholarship.getAmount}"></span> </p>
              </td>
              <td>  
-              <p> Date Granted:   <span th:text="${scholarship.getDate_granted()}"></span> </p>
+              <p> Granted:   <span th:text="${scholarship.getDate_granted()}"></span> </p>
              </td>
              <td>  
-              <p> Expiration Date:   <span th:text="${scholarship.getDate_expires()}"></span> </p>
+              <p> Expires:   <span th:if="${scholarship.getDate_expires()}" th:text="${scholarship.getDate_expires()}"></span> 
+                                     <span th:if="!${scholarship.getDate_expires()}" th:text="None"></span></p>
              </td>
           </tr>
           </th:block>

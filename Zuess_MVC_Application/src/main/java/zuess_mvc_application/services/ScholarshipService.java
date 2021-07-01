@@ -36,17 +36,19 @@ public class ScholarshipService {
 	}
 	
 	public boolean syncEthereumAndDatabaseAllowances() {
-		
 		return true;
 	}
 	
 	public List<Scholarship> getActiveScholarships() {
-		
 		List<Scholarship> scholarshipsList = new ArrayList<>();
 		scholarshipsList = scholarshipRepository.getActiveScholarships();
-		
 		return scholarshipsList;
 	}
 	
+	public List<Scholarship> getScholarshipsByUserId(int userId){
+		List<Scholarship> scholarshipsList = new ArrayList<>();
+		scholarshipsList = scholarshipRepository.getActiveScholarshipsByUserId(userId);
+		return scholarshipsList;
+	}
 	
 }
