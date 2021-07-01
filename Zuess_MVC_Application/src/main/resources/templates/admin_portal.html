@@ -10,9 +10,11 @@
  <hr />
 </div>
 
+<br />
+
 <th:block th:if="${session.deployed}"> 
  <div style="text-align: center">
- <h4> <span th:text="${session.contractType}"></span> is currently deployed with a balance of <span th:text="${session.contractBalance}"></span></h4>
+ <h4> <span th:text="${session.contractType}"></span> is currently deployed with <span th:text="${session.contractBalance}"></span> in available funds. </h4>
  </div>
 </th:block>
 
