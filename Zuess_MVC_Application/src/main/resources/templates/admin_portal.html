@@ -9,6 +9,15 @@
    <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo">Zuess Administrator Portal </span> </h3> 
  <hr />
 </div>
+
+<br />
+
+<th:block th:if="${session.deployed}"> 
+ <div style="text-align: center">
+ <h4> <span th:text="${session.contractType}"></span> is currently deployed with <span th:text="${session.contractBalance}"></span> in available funds. </h4>
+ </div>
+</th:block>
+
 <br /> <br />
 
 <div style="padding: 1em">

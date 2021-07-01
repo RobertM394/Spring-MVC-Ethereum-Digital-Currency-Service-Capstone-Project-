@@ -17,13 +17,17 @@ import org.springframework.stereotype.Service;
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
+import org.web3j.abi.datatypes.Bool;
 import org.web3j.abi.datatypes.Function;
 import org.web3j.abi.datatypes.Type;
 import org.web3j.abi.datatypes.Uint;
+import org.web3j.abi.datatypes.generated.Uint256;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.RemoteFunctionCall;
+import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
@@ -133,13 +137,16 @@ public class BlockchainService {
 		BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 				
 		Function function = new Function("transfer", // Function name
-		    Arrays.asList(new Address(toAddress), new Uint(BigInteger.valueOf(transferAmount))), // Function input parameters
-		    Collections.emptyList());
+			 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(toAddress),
+			 new org.web3j.abi.datatypes.Uint(BigInteger.valueOf(transferAmount))), // Function input parameters
+			 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {})
+			 );
 	
 		String encodedFunction = FunctionEncoder.encode(function);
 		Transaction transaction = Transaction.createContractTransaction(fromAddress, nonce, gasPrice, encodedFunction);
-		System.out.println("\n Transfer was called: \n");
-		web3j.ethSendTransaction(transaction);
+		Request<?, EthSendTransaction> request = web3j.ethSendTransaction(transaction);
+		EthSendTransaction response = request.send();
+		System.out.print("\n Transfer function transaction hash: " + response.getResult() + "\n ");
 	}
 	
 	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	
