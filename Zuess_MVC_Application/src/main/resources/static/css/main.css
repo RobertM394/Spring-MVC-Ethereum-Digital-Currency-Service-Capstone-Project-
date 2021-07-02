@@ -25,13 +25,15 @@ body {
 	font-size: 150%;
 }
 
-#butM, #butMa, #butMc {
+#butM, #butMa, #butMb, #butMc {
 	color: #dbdecc;
 }
 
-#deployModal, #transferModal, #balanceModal {
+/*Use default Bootstrap background
+#deployModal, #transferModal, #balanceModal, #scholarshipModal {
 	background-color: #dbdecc;
 }
+*/
 
 .center {
 	display: block;
@@ -44,10 +46,10 @@ body {
 	color: #112E51;
 }
 
-#bottom {
-	position: absolute;
+#footerLogo {
 	bottom: 0;
-	text-align: center;
+	display: flex;
+	justify-content: center;
 }
 
 /* Looks more professional without the box

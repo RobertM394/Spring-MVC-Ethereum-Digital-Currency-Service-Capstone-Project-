@@ -33,7 +33,11 @@ public class CustomUserDetailsService implements UserDetailsService{
 	
 	public User retrieveUserByEmail(String email) {
 		User user = userRepository.findByEmail(email);
-		return user;
+		if (user != null) {
+			return user;
+		} else {
+			return null;
+		}
 	}
 	
 	public User syncEthereumAndDatabaseUserBalances(OtterCoin otterCoin, User user) throws Exception {

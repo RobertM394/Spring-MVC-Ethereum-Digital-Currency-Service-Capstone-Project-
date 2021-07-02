@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org">
 <head th:replace="fragments :: header">
-
 <title>Administrator Portal</title>
 </head>
 <body>
+<!-- Custom Javascript Functions -->
+<script>
+$( document ).ready(function(){
+});
+</script>
+
 <div class="jumbotron" style="text-align: center"> 
    <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo">Zuess Administrator Portal </span> </h3> 
  <hr />
@@ -32,8 +37,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Deploy Contract</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h3 class="modal-title">Deploy Contract</h3>
       </div>
       <div class="modal-body">
       <form th:action="@{/deploySmartContract}" method="post">
@@ -99,20 +103,19 @@
 <!-- Modal -->
 <div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true" >
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content" style="min-width: 600px !important;">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Transfer Funds</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h3 class="modal-title">Transfer Funds</h3>
       </div>
       <div class="modal-body">
-                <h4> Select Account(s) </h4>
+                <h5> Select Account(s) by Ethereum ID </h5>
           <form th:action="@{/transferFunds}" method="post">
-          <table>
+          <table class="table">
           <th:block th:each="account : ${session.ethereumAccountsList}">
           <tr>
-             <td>  
+             <td>
                 <input type="checkbox" name="accounts" th:value="${account}">
-                <label for="accounts" th:text="${account}"> </label>
+                <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> </label>  
              </td>
           </tr>
           </th:block>
@@ -120,21 +123,106 @@
           <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
           <input type="number" name="transferAmount" placeholder="50"> <br /> <br /> 
           <button type="submit" class="btn btn-primary"> Add Funds </button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
           </form>
 	      </div>
 	    </div>
 	  </div>
 	  </div>
 	</div>
-<!--  End contact that should appear in Transfer Funds modal -->	
+<!--  End content that should appear in Transfer Funds modal -->	
 
+<!-- Begin Scholarships section-->
+<div style="padding: 1em">
+  <h5> Grant or View Scholarships </h5>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grantScholarshipModal" id= "butMa">
+ Grant Scholarship
+</button>
 
-	<div id="bottom">
-    	<img src="../images/otter.png" alt="" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
-    	<p>Zeuss Inc.&#169;</p>
-    </div>	
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewScholarshipsModal" id= "butMa">
+ View Scholarships
+</button>
 
+<!-- Grant Scholarship Modal -->
+<div class="modal fade" id="grantScholarshipModal" tabindex="-1" aria-labelledby="grantScholarshipModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Grant a Scholarship</h3>
+        <br />
+      </div>
+      <div class="modal-body">
+      <p style="font-size: 0.85em;"> A scholarship is an amount in Ethereum tokens you approve the recipient to spend directly from the organization (adminstrator) 
+       account. No funds are transferred from the account until the recipient spends the funds. For more information on Scholarships, see our <a href="/help" target="_blank"> Help Page </a>
+        <hr />
+          <form th:action="@{/grantScholarship}" method="post">
+          <table class="table">
+          <tr>
+             <td>  
+                  <h5> Recipient Email <label for="recipientEmail"> </label> </h5>
+                  <span style="font-size: 0.75em"> The recipient must have a currently valid Ethereum ID. </span> 
+                  <input type="text" name="recipientEmail" placeholder="student@csumb.edu">  
+             </td>
+          </tr>
+            <tr>
+               <td>
+               <br />
+                  <h5> <span th:text="${session.contractType}"> </span> Tokens <label for="scholarshipAmount"> </label> </h5>
+                  <input type="number" name="scholarshipAmount" placeholder="500">  
+               </td>
+            </tr>
+          </table>
+           <br />
+              <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMb"> Grant Scholarship </button> 
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+         </form>
+         </div>
+       </div>
+     </div>
+     </div>
+   </div>
+<!-- End Grant Scholarship Modal content -->
+
+<!-- View Scholarships Modal -->
+<div class="modal fade" id="viewScholarshipsModal" tabindex="-1" aria-labelledby="viewScholarshipsModalLabel" aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title"> Currently Active Scholarships </h3>
+      </div>
+      <div class="modal-body">
+          <table class="table">
+          <th:block th:each="scholarship : ${session.scholarshipsList}">
+          <tr>
+             <td>  
+              <p> Recipient ID:  <span th:text="${scholarship.getRecipient_id()}"></span> </p>
+             </td>
+             <td>  
+              <p> Amount:   <span th:text="${scholarship.getAmount}"></span> </p>
+             </td>
+             <td>  
+              <p> Granted:   <span th:text="${scholarship.getDate_granted()}"></span> </p>
+             </td>
+             <td>  
+              <p> Expires:   <span th:if="${scholarship.getDate_expires()}" th:text="${scholarship.getDate_expires()}"></span> 
+                                     <span th:if="!${scholarship.getDate_expires()}" th:text="None"></span></p>
+             </td>
+          </tr>
+          </th:block>
+          </table>
+
+         </div>
+       </div>
+      </div>
+     </div>
+<!-- End Scholarships Content -->
+
+</th:block>
 </body>
+   <div id="footerLogo">
+      <img src="../images/otter.png" alt="" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
+      <p >Zeuss Inc.&#169;</p>
+    </div>  
 </html>
 
 <!--References:

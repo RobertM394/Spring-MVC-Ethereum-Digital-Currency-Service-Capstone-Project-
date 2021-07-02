@@ -30,13 +30,15 @@ role_id INT NOT NULL,
 PRIMARY KEY (user_id)
 )
 
-CREATE TABLE allowances(
-id INT NOT NULL AUTO_INCREMENT,
-allowance_amount double,
-allotted_by INT,
-allotted_to INT,
-PRIMARY KEY (id)
-)
+CREATE TABLE scholarships (
+   id INT NOT NULL AUTO_INCREMENT,
+    recipient_id INT,
+    recipient_eth_id VARCHAR(60),
+    amount int,
+    date_granted DATE NULL,
+    date_expires DATE NULL,
+    PRIMARY KEY (id)
+);
 
 CREATE TABLE transactions(
 id INT NOT NULL AUTO_INCREMENT,

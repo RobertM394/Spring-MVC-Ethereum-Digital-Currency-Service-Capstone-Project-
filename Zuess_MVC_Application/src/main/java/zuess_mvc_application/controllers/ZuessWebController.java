@@ -31,42 +31,25 @@ public class ZuessWebController {
 	CustomUserDetailsService customUserDetailsService;
 	
 	@Autowired
-	HttpSession session;
+	ScholarshipService scholarshipService;
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	HttpSession session;
 	
 	private static BlockchainService blockchainService = new BlockchainService(); //This must be declared as an static or instance variable -- do not @Autowire.
 	private static List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
 	private static EthereumAccounts ethereumAccounts = new EthereumAccounts(ethereumAccountsList);
 	private static OtterCoin otterCoin;
 	
-	/***HTTP Routes***/
+	/***HTTP Routes
+	 * Main Site Routes 
+	 * ***/
 	@GetMapping("/registration")
 	public String getUserRegistrationForm(User user) throws InterruptedException, ExecutionException {
 		return "new_user_registration";
-	}
-	
-// TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
-	@PostMapping("/submitNewUserRegistration")
-	public String persistNewUser(HttpSession session, User user) {
-		
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
-		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
-		userRepo.save(user);
-		session.setAttribute("user", user);
-		return "acct_create_success";
-	}
-	 
-	@GetMapping("/accountInfo")
-	public String getUserAccountDetails(Principal principal) throws Exception {
-		String email = principal.getName();
-		User user = customUserDetailsService.retrieveUserByEmail(email);
-		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
-		session.setAttribute("user", user);
-		return "standard_user_account";
 	}
 	
 	@GetMapping("")
@@ -79,7 +62,7 @@ public class ZuessWebController {
 		return "login";
 	}
 	
-	
+	/***Admin Portal Routes***/
 	@GetMapping("/adminPortal")
 	public String getAdminPortal(HttpSession session, Principal principal) throws Exception {
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
@@ -132,6 +115,66 @@ public class ZuessWebController {
 		}
 		return "admin_portal";
 	}
+
+	@PostMapping("/grantScholarship")
+	public String grantScholarship(HttpSession session,
+			@RequestParam("recipientEmail") String email,
+			@RequestParam("scholarshipAmount") int amount) throws Exception {
+		
+		User user = customUserDetailsService.retrieveUserByEmail(email);
+		if (user == null) {
+			session.setAttribute("userFound", false);
+		} else {
+			
+			int recipient_id = user.getId();
+			String recipient_eth_id = user.getEth_account_id();
+			int scholarshipAmount = amount;
+			Scholarship scholarship = scholarshipService.grantNewScholarship(otterCoin, recipient_id, recipient_eth_id, scholarshipAmount, null);
+		}
+		
+		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
+		session.setAttribute("scholarshipsList", scholarshipsList);
+		
+		return "admin_portal";
+	}
+	
+	@GetMapping("/viewScholarships")
+	public String viewScholarships(HttpSession session) throws Exception {
+		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
+		session.setAttribute("scholarshipsList", scholarshipsList);
+		return "admin_portal";
+	}
+	
+	/***User Account Routes***/
+// TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
+	@PostMapping("/submitNewUserRegistration")
+	public String persistNewUser(HttpSession session, User user) {
+		
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
+		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
+		userRepo.save(user);
+		session.setAttribute("user", user);
+		return "acct_create_success";
+	}
+	 
+	@GetMapping("/accountInfo")
+	public String getUserAccountDetails(Principal principal) throws Exception {
+		
+		//Load user details
+		String email = principal.getName();
+		User user = customUserDetailsService.retrieveUserByEmail(email);
+		
+		//Sync user's Zuess (database) and Ethereum (blockchain) account data
+		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
+		
+		//Add session attributes
+		List<Scholarship> currentUserScholarshipsList = scholarshipService.getScholarshipsByUserId(user.getId());
+		session.setAttribute("scholarshipsList", currentUserScholarshipsList);
+		session.setAttribute("user", user);
+		return "standard_user_account";
+	}
 	
 	@PostMapping("/userFundsTransfer")
 	public String userActions(Principal principal,
@@ -146,7 +189,8 @@ public class ZuessWebController {
 			User user = customUserDetailsService.retrieveUserByEmail(email);
 			blockchainService.transferFundsAsStandardUser(FROM_ADDRESS, TO_ADDRESS, 10);
 			
-		return "admin_portal";
+		return "standard_user_account";
 	}
+	
 	
 }
