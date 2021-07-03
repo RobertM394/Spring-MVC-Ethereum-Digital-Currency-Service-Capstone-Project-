@@ -6,6 +6,7 @@ Table Creation Scripts
 
 USE zuess_web; #database name
 
+
 CREATE TABLE users(
 id INT NOT NULL AUTO_INCREMENT,
 email VARCHAR(50),
@@ -40,6 +41,17 @@ CREATE TABLE scholarships (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE InventoryItem (
+   id INT NOT NULL AUTO_INCREMENT,
+    scholarship_eligible boolean,
+    name VARCHAR(50),
+    type VARCHAR(50) NULL,
+    description VARCHAR(50) NULL,
+    price int, 
+    image_source VARCHAR(100) NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE transactions(
 id INT NOT NULL AUTO_INCREMENT,
 transaction_hash VARCHAR(50),
@@ -51,3 +63,6 @@ event_type VARCHAR(50),
 PRIMARY KEY (id)
 )
 
+@Insert Statements
+INSERT INTO InventoryItem (scholarship_eligible, name, price, image_source)
+VALUES (false, "CSUMB Adidas Logo T-Shirt", 12, "images/AdidasShirt.png");

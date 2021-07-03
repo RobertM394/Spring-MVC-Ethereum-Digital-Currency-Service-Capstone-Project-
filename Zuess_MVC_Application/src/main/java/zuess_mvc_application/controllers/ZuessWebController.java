@@ -34,6 +34,9 @@ public class ZuessWebController {
 	ScholarshipService scholarshipService;
 	
 	@Autowired
+	InventoryService inventoryService;
+	
+	@Autowired
 	UserRepository userRepo;
 	
 	@Autowired
@@ -44,23 +47,50 @@ public class ZuessWebController {
 	private static EthereumAccounts ethereumAccounts = new EthereumAccounts(ethereumAccountsList);
 	private static OtterCoin otterCoin;
 	
+	List<InventoryItem> cartItemsList = new ArrayList<>();
+	
 	/***HTTP Routes
 	 * Main Site Routes 
 	 * ***/
+	@GetMapping("")
+	public String getHomepage() {
+		return "index.html";
+	}
+	
 	@GetMapping("/registration")
 	public String getUserRegistrationForm(User user) throws InterruptedException, ExecutionException {
 		return "new_user_registration";
 	}
 	
-	@GetMapping("")
-	public String getHomepage() {
-		return "index.html";
-	}
-	//This allows our custom page to be implemented with spring security
+	//This allows our custom page to be implemented with Spring Security
 	@RequestMapping("/login")
 	public String login() {
 		return "login";
 	}
+	
+	/***Store Routes***/
+	@GetMapping("/store")
+	public String getStoreHomepage(HttpSession session) {
+		return "store_homepage";
+	}
+	
+	@PostMapping("/addToCart")
+	public String addItemToCart(HttpSession session,
+			@RequestParam("itemId") int itemId) {
+		
+		InventoryItem item = inventoryService.getInventoryItemById(itemId);
+		cartItemsList.add(item);
+		session.setAttribute("cartItemsList", cartItemsList);
+		
+		return "store_homepage";
+	}
+	
+	@GetMapping("/checkout")
+	public String getCheckoutPage(HttpSession session) {
+		getCartTotal(session);
+		return "store_checkout";
+	}
+	
 	
 	/***Admin Portal Routes***/
 	@GetMapping("/adminPortal")
@@ -132,6 +162,7 @@ public class ZuessWebController {
 			Scholarship scholarship = scholarshipService.grantNewScholarship(otterCoin, recipient_id, recipient_eth_id, scholarshipAmount, null);
 		}
 		
+		scholarshipService.syncEthereumAndDatabaseAllowances(otterCoin, ethereumAccountsList.get(0));
 		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
 		session.setAttribute("scholarshipsList", scholarshipsList);
 		
@@ -168,6 +199,7 @@ public class ZuessWebController {
 		
 		//Sync user's Zuess (database) and Ethereum (blockchain) account data
 		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
+		scholarshipService.syncEthereumAndDatabaseAllowances(otterCoin, ethereumAccountsList.get(0));
 		
 		//Add session attributes
 		List<Scholarship> currentUserScholarshipsList = scholarshipService.getScholarshipsByUserId(user.getId());
@@ -192,5 +224,15 @@ public class ZuessWebController {
 		return "standard_user_account";
 	}
 	
+
+	/***Custom Controller Functions***/
+	public int getCartTotal(HttpSession session) {
+		int total = 0;
+		for (InventoryItem item : cartItemsList) {
+			total += item.getPrice();
+		}
+		session.setAttribute("total", total);
+		return total;
+	}
 	
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments :: header">
+<meta charset="ISO-8859-1">
+<title>User Account Page</title>
+</head>
+
+<body>
+   <div class="jumbotron" style="text-align: center">
+      <h3>
+         <span
+            style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+            id="jumbo">Bookstore </span> <br />
+      </h3>
+      <hr />
+   </div>
+   
+   <div style="float: left; margin: 0.25em">
+   [[${session.user.getFirst_name()}]]'s Account Balance: [[${session.user.getEth_account_balance()}]] <br /> 
+   [[${session.user.getFirst_name()}]]'s Scholarship Balance: [[${session.user.getEth_account_balance()}]] <br />
+   </div>
+   <br /><br /><br />
+   
+   <!-- 3 Columns/Items per row -->
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-4">
+            <div class="card" style="width: 18rem; border: none;">
+               <div class="card-body" style="width: 18rem;">
+                  <h5 class="card-title"></h5>
+                  <p class="card-text">
+                   
+                  <!-- @Antonio, all images should be a uniform size, saved from the Bookstore site and resized to 200 Hor. x 191 Vert. pixels. -->    
+                  <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
+                  <hr />
+                  <div style="margin: 0 auto; width: 50%"> 
+                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
+                    $12.00 </span> 
+                     <form action="/addToCart" method="post">
+                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
+                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
+                     </form>
+                  </div> 
+          
+               </div>
+            </div>
+         </div>
+         
+           <div class="col-sm-4">
+            <div class="card" style="width: 18rem; border: none;">
+               <div class="card-body" style="width: 18rem;">
+                  <h5 class="card-title"></h5>
+                  <p class="card-text">
+                 <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
+                 <hr />
+                  <div style="margin: 0 auto; width: 50%"> 
+                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
+                    $12.00 </span> 
+                     <form action="/addToCart" method="post">
+                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
+                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
+                     </form>
+                  </div> 
+
+               </div>
+            </div>
+         </div>
+         
+              <div class="col-sm-4">
+            <div class="card" style="width: 18rem; border: none;">
+               <div class="card-body" style="width: 18rem;">
+                  <h5 class="card-title"></h5>
+                  <p class="card-text">
+                  
+                  <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
+                  <hr />
+                  <div style="margin: 0 auto; width: 50%"> 
+                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
+                    $12.00 </span> 
+                     <form action="/addToCart" method="post">
+                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
+                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
+                     </form>
+                  </div> 
+
+               </div>
+            </div>
+         </div>
+         
+      </div>
+   </div>
+     
+</body>
+</html>

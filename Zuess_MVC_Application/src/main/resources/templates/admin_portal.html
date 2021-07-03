@@ -11,7 +11,7 @@ $( document ).ready(function(){
 </script>
 
 <div class="jumbotron" style="text-align: center"> 
-   <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo">Zuess Administrator Portal </span> </h3> 
+   <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo"> Zuess Administrator Portal </span> </h3> 
  <hr />
 </div>
 
@@ -154,7 +154,7 @@ $( document ).ready(function(){
       <div class="modal-body">
       <p style="font-size: 0.85em;"> A scholarship is an amount in Ethereum tokens you approve the recipient to spend directly from the organization (adminstrator) 
        account. No funds are transferred from the account until the recipient spends the funds. For more information on Scholarships, see our <a href="/help" target="_blank"> Help Page </a>
-        <hr />
+        <hr /> 
           <form th:action="@{/grantScholarship}" method="post">
           <table class="table">
           <tr>
@@ -220,7 +220,7 @@ $( document ).ready(function(){
 </th:block>
 </body>
    <div id="footerLogo">
-      <img src="../images/otter.png" alt="" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
+      <img src="../images/otter.png" alt="CSUMB Otter Logo" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
       <p >Zeuss Inc.&#169;</p>
     </div>  
 </html>
