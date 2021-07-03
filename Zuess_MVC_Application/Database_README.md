@@ -25,11 +25,14 @@ role_name VARCHAR(20),
 PRIMARY KEY (role_id)
 )
 
-CREATE TABLE user_roles(
-user_id INT NOT NULL,
-role_id INT NOT NULL,
-PRIMARY KEY (user_id)
-)
+CREATE TABLE user_roles (
+  user_id INT NOT NULL,
+  role_id INT NOT NULL,
+  KEY user_fk_idx (user_id),
+  KEY role_fk_idx (role_id),
+  CONSTRAINT role_fk FOREIGN KEY (role_id) REFERENCES roles (role_id),
+  CONSTRAINT user_fk FOREIGN KEY (user_id) REFERENCES users (user_id)
+);
 
 CREATE TABLE scholarships (
    id INT NOT NULL AUTO_INCREMENT,

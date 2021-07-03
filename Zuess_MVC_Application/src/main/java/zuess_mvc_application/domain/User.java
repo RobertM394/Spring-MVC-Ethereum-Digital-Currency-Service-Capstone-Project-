@@ -1,10 +1,20 @@
 package zuess_mvc_application.domain;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,6 +22,7 @@ import javax.persistence.Table;
 public class User {
 	
 	@Id
+	@Column(name= "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
@@ -35,6 +46,15 @@ public class User {
 	
 	@Column
 	private int organization_id;
+	
+	@ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Role.class)
+	@JoinTable(
+			name = "user_roles",
+			joinColumns = @JoinColumn(name = "id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+			)
+	private List<Role> roles = new ArrayList<Role>();
+
 	
 	public User () { }
 
@@ -129,6 +149,14 @@ public class User {
 	public void setOrganization_id(int organization_id)
 	{
 		this.organization_id = organization_id;
+	}
+	
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	@Override

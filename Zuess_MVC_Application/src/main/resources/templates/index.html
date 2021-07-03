@@ -5,7 +5,29 @@
 <title>Home</title>
 </head>
 <body>
-	<a th:href="@{/login}">Login</a>
-	<a th:href="@{/registration}">Register</a>
+	<div class=" container">
+			<div class="row">
+				<div class="col-lg-5">
+					<img src="../images/otter.png" class="img-fluid" alt="">
+				</div>
+				<div class="col-lg-7 text-center py-5">
+
+					<h1>Welcome</h1>
+
+					<form th:action="@{/login}" method="get" >
+						<div class="offset-1 col-lg-10">
+								<button type="submit" value="Submit" class="btn btn-primary">Login</button>
+						</div>
+					</form>
+					<form th:action="@{/registration}" method="get" >
+						<div class="offset-1 col-lg-10">
+								<button type="submit" value="Submit" class="btn btn-primary">Register</button>
+						</div>	
+					</form>
+
+				</div>
+
+			</div>
+		</div>
 </body>
 </html>

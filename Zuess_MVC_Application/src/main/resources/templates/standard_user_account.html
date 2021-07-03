@@ -22,14 +22,16 @@
 			<div class="col-sm-4">
 				<div class="card" style="width: 18rem; border: none;">
 					<div class="card-body">
-						<h5 class="card-title"><span th:text="${session.user.getFirst_name()}"></span>'s Account Information </h5>
+						<h5 class="card-title"><span sec:authentication="name"></span>'s Account Information </h5>
 						<hr />
 					  <p class="card-text"  style="width: 35rem;">
-                     Name: [[${session.user.getFirst_name()}]] [[${session.user.getLast_name()}]] <br /> 
-                     Email: [[${session.user.getEmail()}]] <br /> 
-                     Account Balance: [[${session.user.getEth_account_balance()}]] <br /> 
-                     Ethereum ID: [[${session.user.getEth_account_id()}]] <br />  
-                     Organization ID: [[${session.user.getOrganization_id()}]] <br />
+							Name: <span sec:authentication="principal.fullName"></span> <br />
+							Roles: <span sec:authentication="principal.authorities"></span>
+							<br /> 
+							Email: <span sec:authentication="name"></span> <br /> 
+							Account Balance: <span sec:authentication="principal.accountBalance"></span> <br /> 
+							Ethereum ID: <span sec:authentication="principal.ethAccountId"></span> <br /> 
+							Organizational ID: <span sec:authentication="principal.organizationId"></span> <br />
                   </p>
 						<button type="button" class="btn btn-primary">Edit Account </button>
 					</div>

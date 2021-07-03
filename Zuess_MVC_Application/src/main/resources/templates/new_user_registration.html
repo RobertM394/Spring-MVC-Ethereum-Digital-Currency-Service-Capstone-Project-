@@ -10,7 +10,7 @@
     </h4>
     <hr />
         
-      <form th:action="@{/submitNewUserRegistration}" th:object="${user}" method="post">
+      <form th:action="@{/registration/submit}" th:object="${user}" method="post">
          <label for="firstName"> First Name:  </label><br />  
          <input type="text" id="firstName" name="first_name" placeholder="John" th:field="*{first_name}"><br />  
          <label for="lastName"> Last Name:  </label><br>
