@@ -18,5 +18,10 @@ public interface ScholarshipRepository extends JpaRepository<Scholarship, Long> 
 	
 	@Query(value="SELECT * FROM scholarships WHERE recipient_id = ?1", nativeQuery=true)
 	List<Scholarship> getActiveScholarshipsByUserId(int id);
+	
+	@Transactional
+	@Modifying
+	@Query(value="UPDATE scholarships SET amount = ?2 WHERE id = ?1", nativeQuery=true)
+	void updateScholarshipBalance(int scholarshipId, int updatedBalance);
 
 }

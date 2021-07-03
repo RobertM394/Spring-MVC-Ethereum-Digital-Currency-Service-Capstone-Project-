@@ -11,13 +11,12 @@
 		<h3>
 			<span
 				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
-				id="jumbo">Zuess User Portal </span> <br />
+				id="jumbo">Zuess User Portal </span> 
 		</h3>
+		<hr />
 	</div>
-	<!-- @Antonio, please polish the styling here using these Bootstrap cards
-I've already added in the basics. 
-Reference: https://getbootstrap.com/docs/4.0/components/card/
- -->
+	<br />
+		
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-4">
@@ -25,16 +24,13 @@ Reference: https://getbootstrap.com/docs/4.0/components/card/
 					<div class="card-body">
 						<h5 class="card-title"><span th:text="${session.user.getFirst_name()}"></span>'s Account Information </h5>
 						<hr />
-						<p class="card-text">
-							Name: [[${session.user.getFirst_name()}]]
-							[[${session.user.getLast_name()}]] <br /> Email:
-							[[${session.user.getEmail()}]] <br /> Account Balance:
-							[[${session.user.getEth_account_balance()}]] <br /> Ethereum ID:
-							[[${session.user.getEth_account_id()}]] <br /> Organizational
-							ID: [[${session.user.getOrganization_id()}]] <br />
-						</p>
-						<!-- Antonio, let's have this button pop a modal with the user's account details as the default th:value in text boxes. They can then edit the details 
-    within the text box and click a submit button, which will update their details in the database. -->
+					  <p class="card-text"  style="width: 35rem;">
+                     Name: [[${session.user.getFirst_name()}]] [[${session.user.getLast_name()}]] <br /> 
+                     Email: [[${session.user.getEmail()}]] <br /> 
+                     Account Balance: [[${session.user.getEth_account_balance()}]] <br /> 
+                     Ethereum ID: [[${session.user.getEth_account_id()}]] <br />  
+                     Organization ID: [[${session.user.getOrganization_id()}]] <br />
+                  </p>
 						<button type="button" class="btn btn-primary">Edit Account </button>
 					</div>
 				</div>

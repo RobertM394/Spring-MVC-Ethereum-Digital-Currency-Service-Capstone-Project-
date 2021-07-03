@@ -26,8 +26,6 @@ public class ScholarshipService {
 		
 		Date date_granted = new Date(System.currentTimeMillis());
 		Scholarship scholarship = new Scholarship(recipient_id, recipient_eth_id, amount, date_granted, date_expires);
-		
-		//Persist scholarship object in database and approve scholarship allowance on Ethereum blockchain 
 		scholarshipRepository.save(scholarship);
 		final TransactionReceipt receipt = blockchainService.approveAllowance(otterCoin, recipient_eth_id, amount);
 		
@@ -35,8 +33,15 @@ public class ScholarshipService {
 		return scholarship;
 	}
 	
-	public boolean syncEthereumAndDatabaseAllowances() {
-		return true;
+	public List<Scholarship> syncEthereumAndDatabaseAllowances(OtterCoin otterCoin, String admin_eth_address) throws Exception {
+		List<Scholarship> scholarshipsList = getActiveScholarships();
+		
+		for (Scholarship scholarship : scholarshipsList) {
+			int currentBalance = blockchainService.getAllowance(otterCoin, admin_eth_address, scholarship.getRecipient_eth_id());
+			scholarship.setAmount(currentBalance);
+			scholarshipRepository.updateScholarshipBalance(scholarship.getId(), currentBalance);
+		}
+		return scholarshipsList;
 	}
 	
 	public List<Scholarship> getActiveScholarships() {

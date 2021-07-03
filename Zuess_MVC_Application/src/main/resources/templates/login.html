@@ -21,22 +21,22 @@
 					<form th:action="@{/login}" method="post" action="">
 						<div class="form-row py-3 pt-5">
 							<div class="offset-1 col-lg-10">
-								<input type="text" id="email" name="email" class="inp"
-									placeholder="username">
+								<input type="text" id="email" name="email" class="loginFields"
+									placeholder=" username@csumb.edu">
 							</div>
 						</div>
 						<div class="form-row py-3 pt-5">
 							<div class="offset-1 col-lg-10">
-								<input type="password" id="password" name="password" class="inp"
-									placeholder="password">
+								<input type="password" id="password" name="password" class="loginFields"
+									placeholder=" Password">
 							</div>
 						</div>
 						<div class="form-row">
-							<div class="offset-1 col-lg-10">
+							<div class="offset-1 col-lg-10"> 
 								<button type="submit" value="Submit" class="btn btn-primary">Sign
 									In</button>
-							</div>
-
+                        <a href="/registration" class="btn btn-primary">Register </a>
+                     </div>
 						</div>
 					</form>
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments :: header">
+<meta charset="ISO-8859-1">
+<title>User Account Page</title>
+</head>
+
+<body>
+   <div class="jumbotron" style="text-align: center">
+      <h3>
+         <span
+            style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+            id="jumbo"> Bookstore Checkout </span> <br />
+      </h3>
+      <hr />
+   </div>
+   
+   <div style="float: left; margin: 0.25em">
+   [[${session.user.getFirst_name()}]]'s Account Balance: [[${session.user.getEth_account_balance()}]] <br /> 
+   [[${session.user.getFirst_name()}]]'s Scholarship Balance: [[${session.user.getEth_account_balance()}]] <br />
+   </div>
+   <br /><br /><br />
+   <!-- 3 Columns/Items per row -->
+   <div class="container" style="float: left">
+      <div class="row">
+         <div class="col-sm-4">
+            <div class="card" style="border: none">
+               <div class="card-body">
+                  <h5 class="card-title"> Order Summary </h5>
+                  <p class="card-text"  style="width: 25rem;">
+                  <hr />
+                   
+                   <table class="table">
+                   <th:block th:each="item : ${session.cartItemsList}">
+                     <tr>
+                        <td>
+                        Item Name: <span th:text="${item.getName()}"></span> <br />
+                        Price:  <span th:text="${item.getPrice()}"> </span>
+                        </td>
+                     </tr>
+                    </th:block>
+                   </table>
+               </div>
+            </div>
+           </div>
+            
+           <div class="col-sm-4" style="float: right;">
+            <div class="card" style="border: none;">
+               <div class="card-body" style="width: 18rem;">
+                  <h5 class="card-title"> Total </h5>
+                  <p class="card-text">
+                  <hr />
+                   
+                    <h5> <nobr> Subtotal (<span th:text="${session.cartItemsList.size()}"></span> items) $<span th:text="${session.total}"></span> </nobr> </h5> 
+                   <h4>Total $<span th:text="${session.total}"></span> </h4> 
+                   <br />
+                   
+                   
+                   <form action="/submitOrder" method="post">
+                   <input type="checkbox" name="useScholarship">
+                   <label for="useScholarship"> Apply Scholarship Funds </label> 
+                   
+                  <label for="scholarshipAmount" style="font-size: 0.8em;"> <nobr> You may use up to $15 of your current $<span th:text="${session.user.getEth_account_balance()}"></span> scholarship balance on this order. </nobr> </label>
+                   <input type="number" placeholder="10" name="scholarshipAmount" style="margin:0.25em;">
+                   <br /> <br />
+                   
+                   <button type="submit" class="btn btn-warning" id="addCartButton">Place Your Order </button>
+                   </form>
+               </div>
+            </div>
+           </div>
+            
+         </div>
+        </div>
+ 
+</body>
+</html>
