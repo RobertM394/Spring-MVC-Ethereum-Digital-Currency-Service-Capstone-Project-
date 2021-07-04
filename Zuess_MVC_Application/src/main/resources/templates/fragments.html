@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymeleaf.org">
+<html xmlns:th="www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:fragment="header">
 <meta charset="ISO-8859-1">
 
@@ -10,7 +11,7 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Trispace:wght@500&amp;display=swap" rel="stylesheet">
 </head>
 
@@ -19,11 +20,8 @@
 		<div class = "container-fluid">
 			<span class="navbar-brand mb-0 h1"> <span style="text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);"> Zuess &#9889; Digital Currency Service</span>
 			</span>
-			<h3 style="text-align: center;" th:if="${session.user}">
-				Welcome <span th:text="${session.user.getFirst_name()}"></span>!
-			</h3>
 		
-		   <div style="float: right;">
+		   <div style="float: right;" sec:authorize="isAuthenticated()">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navButtons">
 			<!-- @Jesse, can you have this only show with a TL if statement only when the user is logged in/authenticated? -->
 			<th:block th:if="${session.cartItemsList}">  <a href="/checkout" style="color: #112E51;"> My Cart:</a>(<span th:text="${session.cartItemsList.size()}"></span>) </th:block>
@@ -48,18 +46,3 @@
 <body>
 </body>
 </html>
-
-
-
-	  <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>

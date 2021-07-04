@@ -42,12 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return authProvider;
 	}
 	
-//	@Override
-//    public void configure(WebSecurity web) throws Exception {
-//            web.ignoring()
-//                            .antMatchers("/**");
-//    }
-	
 	@Override
 	protected void configure (AuthenticationManagerBuilder authy) throws Exception {
 		authy.authenticationProvider(authenticationProvider());
@@ -56,17 +50,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	    protected void configure (HttpSecurity http) throws Exception {
 	        http.authorizeRequests()
-	            .antMatchers("/register","/login").authenticated()
-	            .anyRequest().permitAll()
-	            .and()
-	            .formLogin()
-	                .usernameParameter("email")
-	                .defaultSuccessUrl("/adminPortal")
-	                .loginPage("/login")//this is implements our custom login page 
-	                .permitAll()
-	            .and()
-	            .logout().logoutSuccessUrl("/").permitAll()
-	            .and()
-	            .csrf().disable();
+	        .antMatchers("/css/**", "/js/**", "/images/**").permitAll()
+            .antMatchers("/registration/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .formLogin()
+                .usernameParameter("email")
+                .defaultSuccessUrl("/adminPortal")
+                .loginPage("/login")
+                .permitAll()
+            .and()
+            .logout().logoutSuccessUrl("/").permitAll()
+            .and()
+            .csrf().disable();
 	    }
 }

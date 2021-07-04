@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpSession;
 
 import zuess_mvc_application.services.*;
 import zuess_mvc_application.domain.*;
+import zuess_mvc_application.repository.RoleRepository;
 import zuess_mvc_application.repository.UserRepository;
 
 @Controller
@@ -38,6 +40,9 @@ public class ZuessWebController {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	RoleRepository roleRepo;
 	
 	@Autowired
 	HttpSession session;
@@ -178,14 +183,24 @@ public class ZuessWebController {
 	
 	/***User Account Routes***/
 // TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
-	@PostMapping("/submitNewUserRegistration")
+	@PostMapping("/registration/submit")
 	public String persistNewUser(HttpSession session, User user) {
+		System.out.println("Begin new user registration.");
 		
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
 		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
+
+		//TODO: This is where i will insert logic to select what type of role will be created. I think creating a default admin role that auto populates and limiting demo to user role creation and leaving this be makes the most sense.
+		String userRole = "USER";
+		
+		user.setRoles(Arrays.asList(roleRepo.findByName(userRole)));
+		System.out.println("Set user Role to: " + userRole);
+		
 		userRepo.save(user);
+		
+		System.out.println("User: " + user.getFirst_name() + " " + user.getLast_name() + " created.");
 		session.setAttribute("user", user);
 		return "acct_create_success";
 	}

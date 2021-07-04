@@ -31,6 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 		return new CustomUserDetails(user);
 	}
 	
+	//TODO: Figure out what this is doing.
 	public User retrieveUserByEmail(String email) {
 		User user = userRepository.findByEmail(email);
 		if (user != null) {
