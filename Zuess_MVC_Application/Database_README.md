@@ -1,8 +1,10 @@
-References: 
-https://stackoverflow.com/questions/4169893/is-it-good-database-design-to-have-admin-users-in-the-same-table-as-front-end-us
-
-Table Creation Scripts
----
+/*
+	References: 
+	https://stackoverflow.com/questions/4169893/is-it-good-database-design-to-have-admin-users-in-the-same-table-as-front-end-us
+	
+	Table Creation Scripts
+	---
+*/
 
 USE zuess_web; #database name
 
@@ -17,13 +19,13 @@ eth_account_id VARCHAR(60) NULL,
 eth_account_balance double NULL,
 organization_id INT NULL,
 PRIMARY KEY (id)
-)
+);
 
 CREATE TABLE roles(
 role_id INT NOT NULL AUTO_INCREMENT,
 role_name VARCHAR(20),
 PRIMARY KEY (role_id)
-)
+);
 
 CREATE TABLE user_roles (
   id INT NOT NULL,
@@ -64,8 +66,13 @@ to_account INT,
 gas_used INT,
 event_type VARCHAR(50),
 PRIMARY KEY (id)
-)
+);
 
-@Insert Statements
+#Insert Statements
 INSERT INTO InventoryItem (scholarship_eligible, name, price, image_source)
 VALUES (false, "CSUMB Adidas Logo T-Shirt", 12, "images/AdidasShirt.png");
+
+INSERT INTO zuess_web.roles(role_name)
+VALUES ("USER");
+INSERT INTO zuess_web.roles(role_name)
+VALUES ("ADMIN");
