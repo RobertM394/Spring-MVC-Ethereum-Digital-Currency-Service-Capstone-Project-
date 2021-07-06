@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments :: header">
+<meta charset="ISO-8859-1">
+<title>User Account Page</title>
+</head>
+<body>
+
+	<div class="jumbotron" style="text-align: center">
+		<h3>
+			<span
+				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+				id="jumbo">Help Page</span> <br />
+		</h3>
+		<hr />
+	</div>
+
+	<div id="content">
+		<div class="row">
+			<div class="card" style="width: 18rem;">
+				<img th:src="@{images/blockchain.png}" class="card-img-top"
+					alt="..." src="">
+				<div class="card-body">
+					<h5 class="card-title">The Idea</h5>
+					<p class="card-text">What is Blockchain technology?</p>
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#exampleModal">Learn More</button>
+					<!-- Modal -->
+					<div class="modal fade" id="exampleModal" tabindex="-1"
+						aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Technology</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<iframe width="460" height="215"
+										src="https://www.youtube.com/embed/SSo_EIwHSd4"
+										title="YouTube video player" frameborder="0"
+										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+										allowfullscreen></iframe>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
+								
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="card" style="width: 18rem;">
+				<img th:src="@{images/product.png}" class="card-img-top" alt="..."
+					src="">
+				<div class="card-body">
+					<h5 class="card-title">The Product</h5>
+					<p class="card-text">See our Demo</p>
+					<a href="#" class="btn btn-primary">Learn More</a>
+				</div>
+			</div>
+
+
+
+			<div class="card" style="width: 18rem;">
+				<img th:src="@{images/otterTeama.png}" class="card-img-top" alt="..." width= '300 px' height= '250 px'>
+				<div class="card-body">
+				<br/>
+					<h5 class="card-title">The Team</h5>
+					<br/>
+					<a href="#" class="btn btn-primary">Learn More</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+
+<!-- https://getbootstrap.com/docs/5.0/components/card/ -->
+<!-- Simply Explained : https://www.youtube.com/channel/UCnxrdFPXJMeHru_b4Q_vTPQ -->

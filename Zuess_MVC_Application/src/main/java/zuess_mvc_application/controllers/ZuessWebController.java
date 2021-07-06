@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,10 @@ public class ZuessWebController {
 		return "index.html";
 	}
 	
+	@GetMapping("/helppage")
+	public String getHelp() {
+		return "help_page.html";
+	}
 	@GetMapping("/registration")
 	public String getUserRegistrationForm(User user) throws InterruptedException, ExecutionException {
 		return "new_user_registration";
@@ -75,7 +80,7 @@ public class ZuessWebController {
 	
 	/***Store Routes***/
 	@GetMapping("/store")
-	public String getStoreHomepage(HttpSession session) {
+	public String getStoreHomepage(HttpSession session) {		
 		return "store_homepage";
 	}
 	

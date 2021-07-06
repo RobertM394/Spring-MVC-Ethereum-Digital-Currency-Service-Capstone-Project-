@@ -64,7 +64,7 @@ body {
 }
 
 /* Looks more professional without the box
-.login {
+.checkout {
 	padding: 0;
 	margin: 0;
 	box-sizing: border-box;
@@ -73,7 +73,18 @@ body {
 	box-shadow: 12px 12px 22px;
 }
 */
+.flex-container {
+    display: flex;
+}
 
+.flex-child {
+    flex: 1;
+   
+}  
+
+.flex-child:first-child {
+    margin-right: 20px;
+} 
 img.resize {
 	max-width: 50%;
 	max-height: 50%;
@@ -102,4 +113,11 @@ img.resize {
 
 .storeItemText {
 	color: black;
+}
+#content{
+	display:grid;
+	grid-template-columns:repeat(3,fr);
+	max-width:auto;
+	margin: 0auto;
+	
 }
