@@ -34,15 +34,15 @@
 					<div class="col-sm-4">
 						<div class="card" style="border: none">
 							<div class="card-body">
-								<h5 class="card-title">Order Summary</h5>
+								<h2 class="card-title">Order Summary</h2>
 								<p class="card-text" style="width: 50rem;"></p>
 								<hr />
 
 								<table class="table">
 									<th:block th:each="item : ${session.cartItemsList}">
 										<tr>
-											<td>Item Name: <span th:text="${item.getName()}"></span>
-												<br /> Price: <span th:text="${item.getPrice()}"> </span>
+											<td> <span th:text="${item.getName()}"></span>
+												<br /> Price: $<span th:text="${item.getPrice()}"> </span>
 											</td>
 										</tr>
 									</th:block>
@@ -56,7 +56,7 @@
 
 						<div class="card" style="border: none;">
 							<div class="card-body" style="width: 18rem;">
-								<h5 class="card-title">Total</h5>
+								<h2 class="card-title">Order Total</h2>
 								<p class="card-text"></p>
 								<hr />
 
@@ -76,7 +76,7 @@
 									<input type="checkbox" name="useScholarship"> <label
 										for="useScholarship"> Apply Scholarship Funds </label> <label
 										for="scholarshipAmount" style="font-size: 0.8em;"> <nobr>
-											You may use up to $15 of your current $<span
+											You may use up to $<span th:text="${session.scholarshipEligibleAmount}"></span> of your current $<span
 												th:text="${session.user.getEth_account_balance()}"></span>
 											scholarship balance on this order.
 										</nobr>

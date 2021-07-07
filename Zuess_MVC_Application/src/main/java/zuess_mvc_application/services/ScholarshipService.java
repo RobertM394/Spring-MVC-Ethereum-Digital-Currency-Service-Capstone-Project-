@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
-import zuess_mvc_application.domain.OtterCoin;
-import zuess_mvc_application.domain.Scholarship;
+import zuess_mvc_application.domain.*;
 import zuess_mvc_application.repository.ScholarshipRepository;
 
 @Service
@@ -55,5 +54,5 @@ public class ScholarshipService {
 		scholarshipsList = scholarshipRepository.getActiveScholarshipsByUserId(userId);
 		return scholarshipsList;
 	}
-	
+		
 }
