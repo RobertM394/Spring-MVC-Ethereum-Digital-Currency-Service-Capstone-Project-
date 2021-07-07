@@ -1,95 +1,241 @@
 <!DOCTYPE html>
 <html xmlns:th="www.thymeleaf.org"
-   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:replace="fragments :: header">
 <meta charset="ISO-8859-1">
 <title>User Account Page</title>
 </head>
 
 <body>
-   <div class="jumbotron" style="text-align: center">
-      <h3>
-         <span
-            style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
-            id="jumbo">Bookstore </span> <br />
-      </h3>
-      <hr />
-   </div>
-   
-   <div style="float: left; margin: 0.25em">
-   [[${session.user.getFirst_name()}]]'s Account Balance: [[${session.user.getEth_account_balance()}]] <br /> 
-   [[${session.user.getFirst_name()}]]'s Scholarship Balance: [[${session.user.getEth_account_balance()}]] <br />
-   </div>
-   <br /><br /><br />
-   
-   <!-- 3 Columns/Items per row -->
-   <div class="container">
-      <div class="row">
-         <div class="col-sm-4">
-            <div class="card" style="width: 18rem; border: none;">
-               <div class="card-body" style="width: 18rem;">
-                  <h5 class="card-title"></h5>
-                  <p class="card-text">
-                   
-                  <!-- @Antonio, all images should be a uniform size, saved from the Bookstore site and resized to 200 Hor. x 191 Vert. pixels. -->    
-                  <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
-                  <hr />
-                  <div style="margin: 0 auto; width: 50%"> 
-                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
-                    $12.00 </span> 
-                     <form action="/addToCart" method="post">
-                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
-                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
-                     </form>
-                  </div> 
-          
-               </div>
-            </div>
-         </div>
-         
-           <div class="col-sm-4">
-            <div class="card" style="width: 18rem; border: none;">
-               <div class="card-body" style="width: 18rem;">
-                  <h5 class="card-title"></h5>
-                  <p class="card-text">
-                 <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
-                 <hr />
-                  <div style="margin: 0 auto; width: 50%"> 
-                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
-                    $12.00 </span> 
-                     <form action="/addToCart" method="post">
-                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
-                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
-                     </form>
-                  </div> 
 
-               </div>
-            </div>
-         </div>
-         
-              <div class="col-sm-4">
-            <div class="card" style="width: 18rem; border: none;">
-               <div class="card-body" style="width: 18rem;">
-                  <h5 class="card-title"></h5>
-                  <p class="card-text">
-                  
-                  <img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt">
-                  <hr />
-                  <div style="margin: 0 auto; width: 50%"> 
-                  <span class="storeItemText"> CSUMB Adidas Logo T-Shirt  <br /> 
-                    $12.00 </span> 
-                     <form action="/addToCart" method="post">
-                     <input type="hidden" name="itemId" value=1> <!-- Only items with ID starting with E are eligible for scholarship use -->
-                     <button type="submit" class="btn btn-warning" id="addCartButton">Buy </button>
-                     </form>
-                  </div> 
+	<div class="jumbotron" style="text-align: center">
+		<h3>
+			<span
+				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+				id="jumbo"> Bookstore</span> <br />
+		</h3>
+		<hr />
+	</div>
 
-               </div>
-            </div>
-         </div>
-         
-      </div>
-   </div>
-     
+	<div style="float: left; margin: 0.25em">
+		[[${session.user.getFirst_name()}]]'s Account Balance:
+		[[${session.user.getEth_account_balance()}]] <br />
+		[[${session.user.getFirst_name()}]]'s Scholarship Balance:
+		[[${session.user.getEth_account_balance()}]] <br />
+	</div>
+	<br />
+	<br />
+	<br />
+
+	<!-- 3 Columns/Items per row -->
+	<div id="content">
+		<div class="container">
+			<div class="row">
+			<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+
+								<img th:src="@{images/AdidasShirt.png}" alt="CSUMB Adidas Shirt"
+									src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Adidas Logo T-Shirt</nobr> $12.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="1">
+									<!-- Only items with ID starting with E are eligible for scholarship use -->
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+
+								<!-- @Antonio, all images should be a uniform size, saved from the Bookstore site and resized to 200 Hor. x 191 Vert. pixels. -->
+								<img th:src="@{images/OtterCrew.png}"
+									alt="CSUMB Otters Crew Sweatshirt" width="300" height="190"
+									src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Otters Crew Sweatshirt</nobr> $38.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="2">
+									<!-- Only items with ID starting with E are eligible for scholarship use -->
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+
+								<!-- @Antonio, all images should be a uniform size, saved from the Bookstore site and resized to 200 Hor. x 191 Vert. pixels. -->
+								<img th:src="@{images/HoodSweat.png}"
+									alt="CSUMB Otters Hooded Sweatshirt" width="300" height="190"
+									src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Otters Hooded Sweatshirt </nobr> $45.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="3">
+									<!-- Only items with ID starting with E are eligible for scholarship use -->
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/dadshirt.png}" alt="CSUMB Dad T-shirt"
+									width="300" height="190" src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Dad T-shirt</nobr> $19.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="4"> 
+									<button type="submit" class="btn btn-warning" 
+									id="addCartButton">Buy</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/OtterHat.png}" alt="CSUMB Otters Hat"
+									width="300" height="190" src="" >
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Otters Hat</nobr>
+									$24.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="5">
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/ZypherHat.png}" alt="CSUMB Adjustable Cap"
+									width="300" height="190" src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>CSUMB Adjustable Cap</nobr> $22.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="6">
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/DatabaseBook.png}"
+									alt="Database Book" width="150" height="190" src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>Database Book</nobr> $70.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="7">
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/MachineBook.png}"
+									alt="Machine Book" width="150" height="190" src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>Machine Learning Book </nobr> $60.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="8">
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-sm-4">
+					<div class="card" style="width: 18rem; border: none;">
+						<div class="card-body" style="width: 18rem;">
+							<h5 class="card-title"></h5>
+							<p class="card-text">
+								<img th:src="@{images/Codingbook.png}"
+									alt="Coding Interview Book" width="150" height="190" src="">
+							</p>
+							<hr />
+							<div style="margin: 0 auto; width: 50%">
+								<span class="storeItemText"><nobr>Coding Interview Book</nobr> $50.00 </span>
+								<form action="/addToCart" method="post">
+									<input type="hidden" name="itemId" value="9">
+									<!-- Only items with ID starting with E are eligible for scholarship use -->
+									<button type="submit" class="btn btn-warning"
+										id="addCartButton">Buy</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
