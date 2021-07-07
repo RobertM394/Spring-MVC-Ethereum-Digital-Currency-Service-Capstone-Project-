@@ -68,4 +68,13 @@ PRIMARY KEY (id)
 
 @Insert Statements
 INSERT INTO InventoryItem (scholarship_eligible, name, price, image_source)
-VALUES (false, "CSUMB Adidas Logo T-Shirt", 12, "images/AdidasShirt.png");
+VALUES (false, "CSUMB Adidas Logo T-Shirt", 12, "images/AdidasShirt.png"),
+(false, "CSUMB Otters Crew Sweatshirt", 38, "images/OtterCrew.png"),
+(false, "CSUMB Otters Hooded Sweatshirt", 45, "images/HoodSweat.png"),
+(false, "CSUMB Dad T-Shirt", 19, "images/OtterTee.png"),
+(false, "CSUMB Otters Hat", 24, "images/OtterHat.png"),
+(false, "CSUMB Adjustable Cap", 22, "images/ZypherHat.png"),
+(true, "Database Book", 70, "images/DatabaseBook.png"),
+(true, "Machine Learning Book", 60, "images/MachineBook.png"),
+(true, "Coding Interview Book", 50, "images/Codingbook.png")
+
