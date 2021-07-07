@@ -22,7 +22,7 @@
 			<div class="col-sm-4">
 				<div class="card" style="width: 18rem; border: none;">
 					<div class="card-body">
-						<h5 class="card-title"><span sec:authentication="name"></span>'s Account Information </h5>
+						<h5 class="card-title"><span sec:authentication="principal.fullName"></span>'s Account Information </h5>
 						<hr />
 					  <p class="card-text"  style="width: 35rem;">
 							Name: <span sec:authentication="principal.fullName"></span> <br />

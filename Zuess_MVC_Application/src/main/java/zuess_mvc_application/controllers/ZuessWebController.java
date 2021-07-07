@@ -63,8 +63,8 @@ public class ZuessWebController {
 		return "index.html";
 	}
 	
-	@GetMapping("/helppage")
-	public String getHelp() {
+	@GetMapping("/help")
+	public String getHelpPage() {
 		return "help_page.html";
 	}
 	@GetMapping("/registration")
@@ -248,11 +248,19 @@ public class ZuessWebController {
 	/***Custom Controller Functions***/
 	public int getCartTotal(HttpSession session) {
 		int total = 0;
+		int scholarshipEligibleAmount = 0; 
 		for (InventoryItem item : cartItemsList) {
 			total += item.getPrice();
+			
+			if (item.isScholarship_eligible()) {
+				scholarshipEligibleAmount += item.getPrice();
+			}
 		}
 		session.setAttribute("total", total);
+		session.setAttribute("scholarshipEligibleAmount", scholarshipEligibleAmount);
 		return total;
 	}
+	
+	
 	
 }

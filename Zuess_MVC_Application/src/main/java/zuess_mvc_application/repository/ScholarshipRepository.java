@@ -13,7 +13,7 @@ import zuess_mvc_application.domain.*;
 @Repository
 public interface ScholarshipRepository extends JpaRepository<Scholarship, Long> {
 	
-	@Query(value="SELECT * FROM scholarships", nativeQuery=true)
+	@Query(value="SELECT * FROM scholarships GROUP BY recipient_eth_id", nativeQuery=true)
 	List<Scholarship> getActiveScholarships();
 	
 	@Query(value="SELECT * FROM scholarships WHERE recipient_id = ?1", nativeQuery=true)
