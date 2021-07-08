@@ -72,15 +72,15 @@
 								<br />
 
 
-								<form action="/submitOrder" method="post">
-									<input type="checkbox" name="useScholarship"> <label
+								<form action="/submitNewOrder" method="post">
+									<input type="checkbox" name="useScholarship" value=true> <label
 										for="useScholarship"> Apply Scholarship Funds </label> <label
 										for="scholarshipAmount" style="font-size: 0.8em;"> <nobr>
 											You may use up to $<span th:text="${session.scholarshipEligibleAmount}"></span> of your current $<span
 												th:text="${session.user.getEth_account_balance()}"></span>
 											scholarship balance on this order.
 										</nobr>
-									</label> <input type="number" placeholder="10" name="scholarshipAmount"
+									</label> <input type="number" value=0 name="scholarshipAmount"
 										style="margin: 0.25em;"> <br /> <br />
 
 									<button type="submit" class="btn btn-warning"

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org"
+   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
+<head th:replace="fragments :: header">
+<meta charset="ISO-8859-1">
+<title>Order Confirmation Page</title>
+</head>
+
+<body>
+
+   <div class="jumbotron" style="text-align: center">
+      <h3>
+         <span
+            style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+            id="jumbo"> Thank You for Shopping With Us! </span> <br />
+      </h3>
+      <hr />
+   </div>
+
+   <div class="container">
+      <div class="row">
+         <div class="col-sm-4">
+            <div class="card" style="width: 18rem; border: none;">
+               <div class="card-body">
+                  <h3 class="card-title"><span sec:authentication="principal.fullName"></span>'s Order Confirmation </h3>
+                  <hr />
+                   <h6> Total: $<span th:text="${session.transaction.getTransaction_total()}"></span> </h6>
+                   <h6> Scholarship Funds Used: <nobr> $<span th:text="${session.transaction.getScholarship_funds_used()}"></span> </nobr> </h6>  
+                   <h6> Items: <span th:text="${session.transaction.getItems_list()}"></span> </h6>
+               </div>
+            </div>
+         </div>
+      </div>
+     </div>
+
+</body>
+</html>

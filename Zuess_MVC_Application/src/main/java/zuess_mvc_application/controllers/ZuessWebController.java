@@ -33,6 +33,9 @@ public class ZuessWebController {
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 	
+	@Autowired 
+	StoreTransactionService storeTransactionService;
+	
 	@Autowired
 	ScholarshipService scholarshipService;
 	
@@ -80,7 +83,9 @@ public class ZuessWebController {
 	
 	/***Store Routes***/
 	@GetMapping("/store")
-	public String getStoreHomepage(HttpSession session) {		
+	public String getStoreHomepage(HttpSession session, Principal principal) {		
+		List<StoreTransaction> transactionsList = storeTransactionService.getTransactionsHistoryByUserId(principal.getName(), 5);
+		session.setAttribute("transactionsList", transactionsList);
 		return "store_homepage";
 	}
 	
@@ -91,8 +96,19 @@ public class ZuessWebController {
 		InventoryItem item = inventoryService.getInventoryItemById(itemId);
 		cartItemsList.add(item);
 		session.setAttribute("cartItemsList", cartItemsList);
-		
 		return "store_homepage";
+	}
+	
+	@PostMapping("/submitNewOrder")
+	public String submitNewOrder(HttpSession session, Principal principal,
+			@RequestParam(required = false, name = "scholarshipAmount") int scholarshipAmount,
+			@RequestParam(required = false, name = "useScholarship") boolean useScholarship
+			){
+		if (useScholarship != true) scholarshipAmount = 0;
+		StoreTransaction transaction = storeTransactionService.submitNewOrder(cartItemsList, scholarshipAmount, principal.getName());
+		session.setAttribute("transaction", transaction);
+		cartItemsList.clear();
+		return "order_confirmation";
 	}
 	
 	@GetMapping("/checkout")
@@ -100,7 +116,6 @@ public class ZuessWebController {
 		getCartTotal(session);
 		return "store_checkout";
 	}
-	
 	
 	/***Admin Portal Routes***/
 	@GetMapping("/adminPortal")

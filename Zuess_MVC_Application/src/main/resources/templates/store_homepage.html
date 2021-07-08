@@ -22,7 +22,44 @@
 		[[${session.user.getEth_account_balance()}]] <br />
 		[[${session.user.getFirst_name()}]]'s Scholarship Balance:
 		[[${session.user.getEth_account_balance()}]] <br />
+		
+		 <div style="float: right; margin: 0.25em">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderHistoryModal" id= "butMa"> View Order History </button>
+      </div>
 	</div>
+	
+	
+	<!-- Order History Modal -->
+               <div class="modal fade" id="orderHistoryModal" tabindex="-1"
+                    aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title"> <span sec:authentication="principal.fullName"></span>'s Order History</h5>
+                                 
+                   <th:block th:each="transaction : ${session.transactionsList}">
+                     <div class="container">
+                        <div class="row">
+                         <div class="col-sm-4">
+                           <div class="card" style="width: 18rem; border: none;">
+                             <div class="card-body">
+                                <h6> Total: $<span th:text="${transaction.getTransaction_total()}"></span> </h6>
+                                <h6> Scholarship Funds Used: <nobr> $<span th:text="${transaction.getScholarship_funds_used()}"></span> </nobr> </h6>  
+                                <h6> Items: <span th:text="${transaction.getItems_list()}"></span> </h6>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                 </div>
+               </th:block>
+                               
+                  </div>
+               </div>
+               </div>
+            </div>
+            <!-- End Order History modal code -->
+	
+
 	<br />
 	<br />
 	<br />
@@ -239,3 +276,6 @@
 	</div>
 </body>
 </html>
+<!-- Image References:
+https://www.bkstr.com/csumontereybaystore/home
+ -->

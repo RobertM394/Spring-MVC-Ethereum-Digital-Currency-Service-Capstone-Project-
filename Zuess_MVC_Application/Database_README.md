@@ -55,6 +55,16 @@ CREATE TABLE InventoryItem (
     PRIMARY KEY (id)
 );
 
+CREATE TABLE store_transactions(
+   id INT NOT NULL AUTO_INCREMENT,
+   user_id INT,
+   transaction_total INT,
+   scholarship_funds_used INT,
+   items_list VARCHAR(500),
+   transaction_date DATE,
+   PRIMARY KEY (id)
+)
+
 CREATE TABLE transactions(
 id INT NOT NULL AUTO_INCREMENT,
 transaction_hash VARCHAR(50),
