@@ -84,8 +84,15 @@ public class ZuessWebController {
 	/***Store Routes***/
 	@GetMapping("/store")
 	public String getStoreHomepage(HttpSession session, Principal principal) {		
+		List<InventoryItem> inventoryItemsList = inventoryService.getAllInventoryItems();
 		List<StoreTransaction> transactionsList = storeTransactionService.getTransactionsHistoryByUserId(principal.getName(), 5);
+		session.setAttribute("inventoryItemsList", inventoryItemsList);
 		session.setAttribute("transactionsList", transactionsList);
+		
+		for (InventoryItem item : inventoryItemsList) {
+			System.out.println(item.getName());
+		}
+		
 		return "store_homepage";
 	}
 	
@@ -99,6 +106,21 @@ public class ZuessWebController {
 		return "store_homepage";
 	}
 	
+	@GetMapping("/checkout")
+	public String getCheckoutPage(HttpSession session) {
+		getCartTotal(session);
+		return "store_checkout";
+	}
+	
+	@PostMapping("/removeCartItem")
+	public String removeCartItem(HttpSession session,
+			@RequestParam("itemIndex") int itemIndex) {
+			cartItemsList.remove(itemIndex);
+			session.setAttribute("cartItemsList", cartItemsList);
+			getCartTotal(session);
+		return "store_checkout";
+	}
+	
 	@PostMapping("/submitNewOrder")
 	public String submitNewOrder(HttpSession session, Principal principal,
 			@RequestParam(required = false, name = "scholarshipAmount") int scholarshipAmount,
@@ -109,12 +131,6 @@ public class ZuessWebController {
 		session.setAttribute("transaction", transaction);
 		cartItemsList.clear();
 		return "order_confirmation";
-	}
-	
-	@GetMapping("/checkout")
-	public String getCheckoutPage(HttpSession session) {
-		getCartTotal(session);
-		return "store_checkout";
 	}
 	
 	/***Admin Portal Routes***/
@@ -249,12 +265,12 @@ public class ZuessWebController {
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		
-			String FROM_ADDRESS = "0x6653089355F411b2eEb7ba45912317a4b2F57a40";
-			String TO_ADDRESS = "0x0343A271bA0D711975C5AEb1EB97EEB9eCc8d0b7";
-			
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
-			blockchainService.transferFundsAsStandardUser(FROM_ADDRESS, TO_ADDRESS, 10);
+			
+			String FROM_ADDRESS = user.getEth_account_id();
+			
+			blockchainService.transferUsingCustomFromAddress(otterCoin, FROM_ADDRESS, ethToAddress, transferAmount);
 			
 		return "standard_user_account";
 	}

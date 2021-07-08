@@ -33,8 +33,8 @@ $( document ).ready(function(){
 </button>
 
 <th:block th:if="!${session.deployed}"> 
-<br /> <br />
-<span>Please begin by deploying a Smart Contract with your Ethereum Private Key </span>
+<br /> 
+<span> Please begin by deploying a Smart Contract with your Ethereum Private Key. </span>
 </th:block>
 
 <!-- Modal -->
@@ -90,7 +90,7 @@ $( document ).ready(function(){
  <div style="padding: 1em">
    <form th:action="@{/adminActions}" method="post">
    <h5> Display Account Balance <label for="getBalanceOfAddress"> </label> </h5>
-      <input type="text" name="getBalanceOfAddress" placeholder="0x68c176f609F45A62D3473c6bdD279f47d0508E6e">  
+      <input type="text" name="getBalanceOfAddress" placeholder="Ethereum Id">  
       <th:block th:if="${session.accountBalance} != null"> Balance is: <span th:text="${session.accountBalance}"> </span> </th:block>
       <br />
       <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMc">
@@ -126,7 +126,7 @@ $( document ).ready(function(){
           </th:block>
           </table>
           <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
-          <input type="number" name="transferAmount" placeholder="50"> <br /> <br /> 
+          <input type="number" name="transferAmount" value=100> <br /> <br /> 
           <button type="submit" class="btn btn-primary"> Add Funds </button>
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
           </form>
@@ -221,12 +221,11 @@ $( document ).ready(function(){
       </div>
      </div>
 <!-- End Scholarships Content -->
-
 </th:block>
+<!-- Moved CSUMB logo to navbar -->  
 </body>
    <div id="footerLogo">
-      <img src="../images/otter.png" alt="CSUMB Otter Logo" th:src="@{images/otter.png}" style="width:50px;height:25px;"/>
-      <p >Zeuss Inc.&#169;</p>
+      <p >&#169;Zuess</p>
     </div>  
 </html>
 
