@@ -12,37 +12,40 @@
 		<h3>
 			<span
 				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
-				id="jumbo"> Bookstore Checkout </span> <br />
+				id="jumbo"> CSUMB Bookstore Checkout </span> <br />
 		</h3>
 		<hr />
 	</div>
 
 	<div class="flex-child" style="float: left; margin: 0.25em">
-		[[${session.user.getFirst_name()}]]'s Account Balance:
+		[[${session.user.getFirst_name()}]]'s Ethereum Funds:
 		[[${session.user.getEth_account_balance()}]] <br />
-		[[${session.user.getFirst_name()}]]'s Scholarship Balance:
+		[[${session.user.getFirst_name()}]]'s Ethereum Scholarship Funds:
 		[[${session.user.getEth_account_balance()}]] <br />
 	</div>
 	<br />
 	<br />
 	<br />
 	<!-- 3 Columns/Items per row -->
-	<div class="flex-containter">
+	<div class="flex-containter" style="float: left">
 		<div class="container">
 			<div class="row">
 				<div class="flex-child">
 					<div class="col-sm-4">
 						<div class="card" style="border: none">
 							<div class="card-body">
-								<h2 class="card-title">Order Summary</h2>
+								<h4 class="card-title"> <nobr> Order Summary </nobr> </h4>
 								<p class="card-text" style="width: 50rem;"></p>
-								<hr />
+							  <hr />
 
 								<table class="table">
-									<th:block th:each="item : ${session.cartItemsList}">
-										<tr>
-											<td> <span th:text="${item.getName()}"></span>
-												<br /> Price: $<span th:text="${item.getPrice()}"> </span>
+									<th:block th:each="item, iteration : ${session.cartItemsList}">
+										<tr style="border: none">
+											<td style="border: none"> <nobr> <span th:text="${item.getName()}"></span> — $<span th:text="${item.getPrice()}"> </span>
+											<form action="/removeCartItem" method="post">
+											<input type="hidden" name="itemIndex" th:value="${iteration.index}"> 
+											<button style="font-size: 0.75em;" type="submit" class="btn btn-warning" id="removeItem">Remove </button> 
+											</form>
 											</td>
 										</tr>
 									</th:block>
@@ -54,38 +57,28 @@
 				<div class="flex-child">
 					<div class="col-sm-4">
 
-						<div class="card" style="border: none;">
+						<div class="card" style="border: none; float: right;">
 							<div class="card-body" style="width: 18rem;">
-								<h2 class="card-title">Order Total</h2>
+								<h4 class="card-title"><nobr> Order Total: $<span th:text="${session.total}"></span> </nobr></h4>
 								<p class="card-text"></p>
 								<hr />
-
-								<h5>
-									<nobr>
-										Subtotal (<span th:text="${session.cartItemsList.size()}"></span>
-										items) $<span th:text="${session.total}"></span>
-									</nobr>
-								</h5>
-								<h4>
-									Total $<span th:text="${session.total}"></span>
-								</h4>
-								<br />
-
-
-								<form action="/submitOrder" method="post">
-									<input type="checkbox" name="useScholarship"> <label
-										for="useScholarship"> Apply Scholarship Funds </label> <label
+								<form action="/submitNewOrder" method="post">
+									<nobr> <input type="checkbox" name="useScholarship" value=true> <label
+										for="useScholarship">  Apply Scholarship Funds to Order </nobr> </label> <label
 										for="scholarshipAmount" style="font-size: 0.8em;"> <nobr>
 											You may use up to $<span th:text="${session.scholarshipEligibleAmount}"></span> of your current $<span
 												th:text="${session.user.getEth_account_balance()}"></span>
 											scholarship balance on this order.
 										</nobr>
-									</label> <input type="number" placeholder="10" name="scholarshipAmount"
+									</label> <input type="number" value=0 name="scholarshipAmount"
 										style="margin: 0.25em;"> <br /> <br />
 
 									<button type="submit" class="btn btn-warning"
 										id="addCartButton">Place Your Order</button>
 								</form>
+								<div th:if="${session.transactionError} == true" class="alert alert-warning" role="alert">
+                        <p style="font-size: 0.75em;">  This transaction could not be processed! Please confirm you have enough Ethereum funds and a valid Ethereum ID. </p>
+                        </div>
 							</div>
 						</div>
 					</div>

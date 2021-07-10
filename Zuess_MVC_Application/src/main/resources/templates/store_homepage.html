@@ -3,7 +3,7 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:replace="fragments :: header">
 <meta charset="ISO-8859-1">
-<title>User Account Page</title>
+<title>Bookstore Homepage</title>
 </head>
 
 <body>
@@ -12,17 +12,56 @@
 		<h3>
 			<span
 				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
-				id="jumbo"> Bookstore</span> <br />
+				id="jumbo"> CSUMB Bookstore</span> <br />
 		</h3>
 		<hr />
 	</div>
+	
+	<div style="float: right; margin: 0.25em">
+	 <a th:href="@{/checkout}" th:if="${session.cartItemsList}" type="button" class="btn btn-primary"> Checkout Cart(<span style="color:white" th:text="${session.cartItemsList.size()}"></span>)</a>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#orderHistoryModal"> View Order History </button>
+      </div>
 
 	<div style="float: left; margin: 0.25em">
-		[[${session.user.getFirst_name()}]]'s Account Balance:
-		[[${session.user.getEth_account_balance()}]] <br />
-		[[${session.user.getFirst_name()}]]'s Scholarship Balance:
-		[[${session.user.getEth_account_balance()}]] <br />
+		[[${session.user.getFirst_name()}]]'s Ethereum Balance: 
+		$[[${session.user.getEth_account_balance()}]] <br />
+		[[${session.user.getFirst_name()}]]'s Ethereum Scholarship Balance: 
+		$[[${session.user.getEth_account_balance()}]] <br />
 	</div>
+	
+	
+	<!-- Order History Modal -->
+               <div class="modal fade" id="orderHistoryModal" tabindex="-1"
+                    aria-labelledby="orderHistoryModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h5 class="modal-title"> <span sec:authentication="principal.fullName"></span>'s Order History</h5>
+                            <hr/> <br />
+                   
+                     <div class="container">
+                     <th:block th:each="transaction : ${session.transactionsList}">
+                        <div class="row">
+                         <div class="col-sm-4">
+                           <div class="card" style="width: 18rem; border: none;">
+                             <div class="card-body">
+                                <h6> Order Total: $<span th:text="${transaction.getTransaction_total()}"></span> </h6>
+                                <h6> Scholarship Funds Used: <nobr> $<span th:text="${transaction.getScholarship_funds_used()}"></span> </nobr> </h6>  
+                                <h6> Items: <span th:text="${transaction.getItems_list()}"></span> </h6>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  </th:block>
+                 </div>
+                               
+                  </div>
+               </div>
+               </div>
+            </div>
+            <!-- End Order History modal code -->
+	
+
 	<br />
 	<br />
 	<br />
@@ -239,3 +278,6 @@
 	</div>
 </body>
 </html>
+<!-- Image References:
+https://www.bkstr.com/csumontereybaystore/home
+ -->

@@ -18,7 +18,7 @@ public class EthereumAccounts {
 	
 	public String assignNewEthereumAccount() {
 		
-		for (int i = 1; i < ethAccountsListCopy.size(); i++) {
+		for (int i = 2; i < ethAccountsListCopy.size(); i++) {
 			String assignedAccount = ethAccountsListCopy.get(i);
 			ethAccountsListCopy.remove(i);
 			numberOfAvailableAccounts -= 1;

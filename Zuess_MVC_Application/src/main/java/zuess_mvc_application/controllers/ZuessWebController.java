@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class ZuessWebController {
 	@Autowired
 	CustomUserDetailsService customUserDetailsService;
 	
+	@Autowired 
+	StoreTransactionService storeTransactionService;
+	
 	@Autowired
 	ScholarshipService scholarshipService;
 	
@@ -51,6 +55,7 @@ public class ZuessWebController {
 	private static BlockchainService blockchainService = new BlockchainService(); //This must be declared as an static or instance variable -- do not @Autowire.
 	private static List<String> ethereumAccountsList = blockchainService.getEthereumUserAccounts();
 	private static EthereumAccounts ethereumAccounts = new EthereumAccounts(ethereumAccountsList);
+	private static String storeEthereumAddress = ethereumAccountsList.get(1);
 	private static OtterCoin otterCoin;
 	
 	List<InventoryItem> cartItemsList = new ArrayList<>();
@@ -78,9 +83,22 @@ public class ZuessWebController {
 		return "login";
 	}
 	
-	/***Store Routes***/
+	/***Store Routes
+	 * @throws Exception ***/
 	@GetMapping("/store")
-	public String getStoreHomepage(HttpSession session) {		
+	public String getStoreHomepage(HttpSession session, Principal principal) throws Exception {	
+		
+		User user = syncEthereumAndDatabaseAccountBalances(otterCoin, principal.getName());
+		List<InventoryItem> inventoryItemsList = inventoryService.getAllInventoryItems();
+		List<StoreTransaction> transactionsList = storeTransactionService.getTransactionsHistoryByUserId(principal.getName(), 5);
+		session.setAttribute("user", user);
+		session.setAttribute("inventoryItemsList", inventoryItemsList);
+		session.setAttribute("transactionsList", transactionsList);
+		
+		for (InventoryItem item : inventoryItemsList) {
+			System.out.println(item.getName());
+		}
+		
 		return "store_homepage";
 	}
 	
@@ -91,16 +109,45 @@ public class ZuessWebController {
 		InventoryItem item = inventoryService.getInventoryItemById(itemId);
 		cartItemsList.add(item);
 		session.setAttribute("cartItemsList", cartItemsList);
-		
 		return "store_homepage";
 	}
 	
 	@GetMapping("/checkout")
 	public String getCheckoutPage(HttpSession session) {
 		getCartTotal(session);
+		session.setAttribute("transactionError", false);
 		return "store_checkout";
 	}
 	
+	@PostMapping("/removeCartItem")
+	public String removeCartItem(HttpSession session,
+			@RequestParam("itemIndex") int itemIndex) {
+			cartItemsList.remove(itemIndex);
+			session.setAttribute("cartItemsList", cartItemsList);
+			getCartTotal(session);
+		return "store_checkout";
+	}
+	
+	@PostMapping("/submitNewOrder")
+	public String submitNewOrder(HttpSession session, Principal principal,
+			@RequestParam(required = false, name = "scholarshipAmount") int scholarshipAmount,
+			@RequestParam(required = false, name = "useScholarship") boolean useScholarship
+			) throws IOException, InterruptedException, ExecutionException{
+		if (useScholarship != true) scholarshipAmount = 0;
+		int total = getCartTotal(session);
+		
+		Boolean transferSuccess = storeTransactionService.submitNewOrderToEthereum(otterCoin, storeEthereumAddress, principal.getName(), total);
+		if(transferSuccess) {
+			StoreTransaction transaction = storeTransactionService.submitNewOrderToDatabase(cartItemsList, scholarshipAmount, principal.getName());
+			session.setAttribute("transaction", transaction);
+			cartItemsList.clear();
+			return "order_confirmation";
+		} else {
+			session.setAttribute("transactionError", true);
+			return "store_checkout";
+		}
+
+	}
 	
 	/***Admin Portal Routes***/
 	@GetMapping("/adminPortal")
@@ -213,15 +260,7 @@ public class ZuessWebController {
 	@GetMapping("/accountInfo")
 	public String getUserAccountDetails(Principal principal) throws Exception {
 		
-		//Load user details
-		String email = principal.getName();
-		User user = customUserDetailsService.retrieveUserByEmail(email);
-		
-		//Sync user's Zuess (database) and Ethereum (blockchain) account data
-		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
-		scholarshipService.syncEthereumAndDatabaseAllowances(otterCoin, ethereumAccountsList.get(0));
-		
-		//Add session attributes
+		User user = syncEthereumAndDatabaseAccountBalances(otterCoin, principal.getName());
 		List<Scholarship> currentUserScholarshipsList = scholarshipService.getScholarshipsByUserId(user.getId());
 		session.setAttribute("scholarshipsList", currentUserScholarshipsList);
 		session.setAttribute("user", user);
@@ -234,12 +273,12 @@ public class ZuessWebController {
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
 		
-			String FROM_ADDRESS = "0x6653089355F411b2eEb7ba45912317a4b2F57a40";
-			String TO_ADDRESS = "0x0343A271bA0D711975C5AEb1EB97EEB9eCc8d0b7";
-			
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
-			blockchainService.transferFundsAsStandardUser(FROM_ADDRESS, TO_ADDRESS, 10);
+			
+			String FROM_ADDRESS = user.getEth_account_id();
+			
+			blockchainService.transferUsingCustomFromAddress(otterCoin, FROM_ADDRESS, ethToAddress, transferAmount);
 			
 		return "standard_user_account";
 	}
@@ -261,6 +300,11 @@ public class ZuessWebController {
 		return total;
 	}
 	
-	
+	public User syncEthereumAndDatabaseAccountBalances(OtterCoin otterCoin, String userEmail) throws Exception {
+			User user = customUserDetailsService.retrieveUserByEmail(userEmail);
+			user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
+			scholarshipService.syncEthereumAndDatabaseAllowances(otterCoin, ethereumAccountsList.get(0));
+			return user;
+	}
 	
 }

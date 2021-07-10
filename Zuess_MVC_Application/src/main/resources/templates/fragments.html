@@ -18,14 +18,13 @@
 <header th:fragment="nav_bar">
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<div class = "container-fluid">
-			<span class="navbar-brand mb-0 h1"> <span style="text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);"> Zuess &#9889; Digital Currency Service</span>
-			</span>
-		
+			<span class="navbar-brand mb-0 h1"> <span style="text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);"> <img src="../images/otter.png" alt="CSUMB Otter Logo" th:src="@{images/otter.png}" style="width:50px;height:25px;"/> <span style="color: #d4af37;"> Zuess </span> Digital Currency Service</span>
+			</span> 
 		   <div style="float: right;" sec:authorize="isAuthenticated()">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navButtons">
 			<!-- @Jesse, can you have this only show with a TL if statement only when the user is logged in/authenticated? -->
-			<th:block th:if="${session.cartItemsList}">  <a href="/checkout" style="color: #112E51;"> My Cart:</a>(<span th:text="${session.cartItemsList.size()}"></span>) </th:block>
-			   <li>
+			   <th:block th:if="${session.deployed}">
+		   <li>
                <a th:href="@{/store}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Bookstore </a>
             </li>
 				<li>
@@ -37,6 +36,7 @@
 				<li>
 					<a th:href="@{/help}" target="_blank" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Help Page </a>
 				</li>
+				</th:block>
 				<li>
 					<a th:href="@{/logout}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Logout </a>
 				</li>

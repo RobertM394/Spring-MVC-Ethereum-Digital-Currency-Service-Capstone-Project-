@@ -1,5 +1,7 @@
 package zuess_mvc_application.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +17,10 @@ public class InventoryService {
 	public InventoryItem getInventoryItemById(int id) {
 		InventoryItem item = inventoryRepository.getInventoryItemByID(id);
 		return item; 
+	}
+	
+	public List<InventoryItem> getAllInventoryItems(){
+		List<InventoryItem> inventoryItemsList = inventoryRepository.getAllInventoryItems();
+		return inventoryItemsList;
 	}
 }

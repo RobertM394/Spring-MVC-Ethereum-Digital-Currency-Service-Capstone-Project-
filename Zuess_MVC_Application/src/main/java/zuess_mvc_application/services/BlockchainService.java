@@ -30,6 +30,7 @@ import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.Request;
+import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
@@ -147,12 +148,12 @@ public class BlockchainService {
 	}
 	
 	/***Custom Transactions***/
-	//transferFundsAsStandardUser() calls a Smart Contract method using a specified from address 
-	public void transferFundsAsStandardUser(String fromAddress, String toAddress, int transferAmount) throws IOException{
+	//transferFundsUsingCustomFromAddress() calls a Smart Contract method using a specified from address 
+	public boolean transferUsingCustomFromAddress(OtterCoin otterCoin, String fromAddress, String toAddress, int transferAmount) throws IOException, InterruptedException, ExecutionException{
 		
-		BigInteger gasPrice = getCurrentGasPrice();
-		
-		//Determine number of transactions from a particular address to retrieve nonce (prevents replay attacks)
+		Boolean success = true; 
+		BigInteger gasPrice = otterCoin.GAS_PRICE;
+		BigInteger gasLimit = otterCoin.GAS_LIMIT;
 		EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
 		BigInteger nonce = ethGetTransactionCount.getTransactionCount();
 				
@@ -161,12 +162,23 @@ public class BlockchainService {
 			 new org.web3j.abi.datatypes.Uint(BigInteger.valueOf(transferAmount))), // Function input parameters
 			 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Uint256>() {})
 			 );
-	
 		String encodedFunction = FunctionEncoder.encode(function);
-		Transaction transaction = Transaction.createContractTransaction(fromAddress, nonce, gasPrice, encodedFunction);
-		Request<?, EthSendTransaction> request = web3j.ethSendTransaction(transaction);
-		EthSendTransaction response = request.send();
-		System.out.print("\n Transfer function transaction hash: " + response.getResult() + "\n ");
+		
+		Transaction transaction = Transaction.createFunctionCallTransaction(fromAddress, nonce, gasPrice, gasLimit, otterCoin.getContractAddress(), 
+			 encodedFunction);
+		org.web3j.protocol.core.methods.response.EthSendTransaction transactionResponse = web3j.ethSendTransaction(transaction).sendAsync().get();
+		String transactionHash = transactionResponse.getTransactionHash();
+		
+		Response.Error error = transactionResponse.getError();
+		String result = transactionResponse.getResult();
+		String rawResponse = transactionResponse.getRawResponse();
+		
+		if (transactionResponse.getError() != null) { 
+			success = false;
+			return success;
+		}
+		//System.out.println(transactionHash + "Result " + result + "Raw Response " + rawResponse + "Error " + error.getMessage());
+		return success;
 	}
 	
 	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	
@@ -186,7 +198,7 @@ public class BlockchainService {
 		EthGasPrice ethGasPrice = web3j.ethGasPrice().send();
 		return ethGasPrice.getGasPrice();
 	}
-
+	
 }
 
 /***References:
