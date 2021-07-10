@@ -30,6 +30,7 @@ import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.RemoteFunctionCall;
 import org.web3j.protocol.core.Request;
+import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
@@ -148,8 +149,9 @@ public class BlockchainService {
 	
 	/***Custom Transactions***/
 	//transferFundsUsingCustomFromAddress() calls a Smart Contract method using a specified from address 
-	public void transferUsingCustomFromAddress(OtterCoin otterCoin, String fromAddress, String toAddress, int transferAmount) throws IOException, InterruptedException, ExecutionException{
+	public boolean transferUsingCustomFromAddress(OtterCoin otterCoin, String fromAddress, String toAddress, int transferAmount) throws IOException, InterruptedException, ExecutionException{
 		
+		Boolean success = true; 
 		BigInteger gasPrice = otterCoin.GAS_PRICE;
 		BigInteger gasLimit = otterCoin.GAS_LIMIT;
 		EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
@@ -167,7 +169,16 @@ public class BlockchainService {
 		org.web3j.protocol.core.methods.response.EthSendTransaction transactionResponse = web3j.ethSendTransaction(transaction).sendAsync().get();
 		String transactionHash = transactionResponse.getTransactionHash();
 		
-		System.out.println(transactionHash);
+		Response.Error error = transactionResponse.getError();
+		String result = transactionResponse.getResult();
+		String rawResponse = transactionResponse.getRawResponse();
+		
+		if (transactionResponse.getError() != null) { 
+			success = false;
+			return success;
+		}
+		//System.out.println(transactionHash + "Result " + result + "Raw Response " + rawResponse + "Error " + error.getMessage());
+		return success;
 	}
 	
 	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	

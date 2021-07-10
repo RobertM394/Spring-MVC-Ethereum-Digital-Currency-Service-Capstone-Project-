@@ -89,18 +89,18 @@ $( document ).ready(function(){
  <!-- End content that should appear in "Account Balance" modal -->  
  <div style="padding: 1em">
    <form th:action="@{/adminActions}" method="post">
-   <h5> Display Account Balance <label for="getBalanceOfAddress"> </label> </h5>
+   <h5> Display Ethereum Balance <label for="getBalanceOfAddress"> </label> </h5>
       <input type="text" name="getBalanceOfAddress" placeholder="Ethereum Id">  
       <th:block th:if="${session.accountBalance} != null"> Balance is: <span th:text="${session.accountBalance}"> </span> </th:block>
       <br />
       <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMc">
-       Account Balance
+       Ethereum Balance
       </button>   
    </form>
   </div>
 
 <div style="padding: 1em">
-  <h5> Transfer Funds to User Accounts </h5>
+  <h5> Transfer Ethereum Funds to User Accounts </h5>
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferModal" id= "butMa">
  Transfer Funds
 </button>
@@ -116,11 +116,16 @@ $( document ).ready(function(){
                 <h5> Select Account(s) by Ethereum ID </h5>
           <form th:action="@{/transferFunds}" method="post">
           <table class="table">
-          <th:block th:each="account : ${session.ethereumAccountsList}">
+          <th:block th:each="account, iteration : ${session.ethereumAccountsList}">
           <tr>
              <td>
                 <input type="checkbox" name="accounts" th:value="${account}">
-                <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> </label>  
+                <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> 
+                  <th:block th:switch="${iteration.index}"> 
+                  <span th:case=0><br /> (Administrator Account)</span>
+                  <span th:case=1><br /> (Bookstore Account)</span>
+                  </th:block> 
+                </label>  
              </td>
           </tr>
           </th:block>

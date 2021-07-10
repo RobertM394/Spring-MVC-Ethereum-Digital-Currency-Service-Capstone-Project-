@@ -29,7 +29,7 @@
 							Roles: <span sec:authentication="principal.authorities"></span>
 							<br /> 
 							Email: <span sec:authentication="name"></span> <br /> 
-							Account Balance: <span sec:authentication="principal.accountBalance"></span> <br /> 
+							Ethereum Funds: $<span th:text="${session.user.getEth_account_balance()}"></span> <br /> 
 							Ethereum ID: <span sec:authentication="principal.ethAccountId"></span> <br /> 
 							Organizational ID: <span sec:authentication="principal.organizationId"></span> <br />
                   </p>
