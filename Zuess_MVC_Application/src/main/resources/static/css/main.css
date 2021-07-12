@@ -114,10 +114,6 @@ img.resize {
 .storeItemText {
 	color: black;
 }
-#content{
-	display:grid;
-	grid-template-columns:repeat(3,fr);
-	max-width:auto;
-	margin: 0auto;
-	
+.card {
+  padding: 2rem 0rem;
 }
