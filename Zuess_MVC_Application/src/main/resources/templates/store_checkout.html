@@ -19,9 +19,9 @@
 
 	<div class="flex-child" style="float: left; margin: 0.25em">
 		[[${session.user.getFirst_name()}]]'s Ethereum Funds:
-		[[${session.user.getEth_account_balance()}]] <br />
+		$[[${session.user.getEth_account_balance()}]] <br />
 		[[${session.user.getFirst_name()}]]'s Ethereum Scholarship Funds:
-		[[${session.user.getEth_account_balance()}]] <br />
+		$[[${session.scholarshipBalance}]] <br />
 	</div>
 	<br />
 	<br />
@@ -67,7 +67,7 @@
 										for="useScholarship">  Apply Scholarship Funds to Order </nobr> </label> <label
 										for="scholarshipAmount" style="font-size: 0.8em;"> <nobr>
 											You may use up to $<span th:text="${session.scholarshipEligibleAmount}"></span> of your current $<span
-												th:text="${session.user.getEth_account_balance()}"></span>
+												th:text="${session.scholarshipBalance}"></span>
 											scholarship balance on this order.
 										</nobr>
 									</label> <input type="number" value=0 name="scholarshipAmount"
@@ -78,6 +78,9 @@
 								</form>
 								<div th:if="${session.transactionError} == true" class="alert alert-warning" role="alert">
                         <p style="font-size: 0.75em;">  This transaction could not be processed! Please confirm you have enough Ethereum funds and a valid Ethereum ID. </p>
+                        </div>
+                        <div th:if="${session.scholarshipTransactionError} == true" class="alert alert-warning" role="alert">
+                        <p style="font-size: 0.75em;">  This transaction could not be processed! You have insufficient Scholarship funds. </p>
                         </div>
 							</div>
 						</div>

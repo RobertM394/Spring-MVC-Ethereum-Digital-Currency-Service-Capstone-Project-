@@ -30,7 +30,7 @@
 		[[${session.user.getFirst_name()}]]'s Ethereum Balance:
 		$[[${session.user.getEth_account_balance()}]] <br />
 		[[${session.user.getFirst_name()}]]'s Ethereum Scholarship Balance:
-		$[[${session.user.getEth_account_balance()}]] <br />
+		$[[${session.scholarshipBalance}]] <br />
 	</div>
 
 
@@ -95,7 +95,7 @@
 					<img th:src="@{${InventoryItems.image_source}}" width="auto"
 						height="auto" src="" alt="">
 					<div class="card-body">
-						<h5 class="card-title"</h5>
+						<h5 class="card-title"></h5>
 						<nobr><span th:text="${InventoryItems.name}"
 							th:name="name">Product name</span></nobr>
 						$<span class="card-text" th:text="${InventoryItems.price}"

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -91,14 +92,12 @@ public class ZuessWebController {
 		User user = syncEthereumAndDatabaseAccountBalances(otterCoin, principal.getName());
 		List<InventoryItem> inventoryItemsList = inventoryService.getAllInventoryItems();
 		List<StoreTransaction> transactionsList = storeTransactionService.getTransactionsHistoryByUserId(principal.getName(), 5);
+		int scholarshipBalance = scholarshipService.getScholarshipBalanceFromBlockchain(otterCoin, ethereumAccountsList.get(0), principal.getName());
 		session.setAttribute("user", user);
 		session.setAttribute("inventoryItemsList", inventoryItemsList);
 		session.setAttribute("transactionsList", transactionsList);
-		
-		for (InventoryItem item : inventoryItemsList) {
-			System.out.println(item.getName());
-		}
-		
+		session.setAttribute("scholarshipBalance", scholarshipBalance);
+
 		return "store_homepage";
 	}
 	
@@ -132,21 +131,36 @@ public class ZuessWebController {
 	public String submitNewOrder(HttpSession session, Principal principal,
 			@RequestParam(required = false, name = "scholarshipAmount") int scholarshipAmount,
 			@RequestParam(required = false, name = "useScholarship") boolean useScholarship
-			) throws IOException, InterruptedException, ExecutionException{
+			) throws Exception{
 		if (useScholarship != true) scholarshipAmount = 0;
-		int total = getCartTotal(session);
 		
-		Boolean transferSuccess = storeTransactionService.submitNewOrderToEthereum(otterCoin, storeEthereumAddress, principal.getName(), total);
+		session.setAttribute("transactionError", false);
+		session.setAttribute("scholarshipTransactionError", false);
+		int total = getCartTotal(session);
+		String adminEthereumAddress = ethereumAccountsList.get(0);
+		List<String> singleTransactionReceiptsList = new ArrayList<>();
+		Boolean scholarshipTransferSuccess = storeTransactionService.spendScholarshipAllowance(otterCoin, principal.getName(), adminEthereumAddress, storeEthereumAddress, scholarshipAmount, singleTransactionReceiptsList);
+		
+		if (scholarshipTransferSuccess) {
+			total = total-scholarshipAmount;
+			int scholarshipBalance = scholarshipService.getScholarshipBalanceFromBlockchain(otterCoin, adminEthereumAddress, principal.getName());
+			session.setAttribute("scholarshipBalance", scholarshipBalance);
+		} else {
+			session.setAttribute("scholarshipTransactionError", true);
+			return "store_checkout";
+		}
+		
+		Boolean transferSuccess = storeTransactionService.submitNewOrderToEthereum(otterCoin, storeEthereumAddress, principal.getName(), total, singleTransactionReceiptsList);
 		if(transferSuccess) {
 			StoreTransaction transaction = storeTransactionService.submitNewOrderToDatabase(cartItemsList, scholarshipAmount, principal.getName());
 			session.setAttribute("transaction", transaction);
+			session.setAttribute("thisTransactionReceipt", singleTransactionReceiptsList);
 			cartItemsList.clear();
 			return "order_confirmation";
 		} else {
 			session.setAttribute("transactionError", true);
 			return "store_checkout";
 		}
-
 	}
 	
 	/***Admin Portal Routes***/
@@ -156,6 +170,7 @@ public class ZuessWebController {
 		String email = principal.getName();
 		User user = customUserDetailsService.retrieveUserByEmail(email);
 		session.setAttribute("user", user);
+		session.setAttribute("modalToShow", null);
 		return "admin_portal";
 	}
 	
@@ -182,8 +197,16 @@ public class ZuessWebController {
 			@RequestParam("accounts") List<String> accounts,
 			@RequestParam("transferAmount") int transferAmount
 			) throws Exception {
-		blockchainService.transferFunds(otterCoin, accounts, transferAmount);
+		List<TransactionReceipt> transactionReceiptList = blockchainService.transferFunds(otterCoin, accounts, transferAmount);
+		
+		for (TransactionReceipt receipt : transactionReceiptList) {
+			System.out.println("Tx " + receipt.getTransactionHash());
+		}
+		
 		double contractBalance = blockchainService.getContractBalance(otterCoin);
+		session.setAttribute("transferAmount", transferAmount);
+		session.setAttribute("transactionReceiptList", transactionReceiptList);
+		session.setAttribute("modalToShow", "fundsTransferModal");
 		session.setAttribute("contractBalance", contractBalance);
 
 		return "admin_portal";
@@ -216,13 +239,15 @@ public class ZuessWebController {
 			int recipient_id = user.getId();
 			String recipient_eth_id = user.getEth_account_id();
 			int scholarshipAmount = amount;
-			Scholarship scholarship = scholarshipService.grantNewScholarship(otterCoin, recipient_id, recipient_eth_id, scholarshipAmount, null);
+			TransactionReceipt scholarshipReceipt = scholarshipService.grantNewScholarship(otterCoin, recipient_id, recipient_eth_id, scholarshipAmount, null);
+			session.setAttribute("scholarshipReceipt", scholarshipReceipt);
+			session.setAttribute("scholarshipAmount", amount);
 		}
 		
 		scholarshipService.syncEthereumAndDatabaseAllowances(otterCoin, ethereumAccountsList.get(0));
 		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
+		session.setAttribute("modalToShow", "showScholarshipReceiptModal");
 		session.setAttribute("scholarshipsList", scholarshipsList);
-		
 		return "admin_portal";
 	}
 	
@@ -230,6 +255,7 @@ public class ZuessWebController {
 	public String viewScholarships(HttpSession session) throws Exception {
 		List<Scholarship> scholarshipsList = scholarshipService.getActiveScholarships();
 		session.setAttribute("scholarshipsList", scholarshipsList);
+		session.setAttribute("modalToShow", null);
 		return "admin_portal";
 	}
 	
@@ -262,8 +288,11 @@ public class ZuessWebController {
 		
 		User user = syncEthereumAndDatabaseAccountBalances(otterCoin, principal.getName());
 		List<Scholarship> currentUserScholarshipsList = scholarshipService.getScholarshipsByUserId(user.getId());
+		int scholarshipBalance = scholarshipService.getScholarshipBalanceFromBlockchain(otterCoin, ethereumAccountsList.get(0), principal.getName());
 		session.setAttribute("scholarshipsList", currentUserScholarshipsList);
 		session.setAttribute("user", user);
+		session.setAttribute("scholarshipBalance", scholarshipBalance);
+		session.setAttribute("modalToShow", null);
 		return "standard_user_account";
 	}
 	
@@ -275,12 +304,16 @@ public class ZuessWebController {
 		
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
+			List<String> transferReceipts = new ArrayList<>();
+			String fromAddress = user.getEth_account_id();
 			
-			String FROM_ADDRESS = user.getEth_account_id();
-			
-			blockchainService.transferUsingCustomFromAddress(otterCoin, FROM_ADDRESS, ethToAddress, transferAmount);
-			
-		return "standard_user_account";
+			blockchainService.transferUsingCustomFromAddress(otterCoin, fromAddress, ethToAddress, transferAmount, transferReceipts);
+			session.setAttribute("transferAmount", transferAmount);
+			session.setAttribute("userFundsTransferRecipient", user);
+			session.setAttribute("transferReceipts", transferReceipts);
+			session.setAttribute("modalToShow", "transferReceiptsModal");
+		
+			return "standard_user_account";
 	}
 	
 

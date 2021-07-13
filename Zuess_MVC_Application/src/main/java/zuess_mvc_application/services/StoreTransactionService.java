@@ -43,12 +43,17 @@ public class StoreTransactionService {
 		return transaction;
 	}
 	
-	public Boolean submitNewOrderToEthereum(OtterCoin otterCoin, String storeEthAddress, String userEmail, int orderTotal) throws IOException, InterruptedException, ExecutionException {
+	public Boolean submitNewOrderToEthereum(OtterCoin otterCoin, String storeEthAddress, String userEmail, int orderTotal, List<String> receiptList) throws IOException, InterruptedException, ExecutionException {
 		User user = userRepository.findByEmail(userEmail);
-		Boolean success = blockchainService.transferUsingCustomFromAddress(otterCoin, user.getEth_account_id(), storeEthAddress, orderTotal);
+		Boolean success = blockchainService.transferUsingCustomFromAddress(otterCoin, user.getEth_account_id(), storeEthAddress, orderTotal, receiptList);
 		return success;
 	}
 	
+	public Boolean spendScholarshipAllowance(OtterCoin otterCoin, String userEmail, String granterAddress, String storeEthAddress, int scholarshipFunds, List<String> receiptList) throws IOException, InterruptedException, ExecutionException {
+		User user = userRepository.findByEmail(userEmail);
+		Boolean success = blockchainService.spendAllowance(otterCoin, user.getEth_account_id(), granterAddress, storeEthAddress, scholarshipFunds, receiptList);
+		return success;
+	}
 	
 	public List<StoreTransaction> getTransactionsHistoryByUserId(String user_email, int number_of_transactions){
 		User user = userRepository.findByEmail(user_email);

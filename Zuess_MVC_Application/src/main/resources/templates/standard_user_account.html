@@ -7,6 +7,15 @@
 </head>
 
 <body>
+<!-- Custom Javascript Functions -->
+<script>
+$( document ).ready(function(){
+   var modalToShow = $('#modalToShow').val();
+   $(`#${modalToShow}`).modal('show'); 
+});
+</script>
+
+
 	<div class="jumbotron" style="text-align: center">
 		<h3>
 			<span
@@ -30,6 +39,7 @@
 							<br /> 
 							Email: <span sec:authentication="name"></span> <br /> 
 							Ethereum Funds: $<span th:text="${session.user.getEth_account_balance()}"></span> <br /> 
+							Ethereum Scholarship Funds: $<span th:text="${session.scholarshipBalance}"></span> <br /> 
 							Ethereum ID: <span sec:authentication="principal.ethAccountId"></span> <br /> 
 							Organizational ID: <span sec:authentication="principal.organizationId"></span> <br />
                   </p>
@@ -133,6 +143,30 @@
       </div>
      </div>
 		
+		
+<!-- Transfer Funds Receipt Modal -->  
+<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+<th:block th:if="${session.transferReceipts}"> 
+   <input type="hidden" id="modalToShow" th:value="${session.modalToShow}">  
+       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="transferReceiptsModal">
+         <div class="modal-dialog modal-lg">
+         <div class="modal-content" style="text-align: center;">
+         <br />
+         <h3 style="text-align: center;"> <img src="images/eth-diamond.png" width="7%"
+                  height="7%"> Your Ethereum Funds Transfer Receipt  </h3>
+         <hr />
+         Ethereum Transfer Receipt: <span th:text="${session.transferReceipts.get(0)}"></span>
+         <br />
+         Recipient Name: <span th:text="${session.userFundsTransferRecipient.getFirst_name()}"></span> <span th:text="${session.userFundsTransferRecipient.getLast_name()}"></span>
+         <br />
+         Recipient Email Address: <span th:text="${session.userFundsTransferRecipient.getEmail()}"></span>
+         <br />
+         Funds Transfer Amount: <nobr> $<span th:text="${session.transferAmount}"></span> </nobr>
+         <br />
+        </div>
+      </div>
+     </div>
+</th:block>
 </body>
 </html>
 
