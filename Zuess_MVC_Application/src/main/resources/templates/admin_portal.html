@@ -7,6 +7,8 @@
 <!-- Custom Javascript Functions -->
 <script>
 $( document ).ready(function(){
+	var modalToShow = $('#modalToShow').val();
+	$(`#${modalToShow}`).modal('show'); 
 });
 </script>
 
@@ -66,26 +68,6 @@ $( document ).ready(function(){
 
 <th:block th:if="${session.deployed}"> 
  
-  <!-- Begin content that should appear in "Account Balance" modal -->
-    <!-- Commenting out modal that does not pop
-   <div class="modal fade" id="balanceModal" tabindex="-1" aria-labelledby="balanceModalLabel" aria-hidden="true" >
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Account Balance</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <h3> Just Testing </h3> 
-        </div>
-        <div class="modal-footer">
-           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-      </div>
-    </div>
-   </div>
-</div>
-   -->
-
  <!-- End content that should appear in "Account Balance" modal -->  
  <div style="padding: 1em">
    <form th:action="@{/adminActions}" method="post">
@@ -227,7 +209,62 @@ $( document ).ready(function(){
      </div>
 <!-- End Scholarships Content -->
 </th:block>
-<!-- Moved CSUMB logo to navbar -->  
+
+
+<!-- Transaction Receipts Modals -->
+<!-- Transfer Funds Receipts Modal -->
+<input type="hidden" id="modalToShow" th:value="${session.modalToShow}">  
+
+<th:block th:if="${session.transactionReceiptList}"> 
+<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="fundsTransferModal">
+         <div class="modal-dialog modal-lg">
+         <div class="modal-content" style="text-align: center;">
+         <br />
+         <h3> 
+         <img src="images/eth-diamond.png" width="7%"
+                  height="7%">
+         Ethereum Transfer Receipts </h3>
+         <hr />
+         
+	     <th:block th:each="receipt, iteration : ${session.transactionReceiptList}">
+	      <nobr> <span style="text-decoration: underline;"> Transaction #</span><span style="text-decoration: underline;" th:text="${iteration.count}"></span> </nobr> 
+	      Hash: <span th:text="${receipt.getTransactionHash()}"></span>
+	      From: <span th:text="${receipt.getFrom()}"></span>
+	      To: <span th:text="${receipt.getTo()}"></span>
+         Amount: <nobr> $<span th:text="${session.transferAmount}"></span> </nobr>
+         <br />
+	      </th:block>
+         
+        </div>
+      </div>
+     </div>
+</th:block>
+
+<!-- Grant Scholarship Receipts Modal -->  
+<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+<th:block th:if="${session.scholarshipReceipt}"> 
+       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="showScholarshipReceiptModal">
+         <div class="modal-dialog modal-lg">
+         <div class="modal-content" style="text-align: center;">
+         <br />
+         <h3 style="text-align: center;"> <img src="images/eth-diamond.png" width="7%"
+                  height="7%"> Ethereum Scholarship Receipt  </h3>
+         <hr />
+         Ethereum Transaction Hash: <span th:text="${session.scholarshipReceipt.getTransactionHash()}"></span>
+         <br />
+         Recipient Account: <span th:text="${session.scholarshipReceipt.getFrom()}"></span>
+         <br />
+         From Account: <span th:text="${session.scholarshipReceipt.getTo()}"></span>
+         <br />
+         Scholarship Allowance Amount: <nobr> $<span th:text="${session.scholarshipAmount}"></span> </nobr>
+         <br />
+
+        </div>
+      </div>
+     </div>
+</th:block>
+
 </body>
    <div id="footerLogo">
       <p >&#169;Zuess</p>
@@ -235,4 +272,7 @@ $( document ).ready(function(){
 </html>
 
 <!--References:
-https://www.thymeleaf.org/doc/articles/layouts.html -->
+https://www.thymeleaf.org/doc/articles/layouts.html 
+https://ethereum.org/en/assets/#brand
+-->
+

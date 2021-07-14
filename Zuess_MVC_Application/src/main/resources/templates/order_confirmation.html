@@ -2,11 +2,17 @@
 <html xmlns:th="www.thymeleaf.org"
    xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity">
 <head th:replace="fragments :: header">
+<!-- Custom Javascript Functions -->
 <meta charset="ISO-8859-1">
 <title>Order Confirmation Page</title>
 </head>
 
 <body>
+<script>
+ $( document ).ready(function(){
+   $('#transactionReceiptModal').modal('show'); 
+ });
+</script>
 
    <div class="jumbotron" style="text-align: center">
       <h3>
@@ -30,6 +36,30 @@
                </div>
             </div>
          </div>
+      </div>
+     </div>
+     
+     <!-- Transaction Receipt Modal -->
+     <!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="transactionReceiptModal">
+         <div class="modal-dialog modal-lg">
+         <div class="modal-content" style="text-align: center;">
+         <h3> 
+         <img src="images/eth-diamond.png" width="7%"
+                  height="7%"> 
+         Ethereum Purchase Receipt </h3>
+         <hr />
+         
+         Transaction Receipt Hash (main account): <br />
+         <span style="font-size: 0.9em;" th:text="${session.thisTransactionReceipt.get(0)}"> </span>
+         <nobr> Transfer Amount: $<span th:text="${session.transaction.getTransaction_total()} - ${session.transaction.getScholarship_funds_used()}"></span> </nobr>
+         <br /> 
+         
+         Transaction Receipt Hash (scholarship account): <br />
+         <span style="font-size: 0.9em;"th:text="${session.thisTransactionReceipt.get(1)}"> </span>
+         <nobr> Transfer Amount: $<span th:text="${session.transaction.getScholarship_funds_used()}"></span> </nobr>
+         
+        </div>
       </div>
      </div>
 

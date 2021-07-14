@@ -90,12 +90,15 @@ public class BlockchainService {
 	
 	//transferFunds() transfers funds. Sender is account of private key holder who deployed OtterCoin
 	//calls Smart Contract transfer(address _to, uint256 _value)
-	public void transferFunds(OtterCoin otterCoin, List<String> addressList, int amount) throws Exception {
+	public List<TransactionReceipt> transferFunds(OtterCoin otterCoin, List<String> addressList, int amount) throws Exception {
 		BigInteger bigIntegerAmount = BigInteger.valueOf(amount);
+		List<TransactionReceipt> transactionReceiptList = new ArrayList<>();
+		
 		for (String address : addressList) {
 		TransactionReceipt receipt = otterCoin.transfer(address, bigIntegerAmount).send();
-		System.out.print("\n TransactionReceipt: " + receipt + "\n");
+		transactionReceiptList.add(receipt);
 		}
+		return transactionReceiptList;
 	}
 	
 	//approveAllowance() Approves an allowance (called a "scholarship" in this application) on caller's account to spender account
@@ -143,13 +146,12 @@ public class BlockchainService {
 	public int getAllowance(OtterCoin otterCoin, String granterAddress, String recipientAddress) throws Exception {
 		BigInteger allowanceAmount = otterCoin.allowance(granterAddress, recipientAddress).send();
 		int allowance = allowanceAmount.intValue();
-		
 		return allowance;
 	}
 	
 	/***Custom Transactions***/
 	//transferFundsUsingCustomFromAddress() calls a Smart Contract method using a specified from address 
-	public boolean transferUsingCustomFromAddress(OtterCoin otterCoin, String fromAddress, String toAddress, int transferAmount) throws IOException, InterruptedException, ExecutionException{
+	public boolean transferUsingCustomFromAddress(OtterCoin otterCoin, String fromAddress, String toAddress, int transferAmount, List<String> receiptList) throws IOException, InterruptedException, ExecutionException{
 		
 		Boolean success = true; 
 		BigInteger gasPrice = otterCoin.GAS_PRICE;
@@ -178,8 +180,47 @@ public class BlockchainService {
 			return success;
 		}
 		//System.out.println(transactionHash + "Result " + result + "Raw Response " + rawResponse + "Error " + error.getMessage());
+		receiptList.add(transactionHash);
 		return success;
 	}
+	
+	//spendAllowance() transfers allowance funds using a custom from address
+		public boolean spendAllowance(OtterCoin otterCoin, String msgSenderAddress, String granterAddress, String toAddress, int transferAmount, List<String> receiptList) throws IOException, InterruptedException, ExecutionException{
+			
+			Boolean success = true; 
+			BigInteger gasPrice = otterCoin.GAS_PRICE;
+			BigInteger gasLimit = otterCoin.GAS_LIMIT;
+			EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(msgSenderAddress, DefaultBlockParameterName.LATEST).send();
+			BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+					
+			Function function = new Function("transferFrom", // Function name
+				 Arrays.<Type>asList(new org.web3j.abi.datatypes.Address(granterAddress),
+				 new org.web3j.abi.datatypes.Address(toAddress),		 
+				 new org.web3j.abi.datatypes.Uint(BigInteger.valueOf(transferAmount))), // Function input parameters
+				 Arrays.<TypeReference<?>>asList(new TypeReference<Address>() {}, new TypeReference<Address>() {}, new TypeReference<Uint256>() {})
+				 );
+			String encodedFunction = FunctionEncoder.encode(function);
+			
+			Transaction transaction = Transaction.createFunctionCallTransaction(msgSenderAddress, nonce, gasPrice, gasLimit, otterCoin.getContractAddress(), 
+				 encodedFunction);
+			org.web3j.protocol.core.methods.response.EthSendTransaction transactionResponse = web3j.ethSendTransaction(transaction).sendAsync().get();
+			String transactionHash = transactionResponse.getTransactionHash();
+			
+			Response.Error error = transactionResponse.getError();
+			String result = transactionResponse.getResult();
+			String rawResponse = transactionResponse.getRawResponse();
+			
+			if (transactionResponse.getError() != null) { 
+				success = false;
+				return success;
+			}
+			
+			receiptList.add(transactionHash);
+			System.out.println(transactionHash + "Result " + result + "Raw Response " + rawResponse);
+			return success;
+		}
+	
+	
 	
 	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	
 	 public List<String> getEthereumUserAccounts() {
