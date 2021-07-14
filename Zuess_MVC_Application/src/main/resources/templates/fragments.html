@@ -24,20 +24,20 @@
 		   <div style="float: right;" sec:authorize="isAuthenticated()">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navButtons">
 			<!-- @Jesse, can you have this only show with a TL if statement only when the user is logged in/authenticated? -->
-			   <th:block th:if="${session.deployed}">
-		   <li>
-               <a th:href="@{/store}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Bookstore </a>
-            </li>
+			   	<th:block th:if="${session.deployed}">
+			   	<li>
+	               <a th:href="@{/store}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Bookstore </a>
+	            </li>
 				<li>
 					<a th:href="@{/accountInfo}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> My Account </a>
 				</li>
+				</th:block>
 				<li>
 					<a th:href="@{/adminPortal}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Admin Portal </a>
 				</li>
 				<li>
 					<a th:href="@{/help}" target="_blank" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Help Page </a>
 				</li>
-				</th:block>
 				<li>
 					<a th:href="@{/logout}" style="white-space:nowrap; margin:0.2em;" class="btn btn-primary" id="navButton"> Logout </a>
 				</li>

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import java.util.OptionalInt;
 import java.util.concurrent.ExecutionException;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import zuess_mvc_application.services.*;
 import zuess_mvc_application.domain.*;
@@ -75,6 +77,7 @@ public class ZuessWebController {
 	}
 	@GetMapping("/registration")
 	public String getUserRegistrationForm(User user) throws InterruptedException, ExecutionException {
+		
 		return "new_user_registration";
 	}
 	
@@ -262,25 +265,30 @@ public class ZuessWebController {
 	/***User Account Routes***/
 // TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
 	@PostMapping("/registration/submit")
-	public String persistNewUser(HttpSession session, User user) {
-		System.out.println("Begin new user registration.");
-		
-		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
-		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
-
-		//TODO: This is where i will insert logic to select what type of role will be created. I think creating a default admin role that auto populates and limiting demo to user role creation and leaving this be makes the most sense.
-		String userRole = "USER";
-		
-		user.setRoles(Arrays.asList(roleRepo.findByName(userRole)));
-		System.out.println("Set user Role to: " + userRole);
-		
-		userRepo.save(user);
-		
-		System.out.println("User: " + user.getFirst_name() + " " + user.getLast_name() + " created.");
-		session.setAttribute("user", user);
-		return "acct_create_success";
+	public String persistNewUser(HttpSession session, @Valid User user, BindingResult bindingResult) {
+		if(bindingResult.hasErrors()) {
+			return "new_user_registration";
+		} else {
+			
+			System.out.println("Begin new user registration.");
+			
+			BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
+			System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
+	
+			//TODO: This is where i will insert logic to select what type of role will be created. I think creating a default admin role that auto populates and limiting demo to user role creation and leaving this be makes the most sense.
+			String userRole = "USER";
+			
+			user.setRoles(Arrays.asList(roleRepo.findByName(userRole)));
+			System.out.println("Set user Role to: " + userRole);
+			
+			userRepo.save(user);
+			
+			System.out.println("User: " + user.getFull_name() + " created.");
+			session.setAttribute("user", user);
+			return "acct_create_success";
+		}
 	}
 	 
 	@GetMapping("/accountInfo")
