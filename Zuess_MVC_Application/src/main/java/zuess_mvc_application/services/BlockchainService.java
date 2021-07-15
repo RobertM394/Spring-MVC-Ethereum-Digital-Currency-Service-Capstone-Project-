@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,15 +35,20 @@ import org.web3j.protocol.core.Request;
 import org.web3j.protocol.core.Response;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthAccounts;
+import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.core.methods.response.EthBlock.TransactionResult;
 import org.web3j.protocol.core.methods.response.EthBlockNumber;
 import org.web3j.protocol.core.methods.response.EthGasPrice;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
+import org.web3j.protocol.core.methods.response.EthGetBlockTransactionCountByNumber;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
+import org.web3j.protocol.core.methods.response.EthTransaction;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.gas.DefaultGasProvider;
 
+import io.reactivex.disposables.Disposable;
 import zuess_mvc_application.domain.*;
 import zuess_mvc_application.repository.*;
 
@@ -220,8 +227,6 @@ public class BlockchainService {
 			return success;
 		}
 	
-	
-	
 	/***Direct Calls to Ganache Blockchain. These methods do not call the Smart Contract***/	
 	 public List<String> getEthereumUserAccounts() {
        EthAccounts accounts = new EthAccounts();
@@ -240,6 +245,38 @@ public class BlockchainService {
 		return ethGasPrice.getGasPrice();
 	}
 	
+	/***Blockchain Visualization Methods***/
+	public List<EthereumBlock> getAllBlocksFromBlockchain() throws IOException {
+		
+		List<EthereumBlock> ethereumBlocksList = new ArrayList<>();
+		EthBlock firstBlock = web3j.ethGetBlockByNumber(DefaultBlockParameterName.EARLIEST, true).send();
+		EthBlock lastBlock = web3j.ethGetBlockByNumber(DefaultBlockParameterName.LATEST, true).send();
+		int start = firstBlock.getBlock().getNumber().intValue(); 
+		int stop = lastBlock.getBlock().getNumber().intValue(); 
+		
+		for (int i = start; i < stop; i++) {
+			
+			BigInteger currentIndex = BigInteger.valueOf(i);
+			EthBlock currentBlock = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(currentIndex), true).send();
+			
+			long id = currentBlock.getId();
+			BigInteger blockNumber = currentBlock.getBlock().getNumber();
+			BigInteger timestamp = currentBlock.getBlock().getTimestamp();
+			BigInteger gasLimit = currentBlock.getBlock().getGasLimit();
+			BigInteger gasUsed = currentBlock.getBlock().getGasUsed();
+			BigInteger blockSize = currentBlock.getBlock().getSize();
+			String receipts = currentBlock.getBlock().getReceiptsRoot();
+			
+			EthereumBlock newEthereumBlock = new EthereumBlock(id, blockNumber, timestamp, gasLimit, gasUsed, blockSize, receipts);
+			ethereumBlocksList.add(newEthereumBlock);
+			
+		}
+		return ethereumBlocksList;
+		
+	}
+	
+	
+	
 }
 
 /***References:
@@ -247,6 +284,7 @@ public class BlockchainService {
  * https://hackernoon.com/ethereum-token-development-using-java-and-web3j-an-overview-spas324r
  * https://github.com/web3j/web3j/issues/833
  * https://www.codota.com/code/java/methods/org.web3j.protocol.Web3j/ethGasPrice
+ * 
  * 
  ***/
  

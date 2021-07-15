@@ -84,6 +84,13 @@ public class ZuessWebController {
 		return "login";
 	}
 	
+	@GetMapping("/blockchain/view")
+	public String getBlockchainVisualization(HttpSession session) throws IOException {
+		List<EthereumBlock> ethereumBlocksList = blockchainService.getAllBlocksFromBlockchain();
+		session.setAttribute("ethereumBlocksList", ethereumBlocksList);
+		return "blockchain";
+	}
+	
 	/***Store Routes
 	 * @throws Exception ***/
 	@GetMapping("/store")
@@ -171,6 +178,9 @@ public class ZuessWebController {
 		User user = customUserDetailsService.retrieveUserByEmail(email);
 		session.setAttribute("user", user);
 		session.setAttribute("modalToShow", null);
+		
+		blockchainService.getAllBlocksFromBlockchain();
+		
 		return "admin_portal";
 	}
 	
@@ -188,7 +198,7 @@ public class ZuessWebController {
 		session.setAttribute("contractType", contractType);
 		session.setAttribute("contractBalance", contractBalance);
 		User user = (User) session.getAttribute("user");
-		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);
+		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);	
 		return "admin_portal";
 	}
 	

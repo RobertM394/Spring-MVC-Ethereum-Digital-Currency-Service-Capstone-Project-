@@ -63,16 +63,6 @@ body {
 	justify-content: center;
 }
 
-/* Looks more professional without the box
-.checkout {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-	background: white;
-	border-radius: 30px;
-	box-shadow: 12px 12px 22px;
-}
-*/
 .flex-container {
     display: flex;
 }
@@ -116,4 +106,8 @@ img.resize {
 }
 .card {
   padding: 2rem 0rem;
+}
+
+strong {
+	font-weight: bold;
 }
