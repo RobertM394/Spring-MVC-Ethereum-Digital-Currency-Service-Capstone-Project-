@@ -37,9 +37,8 @@ public class User {
 
 	//TODO: Figure out display of which aspect of password is missing.
 	
-	//REQURIES Uppercase Lowercase Int Special Min length 8
-	@Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", message = "Uppercase Lowercase Int Special Min-length-8")
-	@Size(max = 100, message = "Password must be less than 100 characters")
+	//REQURIES Uppercase Lowercase Int Min length 8
+	@Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,100}", message = "Uppercase Lowercase Int Min-length-8 Max-length-100")
 	@Column(nullable = false, length = 100)
 	private String password;
 	
