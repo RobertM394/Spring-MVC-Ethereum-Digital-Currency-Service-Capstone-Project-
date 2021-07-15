@@ -27,15 +27,23 @@
             class="col-sm-4">
             <div class="card" style="width: 23rem; border: groove; margin:0.25em; padding:4rem; background-color: rgb(245,222,179); box-shadow: 0px 0px 10px 0px rgba(100, 100, 100, 0.30);">
               
-              <h3 style="text-align:center;"> Block #<span th:text="${block.getBlockNumber()}"></span></h3>
+              <h3 style="text-align:center;"> Block #<span th:text="${block.getBlockNumber()}"></span> </h3>
               <hr />
-              <h5>Details: </h5>
+              <p style="text-align:center"> Transaction Type: 
+              <th:block th:switch="${block.getGasUsed()}">
+               <span th:case="0"> Contract Deployment </span>
+               <span th:case="37642"> Funds Transfer</span>
+               <span th:case="*"> Funds Transfer</span>
+              </th:block>
+              </p>
+              <br />
+              <h5 style="font-style: italic;"> Block Data </h5> 
               <nobr> Block ID: <span th:text="${block.getId()}"></span> </nobr>
               <nobr> Creation Date: <span th:text="${block.getTimestamp()}"></span> </nobr>
               <nobr> Gas Limit: <span th:text="${block.getGasLimit()}"></span> </nobr>
               <nobr> Gas Used to Create: <span th:text="${block.getGasUsed()}"></span> </nobr>
               <nobr> Block Size: <span th:text="${block.getBlockSize()}"></span> </nobr>
-              Receipts: <span th:text="${block.getReceipts()}"></span> 
+               
                </div>
             </div>
          </div>
