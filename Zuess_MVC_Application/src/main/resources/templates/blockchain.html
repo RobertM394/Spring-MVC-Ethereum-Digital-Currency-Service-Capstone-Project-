@@ -29,7 +29,7 @@
               
               <h3 style="text-align:center;"> Block #<span th:text="${block.getBlockNumber()}"></span> </h3>
               <hr />
-              <p style="text-align:center"> Transaction Type: 
+              <p style="text-align:center"> Transaction Stored: 
               <th:block th:switch="${block.getGasUsed()}">
                <span th:case="0"> Contract Deployment </span>
                <span th:case="37642"> Funds Transfer</span>
