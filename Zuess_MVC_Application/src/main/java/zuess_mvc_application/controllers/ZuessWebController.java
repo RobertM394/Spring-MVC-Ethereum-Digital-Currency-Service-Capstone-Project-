@@ -145,8 +145,8 @@ public class ZuessWebController {
 			@RequestParam(required = false, defaultValue = "0", name = "scholarshipAmount") int scholarshipAmount,
 			@RequestParam(required = false, name = "useScholarship") boolean useScholarship
 			) throws Exception{
-		if (useScholarship != true) scholarshipAmount = 0;
 		
+		if (useScholarship != true) scholarshipAmount = 0;
 		session.setAttribute("transactionError", false);
 		session.setAttribute("scholarshipTransactionError", false);
 		int total = getCartTotal(session);

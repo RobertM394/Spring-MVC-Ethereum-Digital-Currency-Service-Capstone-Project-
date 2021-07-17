@@ -7,19 +7,19 @@
 <!-- Custom Javascript Functions -->
 <script>
 $( document ).ready(function(){
-	var modalToShow = $('#modalToShow').val();
-	$(`#${modalToShow}`).modal('show'); 
+	  $( "#transferFundsButton" ).on("click", function(event){
+	         var allUnchecked = true;
+	            $('.transferFundsCheckbox').each(function(){
+	               if ($(this).is(':checked')) allUnchecked = false;
+	            });
+	         if(allUnchecked) {
+	           event.preventDefault();
+	            alert("You must select one or more accounts.");
+	         }
+	      });
 	
-	$( "#transferFundsButton" ).on("click", function(event){
-		var allUnchecked = true;
-		   $('.transferFundsCheckbox').each(function(){
-		      if ($(this).is(':checked')) allUnchecked = false;
-		   });
-		if(allUnchecked) {
-			event.preventDefault();
-			alert("You must select one or more accounts.");
-		}
-	});
+	  var modalToShow = $('#modalToShow').val();
+	  $(`#${modalToShow}`).modal('show'); 
 });
 </script>
 
