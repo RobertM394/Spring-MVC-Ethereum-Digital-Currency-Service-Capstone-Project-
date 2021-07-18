@@ -47,25 +47,27 @@
 							<div class="card" style="width: 18rem; border: none;">
 								<div class="card-body">
 									<h5 class="card-title">
-										<span sec:authentication="principal.fullName"></span>'s Order
-										History
+										<nobr> <span sec:authentication="principal.fullName"></span>'s Order
+										History </nobr>
 									</h5>
-									</br>
-									<th:block th:each="transaction : ${session.transactionsList}">
+									<br />
+							      
+									<th:block th:each="transaction, iteration : ${session.transactionsList}">
 										<h6>
-											Order Total: $<span
-												th:text="${transaction.getTransaction_total()}"></span>
+										Order #<span th:text="${iteration.count}"></span> 
+										<hr />
+										<nobr> Total: $<span
+										th:text="${transaction.getTransaction_total()}"></span> </nobr>
 										</h6>
 										<h6>
-											Scholarship Funds Used:
-											<nobr>
+											<nobr> Scholarship Funds Used:
 												$<span th:text="${transaction.getScholarship_funds_used()}"></span>
 											</nobr>
 										</h6>
 										<h6>
 											Items: <span th:text="${transaction.getItems_list()}"><br /></span>
 										</h6>
-										</br></br>
+										<br />
 									</th:block>
 								</div>
 							</div>

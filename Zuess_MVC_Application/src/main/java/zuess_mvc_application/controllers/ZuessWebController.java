@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 
 import java.io.IOException;
@@ -21,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpSession;
 
@@ -58,6 +61,9 @@ public class ZuessWebController {
 	private static EthereumAccounts ethereumAccounts = new EthereumAccounts(ethereumAccountsList);
 	private static String storeEthereumAddress = ethereumAccountsList.get(1);
 	private static OtterCoin otterCoin;
+	private boolean isContractDeployed = false;
+	private String deployedContractType;
+	private InputValidator inputValidator = new InputValidator();
 	
 	List<InventoryItem> cartItemsList = new ArrayList<>();
 	
@@ -136,11 +142,11 @@ public class ZuessWebController {
 	
 	@PostMapping("/submitNewOrder")
 	public String submitNewOrder(HttpSession session, Principal principal,
-			@RequestParam(required = false, name = "scholarshipAmount") int scholarshipAmount,
+			@RequestParam(required = false, defaultValue = "0", name = "scholarshipAmount") int scholarshipAmount,
 			@RequestParam(required = false, name = "useScholarship") boolean useScholarship
 			) throws Exception{
-		if (useScholarship != true) scholarshipAmount = 0;
 		
+		if (useScholarship != true) scholarshipAmount = 0;
 		session.setAttribute("transactionError", false);
 		session.setAttribute("scholarshipTransactionError", false);
 		int total = getCartTotal(session);
@@ -176,27 +182,37 @@ public class ZuessWebController {
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
 		String email = principal.getName();
 		User user = customUserDetailsService.retrieveUserByEmail(email);
+		session.setAttribute("deployed", isContractDeployed);
+		if (isContractDeployed && otterCoin != null) {
+			double contractBalance = blockchainService.getContractBalance(otterCoin);
+			session.setAttribute("contractType", deployedContractType);
+			session.setAttribute("contractBalance", contractBalance);
+		}
 		session.setAttribute("user", user);
 		session.setAttribute("modalToShow", null);
-		
-		blockchainService.getAllBlocksFromBlockchain();
-		
 		return "admin_portal";
 	}
 	
 	@PostMapping("/deploySmartContract")
 	public String deploySmartContract(HttpSession session,
 			@RequestParam("contractType") String contractType,
-			@RequestParam("initialContractFunds") int initialContractFunds,
+			@RequestParam(required = false, defaultValue = "0", name = "initialContractFunds") int initialContractFunds,
 			@RequestParam("ethPrivateKey") String ethPrivateKey
 			) throws Exception {
 		
+		if ( (!inputValidator.validateSingleField(ethPrivateKey, "ethPrivateKey")) 
+				|| !inputValidator.notEmpty(contractType, initialContractFunds, ethPrivateKey)) return "admin_portal";
+
 		otterCoin = blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
+		if (otterCoin != null) isContractDeployed = true;
+		deployedContractType = contractType;
 		double contractBalance = blockchainService.getContractBalance(otterCoin);
+		
 		session.setAttribute("ethereumAccountsList", ethereumAccountsList);
-		session.setAttribute("deployed", true);
-		session.setAttribute("contractType", contractType);
+		session.setAttribute("deployed", isContractDeployed);
+		session.setAttribute("contractType", deployedContractType);
 		session.setAttribute("contractBalance", contractBalance);
+		
 		User user = (User) session.getAttribute("user");
 		user = customUserDetailsService.syncEthereumAndDatabaseUserBalances(otterCoin, user);	
 		return "admin_portal";
@@ -205,10 +221,12 @@ public class ZuessWebController {
 	@PostMapping("/transferFunds")
 	public String transferFundsToEthAccounts(HttpSession session,
 			@RequestParam("accounts") List<String> accounts,
-			@RequestParam("transferAmount") int transferAmount
+			@RequestParam(required = false, defaultValue = "0", name = "transferAmount") int transferAmount
 			) throws Exception {
-		List<TransactionReceipt> transactionReceiptList = blockchainService.transferFunds(otterCoin, accounts, transferAmount);
 		
+		if (!inputValidator.validateSingleField(transferAmount, "amount")) return "admin_portal";
+		
+		List<TransactionReceipt> transactionReceiptList = blockchainService.transferFunds(otterCoin, accounts, transferAmount);
 		for (TransactionReceipt receipt : transactionReceiptList) {
 			System.out.println("Tx " + receipt.getTransactionHash());
 		}
@@ -229,9 +247,11 @@ public class ZuessWebController {
 			@RequestParam("getBalanceOfAddress") Optional<String> balanceAddress
 			) throws Exception {
 		
+		if (!inputValidator.validateSingleField(balanceAddress, "ethAddress")) return "admin_portal";
 		if (balanceAddress != null) {
 		BigInteger accountBalance = blockchainService.getBalance(otterCoin, balanceAddress.get());
 		session.setAttribute("accountBalance", accountBalance);
+		session.setAttribute("modalToShow", null);
 		}
 		return "admin_portal";
 	}
@@ -239,7 +259,9 @@ public class ZuessWebController {
 	@PostMapping("/grantScholarship")
 	public String grantScholarship(HttpSession session,
 			@RequestParam("recipientEmail") String email,
-			@RequestParam("scholarshipAmount") int amount) throws Exception {
+			@RequestParam(required = false, defaultValue = "0", name = "scholarshipAmount") int amount) throws Exception {
+		
+		if (!inputValidator.validateSingleField(email, "email")) return "admin_portal";
 		
 		User user = customUserDetailsService.retrieveUserByEmail(email);
 		if (user == null) {
@@ -273,22 +295,14 @@ public class ZuessWebController {
 // TODO: Prevent repeated information sign ups (ensure email is unique, return error if already present)
 	@PostMapping("/registration/submit")
 	public String persistNewUser(HttpSession session, User user) {
-		System.out.println("Begin new user registration.");
-		
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setEth_account_id(ethereumAccounts.assignNewEthereumAccount());
-		System.out.println("Ethereum Account assigned: " + user.getEth_account_id());
-
+		
 		//TODO: This is where i will insert logic to select what type of role will be created. I think creating a default admin role that auto populates and limiting demo to user role creation and leaving this be makes the most sense.
 		String userRole = "USER";
-		
 		user.setRoles(Arrays.asList(roleRepo.findByName(userRole)));
-		System.out.println("Set user Role to: " + userRole);
-		
 		userRepo.save(user);
-		
-		System.out.println("User: " + user.getFirst_name() + " " + user.getLast_name() + " created.");
 		session.setAttribute("user", user);
 		return "acct_create_success";
 	}
@@ -309,9 +323,11 @@ public class ZuessWebController {
 	@PostMapping("/userFundsTransfer")
 	public String userActions(Principal principal,
 			@RequestParam("ethToAddress") String ethToAddress,
-			@RequestParam("transferAmount") int transferAmount
+			@RequestParam(required = false, defaultValue = "0", name = "transferAmount") int transferAmount
 			) throws Exception {
 		
+			if (!inputValidator.validateSingleField(ethToAddress, "ethAddress")) return "standard_user_account";
+				
 			String email = principal.getName();
 			User user = customUserDetailsService.retrieveUserByEmail(email);
 			List<String> transferReceipts = new ArrayList<>();
@@ -328,6 +344,121 @@ public class ZuessWebController {
 	
 
 	/***Custom Controller Functions***/
+	
+	//InputValidator
+	//This is an experimental class to validate form input fields of multiple web forms and variable types in the same function.
+	//Server-side input validation is done in our application for security purposes -- any client-side input validation can be bypassed.
+	//@Author Robert Meis
+	public class InputValidator {
+		
+		public InputValidator() { }
+		
+		public <T> boolean notEmpty(T ... parameters) {
+			for (T parameter : parameters) {
+				
+					String pattern = "(^ +$|^$)";
+					Pattern regex = Pattern.compile(pattern);
+					Matcher matcher = regex.matcher(parameter.toString());
+					if (matcher.find()) return false;	
+				}
+			
+			return true;
+			}
+		
+		public <T> boolean validateSingleField(T fieldText, String fieldType ) {
+			boolean isValidInput = true;
+			
+				switch(fieldType) {
+					case "ethPrivateKey":
+						String pattern = "[A-Fa-f0-9]{64}";
+						Pattern regex = Pattern.compile(pattern);
+						Matcher matcher = regex.matcher(fieldText.toString());
+						if (!matcher.find()) isValidInput = false;
+						break;
+					
+					case "ethAddress":
+						pattern = "0x[A-Fa-f0-9]{40}";
+						regex = Pattern.compile(pattern);
+						matcher = regex.matcher(fieldText.toString());
+						if (!matcher.find()) isValidInput = false;
+						break;
+						
+					case "email":
+						pattern = "[A-Za-z0-9\\.-]+@[A-Za-z0-9]+\\.[A-Za-z]{3}";
+						regex = Pattern.compile(pattern);
+						matcher = regex.matcher(fieldText.toString());
+						if (!matcher.find()) isValidInput = false;
+						break;
+					
+					case "amount":
+						pattern = "^[0-9]+$";
+						regex = Pattern.compile(pattern);
+						matcher = regex.matcher(fieldText.toString());
+						if (!matcher.find()) isValidInput = false;
+						break;
+						
+					default: //checks form field list for blank input or whitespace only
+						pattern = "(^ +$|^$)";
+						regex = Pattern.compile(pattern);
+						matcher = regex.matcher(fieldText.toString());
+						if (matcher.find()) isValidInput = false;
+			}
+			
+			return isValidInput;
+			}
+		
+	public boolean validateFieldList(List<?> fieldTextList, String ... fieldTypes) {
+		boolean isValidInput = true;
+		
+		int iteration = 0;
+		for (String type : fieldTypes) {
+			
+			switch(type) {
+				case "ethPrivateKey":
+					String pattern = "[A-Fa-f0-9]{64}";
+					Pattern regex = Pattern.compile(pattern);
+					Matcher matcher = regex.matcher(fieldTextList.get(iteration).toString());
+					if (!matcher.find()) isValidInput = false;
+					break;
+				
+				case "ethAddress":
+					pattern = "0x[A-Fa-f0-9]{40}";
+					regex = Pattern.compile(pattern);
+					matcher = regex.matcher(fieldTextList.get(iteration).toString());
+					if (!matcher.find()) isValidInput = false;
+					break;
+					
+				case "email":
+					pattern = "[A-Za-z0-9\\.-]+@[A-Za-z0-9]+\\.[A-Za-z]{3}";
+					regex = Pattern.compile(pattern);
+					matcher = regex.matcher(fieldTextList.get(iteration).toString());
+					if (!matcher.find()) isValidInput = false;
+					break;
+				
+				case "amount":
+					pattern = "^[0-9]+$";
+					regex = Pattern.compile(pattern);
+					matcher = regex.matcher(fieldTextList.get(iteration).toString());
+					if (!matcher.find()) isValidInput = false;
+					break;
+			
+				default: //checks form field list for blank input or whitespace only
+					pattern = "(^ +$|^$)";
+					regex = Pattern.compile(pattern);
+					matcher = regex.matcher(fieldTextList.get(iteration).toString());
+					if (matcher.find()) isValidInput = false;	
+					break;
+			}
+			iteration++;
+		}
+		
+		return isValidInput;
+		}
+	
+	}
+	
+	
+	
 	public int getCartTotal(HttpSession session) {
 		int total = 0;
 		int scholarshipEligibleAmount = 0; 

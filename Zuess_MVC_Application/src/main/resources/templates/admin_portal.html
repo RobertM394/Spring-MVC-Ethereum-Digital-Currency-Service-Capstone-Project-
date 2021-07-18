@@ -7,8 +7,19 @@
 <!-- Custom Javascript Functions -->
 <script>
 $( document ).ready(function(){
-	var modalToShow = $('#modalToShow').val();
-	$(`#${modalToShow}`).modal('show'); 
+	  $( "#transferFundsButton" ).on("click", function(event){
+	         var allUnchecked = true;
+	            $('.transferFundsCheckbox').each(function(){
+	               if ($(this).is(':checked')) allUnchecked = false;
+	            });
+	         if(allUnchecked) {
+	           event.preventDefault();
+	            alert("You must select one or more accounts.");
+	         }
+	      });
+	
+	  var modalToShow = $('#modalToShow').val();
+	  $(`#${modalToShow}`).modal('show'); 
 });
 </script>
 
@@ -56,7 +67,7 @@ $( document ).ready(function(){
        <label for="initialContractFunds"> Initial Contracts Funds </label> <br />
           <input type="number" name="initialContractFunds" value="1000"> <br /> <br />
        <label for="ethPrivateKey"> Ethereum Private Key </label> <br />
-          <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b 0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br />
+          <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br />
           <button type="submit" class="btn btn-primary"> Deploy Contract </button>
                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>    
      </form>
@@ -101,7 +112,7 @@ $( document ).ready(function(){
           <th:block th:each="account, iteration : ${session.ethereumAccountsList}">
           <tr>
              <td>
-                <input type="checkbox" name="accounts" th:value="${account}">
+                <input type="checkbox" class="transferFundsCheckbox" name="accounts" th:value="${account}">
                 <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> 
                   <th:block th:switch="${iteration.index}"> 
                   <span th:case=0><br /> (Administrator Account)</span>
@@ -114,7 +125,7 @@ $( document ).ready(function(){
           </table>
           <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
           <input type="number" name="transferAmount" value=100> <br /> <br /> 
-          <button type="submit" class="btn btn-primary"> Add Funds </button>
+          <button type="submit" id="transferFundsButton" class="btn btn-primary"> Add Funds </button>
               <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
           </form>
 	      </div>
@@ -160,7 +171,7 @@ $( document ).ready(function(){
                <td>
                <br />
                   <h5> <span th:text="${session.contractType}"> </span> Tokens <label for="scholarshipAmount"> </label> </h5>
-                  <input type="number" name="scholarshipAmount" placeholder="500">  
+                  <input type="number" name="scholarshipAmount" value="100">  
                </td>
             </tr>
           </table>
