@@ -38,7 +38,7 @@ public class User {
 	//TODO: Figure out display of which aspect of password is missing.
 	
 	//REQURIES Min length 8 Allows upper, lower, number (Only works as limit)
-	@Pattern(regexp = "[a-zA-Z0-9]{8,100}", message = "Min-length-8 Max-length-100")
+	@Pattern(regexp = ".*", message = "Min-length-8 Max-length-100")
 	@Column(nullable = false, length = 100)
 	private String password;
 	
