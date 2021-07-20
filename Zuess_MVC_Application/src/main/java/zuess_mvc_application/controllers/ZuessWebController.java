@@ -465,7 +465,8 @@ public class ZuessWebController {
 		for (InventoryItem item : cartItemsList) {
 			total += item.getPrice();
 			
-			if (item.isScholarship_eligible()) {
+			
+			if (item.isScholarship_eligible()) {			
 				scholarshipEligibleAmount += item.getPrice();
 			}
 		}
