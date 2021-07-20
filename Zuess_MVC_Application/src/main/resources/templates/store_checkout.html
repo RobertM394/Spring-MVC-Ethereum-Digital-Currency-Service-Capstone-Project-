@@ -34,19 +34,25 @@
 					<div class="col-sm-4">
 						<div class="card" style="border: none">
 							<div class="card-body">
-								<h4 class="card-title"> <nobr> Order Summary </nobr> </h4>
+								<h4 class="card-title">
+									<nobr> Order Summary </nobr>
+								</h4>
 								<p class="card-text" style="width: 50rem;"></p>
-							  <hr />
+								<hr />
 
 								<table class="table">
 									<th:block th:each="item, iteration : ${session.cartItemsList}">
 										<tr style="border: none">
-											<td style="border: none"> <nobr> <span th:text="${item.getName()}"></span> — $<span th:text="${item.getPrice()}"> </span>
-											<form action="/removeCartItem" method="post">
-											<input type="hidden" name="itemIndex" th:value="${iteration.index}"> 
-											<button style="font-size: 0.75em;" type="submit" class="btn btn-warning" id="removeItem">Remove </button> 
-											</form>
-											</td>
+											<td style="border: none"><nobr>
+													<span th:text="${item.getName()}"></span> — $<span
+														th:text="${item.getPrice()}"> </span>
+													<form action="/removeCartItem" method="post">
+														<input type="hidden" name="itemIndex"
+															th:value="${iteration.index}">
+														<button style="font-size: 0.75em;" type="submit"
+															class="btn btn-warning" id="removeItem">Remove</button>
+													</form>
+												</nobr></td>
 										</tr>
 									</th:block>
 								</table>
@@ -59,29 +65,109 @@
 
 						<div class="card" style="border: none; float: right;">
 							<div class="card-body" style="width: 18rem;">
-								<h4 class="card-title"><nobr> Order Total: $<span th:text="${session.total}"></span> </nobr></h4>
+								<h4 class="card-title">
+									<nobr>
+										Order Total: $<span th:text="${session.total}"></span>
+									</nobr>
+								</h4>
 								<p class="card-text"></p>
 								<hr />
 								<form action="/submitNewOrder" method="post">
-									<nobr> <input type="checkbox" name="useScholarship" value=true> <label
-										for="useScholarship">  Apply Scholarship Funds to Order </nobr> </label> <label
-										for="scholarshipAmount" style="font-size: 0.8em;"> <nobr>
-											You may use up to $<span th:text="${session.scholarshipEligibleAmount}"></span> of your current $<span
-												th:text="${session.scholarshipBalance}"></span>
+									<nobr>
+										<input type="checkbox" name="useScholarship" value="true">
+										<label for="useScholarship"> Apply Scholarship Funds
+											to Order </label>
+									</nobr>
+									<label></label> <label for="scholarshipAmount"
+										style="font-size: 0.8em;"> <nobr>
+											You may use up to $<span
+												th:text="${session.scholarshipEligibleAmount}"></span> of
+											your current $<span th:text="${session.scholarshipBalance}"></span>
 											scholarship balance on this order.
 										</nobr>
-									</label> <input type="number" value=0 name="scholarshipAmount"
+									</label> <input type="number" value="0" name="scholarshipAmount"
 										style="margin: 0.25em;"> <br /> <br />
 
 									<button type="submit" class="btn btn-warning"
 										id="addCartButton">Place Your Order</button>
 								</form>
-								<div th:if="${session.transactionError} == true" class="alert alert-warning" role="alert">
-                        <p style="font-size: 0.75em;">  This transaction could not be processed! Please confirm you have enough Ethereum funds and a valid Ethereum ID. </p>
-                        </div>
-                        <div th:if="${session.scholarshipTransactionError} == true" class="alert alert-warning" role="alert">
-                        <p style="font-size: 0.75em;">  This transaction could not be processed! You have insufficient Scholarship funds. </p>
-                        </div>
+								<br></br>
+
+								<!-- case buttons -->
+								<button type="button" class="btn btn-primary btn-sm"
+									data-bs-toggle="modal" data-bs-target="#scholarInfoModal">1</button>
+								<p>How to use your scholarships</p>
+								<button type="button" class="btn btn-primary btn-sm"
+									data-bs-toggle="modal" data-bs-target="#fundsInfoModal">2</button>
+								<p>Use Your funds</p>
+								<!-- end -->
+
+								<!-- Modal for help -->
+								<div class="modal fade" id="scholarInfoModal" tabindex="-1"
+									aria-labelledby="scholarInfoModal" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">SCHOLARSHIP PAYMENT</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<video autoplay controls width="450" height="320">
+													<source th:src="@{/video/scholar.mp4}" type="video/mp4"
+														src="">
+												</video>
+												<p>With your own currency you decide what it can be
+													purposed for!</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Got It!</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end -->
+								<!-- Modal for help -->
+								<div class="modal fade" id="fundsInfoModal" tabindex="-1"
+									aria-labelledby="fundsInfoModal" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title">FUNDS</h5>
+												<button type="button" class="btn-close"
+													data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<video autoplay controls width="450" height="320">
+													<source th:src="@{/video/funds.mp4}" type="video/mp4"
+														src="">
+												</video>
+												<p>With your own currency you decide what it can be
+													purposed for!</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">Got It!</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end -->
+
+
+
+								<div th:if="${session.transactionError} == true"
+									class="alert alert-warning" role="alert">
+									<p style="font-size: 0.75em;">This transaction could not be
+										processed! Please confirm you have enough Ethereum funds and a
+										valid Ethereum ID.</p>
+								</div>
+								<div th:if="${session.scholarshipTransactionError} == true"
+									class="alert alert-warning" role="alert">
+									<p style="font-size: 0.75em;">This transaction could not be
+										processed! You have insufficient Scholarship funds.</p>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -92,3 +178,5 @@
 
 </body>
 </html>
+<!-- bootstrap modals and cards -->
+<!-- https://getbootstrap.com/ -->

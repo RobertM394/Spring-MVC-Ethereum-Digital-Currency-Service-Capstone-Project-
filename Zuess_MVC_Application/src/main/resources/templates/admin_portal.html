@@ -4,282 +4,428 @@
 <title>Administrator Portal</title>
 </head>
 <body>
-<!-- Custom Javascript Functions -->
-<script>
-$( document ).ready(function(){
-	  $( "#transferFundsButton" ).on("click", function(event){
-	         var allUnchecked = true;
-	            $('.transferFundsCheckbox').each(function(){
-	               if ($(this).is(':checked')) allUnchecked = false;
-	            });
-	         if(allUnchecked) {
-	           event.preventDefault();
-	            alert("You must select one or more accounts.");
-	         }
-	      });
-	
-	  var modalToShow = $('#modalToShow').val();
-	  $(`#${modalToShow}`).modal('show'); 
-});
-</script>
+	<!-- Custom Javascript Functions -->
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var modalToShow = $('#modalToShow').val();
+			$(`#${modalToShow}`).modal('show');
+		});
+	</script>
 
-<div class="jumbotron" style="text-align: center"> 
-   <h3> <span style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0,0,0,0.2);"id ="jumbo"> Zuess Administrator Portal </span> </h3> 
- <hr />
-</div>
-
-<br />
-
-<th:block th:if="${session.deployed}"> 
- <div style="text-align: center">
- <h4> <span th:text="${session.contractType}"></span> is currently deployed with <span th:text="${session.contractBalance}"></span> in available funds. </h4>
- </div>
-</th:block>
-
-<br /> <br />
-
-<div style="padding: 1em">
-   <h5> Deploy a Smart Contract</h5>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deployModal" id= "butM">
-  Deploy Contract
-</button>
-
-<th:block th:if="!${session.deployed}"> 
-<br /> 
-<span> Please begin by deploying a Smart Contract with your Ethereum Private Key. </span>
-</th:block>
-
-<!-- Modal -->
-<div class="modal fade" id="deployModal" tabindex="-1" aria-labelledby="deployModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Deploy Contract</h3>
-      </div>
-      <div class="modal-body">
-      <form th:action="@{/deploySmartContract}" method="post">
-       <label for="contractType"> Select a Smart Contract to Deploy to the Ethereum Blockchain</label> <br />
-          <select name="contractType" id="contractType">
-          <option value="OtterCoin"> OtterCoin </option>
-          <option value="FutureOption"> Future Custom Contract </option>
-          </select> <br /> <br />
-       <label for="initialContractFunds"> Initial Contracts Funds </label> <br />
-          <input type="number" name="initialContractFunds" value="1000"> <br /> <br />
-       <label for="ethPrivateKey"> Ethereum Private Key </label> <br />
-          <input type="text" name="ethPrivateKey" placeholder="81bd9a3c79b0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460"> <br /> <br />
-          <button type="submit" class="btn btn-primary"> Deploy Contract </button>
-                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>    
-     </form>
-      </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<th:block th:if="${session.deployed}"> 
- 
- <!-- End content that should appear in "Account Balance" modal -->  
- <div style="padding: 1em">
-   <form th:action="@{/adminActions}" method="post">
-   <h5> Display Ethereum Balance <label for="getBalanceOfAddress"> </label> </h5>
-      <input type="text" name="getBalanceOfAddress" placeholder="Ethereum Id">  
-      <th:block th:if="${session.accountBalance} != null"> Balance is: <span th:text="${session.accountBalance}"> </span> </th:block>
-      <br />
-      <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMc">
-       Ethereum Balance
-      </button>   
-   </form>
-  </div>
-
-<div style="padding: 1em">
-  <h5> Transfer Ethereum Funds to User Accounts </h5>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#transferModal" id= "butMa">
- Transfer Funds
-</button>
- <!-- Begin content that should appear in "Transfer Funds" modal -->
-<!-- Modal -->
-<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true" >
-  <div class="modal-dialog">
-    <div class="modal-content" style="min-width: 600px !important;">
-      <div class="modal-header">
-        <h3 class="modal-title">Transfer Funds</h3>
-      </div>
-      <div class="modal-body">
-                <h5> Select Account(s) by Ethereum ID </h5>
-          <form th:action="@{/transferFunds}" method="post">
-          <table class="table">
-          <th:block th:each="account, iteration : ${session.ethereumAccountsList}">
-          <tr>
-             <td>
-                <input type="checkbox" class="transferFundsCheckbox" name="accounts" th:value="${account}">
-                <label for="accounts"> <span style="font-size: 0.9em"th:text="${account}"> </span> 
-                  <th:block th:switch="${iteration.index}"> 
-                  <span th:case=0><br /> (Administrator Account)</span>
-                  <span th:case=1><br /> (Bookstore Account)</span>
-                  </th:block> 
-                </label>  
-             </td>
-          </tr>
-          </th:block>
-          </table>
-          <label for="transferAmount"> <h4> Transfer Amount </h4> </label> <br />
-          <input type="number" name="transferAmount" value=100> <br /> <br /> 
-          <button type="submit" id="transferFundsButton" class="btn btn-primary"> Add Funds </button>
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-          </form>
-	      </div>
-	    </div>
-	  </div>
-	  </div>
+	<div class="jumbotron" style="text-align: center">
+		<h3>
+			<span
+				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
+				id="jumbo"> Zuess Administrator Portal </span>
+		</h3>
+		<hr />
 	</div>
-<!--  End content that should appear in Transfer Funds modal -->	
 
-<!-- Begin Scholarships section-->
-<div style="padding: 1em">
-  <h5> Grant or View Scholarships </h5>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#grantScholarshipModal" id= "butMa">
- Grant Scholarship
-</button>
+	<br />
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#viewScholarshipsModal" id= "butMa">
- View Scholarships
-</button>
+	<th:block th:if="${session.deployed}">
+		<div style="text-align: center">
+			<h4>
+				<span th:text="${session.contractType}"></span> is currently
+				deployed with <span th:text="${session.contractBalance}"></span> in
+				available funds.
+			</h4>
+		</div>
+	</th:block>
 
-<!-- Grant Scholarship Modal -->
-<div class="modal fade" id="grantScholarshipModal" tabindex="-1" aria-labelledby="grantScholarshipModalLabel" aria-hidden="true" >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title">Grant a Scholarship</h3>
-        <br />
-      </div>
-      <div class="modal-body">
-      <p style="font-size: 0.85em;"> A scholarship is an amount in Ethereum tokens you approve the recipient to spend directly from the organization (adminstrator) 
-       account. No funds are transferred from the account until the recipient spends the funds. For more information on Scholarships, see our <a href="/help" target="_blank"> Help Page </a>
-        <hr /> 
-          <form th:action="@{/grantScholarship}" method="post">
-          <table class="table">
-          <tr>
-             <td>  
-                  <h5> Recipient Email <label for="recipientEmail"> </label> </h5>
-                  <span style="font-size: 0.75em"> The recipient must have a currently valid Ethereum ID. </span> 
-                  <input type="text" name="recipientEmail" placeholder="student@csumb.edu">  
-             </td>
-          </tr>
-            <tr>
-               <td>
-               <br />
-                  <h5> <span th:text="${session.contractType}"> </span> Tokens <label for="scholarshipAmount"> </label> </h5>
-                  <input type="number" name="scholarshipAmount" value="100">  
-               </td>
-            </tr>
-          </table>
-           <br />
-              <button type="submit" class="btn btn-primary" style="margin: 0.2em" id ="butMb"> Grant Scholarship </button> 
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-         </form>
-         </div>
-       </div>
-     </div>
-     </div>
-   </div>
-<!-- End Grant Scholarship Modal content -->
+	<br />
+	<br />
 
-<!-- View Scholarships Modal -->
-<div class="modal fade" id="viewScholarshipsModal" tabindex="-1" aria-labelledby="viewScholarshipsModalLabel" aria-hidden="true" >
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title"> Currently Active Scholarships </h3>
-      </div>
-      <div class="modal-body">
-          <table class="table">
-          <th:block th:each="scholarship : ${session.scholarshipsList}">
-          <tr>
-             <td>  
-              <p> Recipient ID:  <span th:text="${scholarship.getRecipient_id()}"></span> </p>
-             </td>
-             <td>  
-              <p> Amount:   <span th:text="${scholarship.getAmount}"></span> </p>
-             </td>
-             <td>  
-              <p> Granted:   <span th:text="${scholarship.getDate_granted()}"></span> </p>
-             </td>
-             <td>  
-              <p> Expires:   <span th:if="${scholarship.getDate_expires()}" th:text="${scholarship.getDate_expires()}"></span> 
-                                     <span th:if="!${scholarship.getDate_expires()}" th:text="None"></span></p>
-             </td>
-          </tr>
-          </th:block>
-          </table>
-
-         </div>
-       </div>
-      </div>
-     </div>
-<!-- End Scholarships Content -->
-</th:block>
+	<div style="padding: 1em">
+		<h5>Deploy a Smart Contract</h5>
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+			data-bs-target="#deployModal" id="butM">Deploy Contract</button>
 
 
-<!-- Transaction Receipts Modals -->
-<!-- Transfer Funds Receipts Modal -->
-<input type="hidden" id="modalToShow" th:value="${session.modalToShow}">  
+		<th:block th:if="!${session.deployed}">
+			<!-- button for help -->
+			<button type="button" class="btn btn-primary btn-sm"
+				data-bs-toggle="modal" data-bs-target="#deployInfoModal">?</button>
+		</th:block>
 
-<th:block th:if="${session.transactionReceiptList}"> 
-<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
-       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="fundsTransferModal">
-         <div class="modal-dialog modal-lg">
-         <div class="modal-content" style="text-align: center;">
-         <br />
-         <h3> 
-         <img src="images/eth-diamond.png" width="7%"
-                  height="7%">
-         Ethereum Transfer Receipts </h3>
-         <hr />
-         
-	     <th:block th:each="receipt, iteration : ${session.transactionReceiptList}">
-	      <nobr> <span style="text-decoration: underline;"> Transaction #</span><span style="text-decoration: underline;" th:text="${iteration.count}"></span> </nobr> 
+		<!-- Modal for help -->
+		<div class="modal fade" id="deployInfoModal" tabindex="-1"
+			aria-labelledby="deployInfoModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Modal title</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<video autoplays controls width="450" height="320">
+							<source th:src="@{/video/deploys.mp4}" type="video/mp4" src="">
+						</video>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Got It!</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end -->
+
+		<th:block th:if="!${session.deployed}">
+			<br />
+			<span> Please begin by deploying a Smart Contract with your
+				Ethereum Private Key. </span>
+		</th:block>
+
+		<!-- Modal -->
+		<div class="modal fade" id="deployModal" tabindex="-1"
+			aria-labelledby="deployModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Deploy Contract</h3>
+					</div>
+					<div class="modal-body">
+						<form th:action="@{/deploySmartContract}" method="post" action="">
+							<label for="contractType"> Select a Smart Contract to
+								Deploy to the Ethereum Blockchain</label> <br /> <select
+								name="contractType" id="contractType">
+								<option value="OtterCoin">OtterCoin</option>
+								<option value="FutureOption">Future Custom Contract</option>
+							</select> <br /> <br /> <label for="initialContractFunds">
+								Initial Contracts Funds </label> <br /> <input type="number"
+								name="initialContractFunds" value="1000"> <br /> <br />
+							<label for="ethPrivateKey"> Ethereum Private Key </label> <br />
+							<input type="text" name="ethPrivateKey"
+								placeholder="81bd9a3c79b 0e50053d55d5f40f7683158c4871f2507f92655b40a9450b5d460">
+							<br /> <br />
+							<button type="submit" class="btn btn-primary">Deploy
+								Contract</button>
+							<button type="button" class="btn btn-danger"
+								data-bs-dismiss="modal">Cancel</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<th:block th:if="${session.deployed}">
+
+		<!-- End content that should appear in "Account Balance" modal -->
+		<div style="padding: 1em">
+			<form th:action="@{/adminActions}" method="post" action="">
+				<h5>
+					Display Ethereum Balance <label for="getBalanceOfAddress">
+					</label>
+				</h5>
+				<input type="text" name="getBalanceOfAddress"
+					placeholder="Ethereum Id">
+				<th:block th:if="${session.accountBalance} != null"> Balance is: <span
+						th:text="${session.accountBalance}"> </span>
+				</th:block>
+				<br />
+				<button type="submit" class="btn btn-primary" style="margin: 0.2em"
+					id="butMc">Ethereum Balance</button>
+			</form>
+		</div>
+
+		<div style="padding: 1em">
+			<h5>Transfer Ethereum Funds to User Accounts</h5>
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#transferModal" id="butMa">Transfer Funds</button>
+
+			<!-- Info button -->
+			<button type="button" class="btn btn-primary btn-sm"
+				data-bs-toggle="modal" data-bs-target="#transferInfoModal">?</button>
+			<!-- Begin content that should appear in "Transfer Funds" modal -->
+
+			<!-- Modal -->
+			<div class="modal fade" id="transferModal" tabindex="-1"
+				aria-labelledby="transferModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content" style="min-width: 600px !important;">
+						<div class="modal-header">
+							<h3 class="modal-title">Transfer Funds</h3>
+						</div>
+						<div class="modal-body">
+							<h5>Select Account(s) by Ethereum ID</h5>
+							<form th:action="@{/transferFunds}" method="post" action="">
+								<table class="table">
+									<th:block
+										th:each="account, iteration : ${session.ethereumAccountsList}">
+										<tr>
+											<td><input type="checkbox" name="accounts"
+												th:value="${account}"> <label for="accounts">
+													<span style="font-size: 0.9em" th:text="${account}">
+												</span> <th:block th:switch="${iteration.index}">
+														<span th:case="0"><br /> (Administrator Account)</span>
+														<span th:case="1"><br /> (Bookstore Account)</span>
+													</th:block>
+											</label></td>
+										</tr>
+									</th:block>
+								</table>
+								<label for="transferAmount">
+									<h4>Transfer Amount</h4>
+								</label> <br /> <input type="number" name="transferAmount" value="100">
+								<br /> <br />
+								<button type="submit" class="btn btn-primary">Add Funds
+								</button>
+								<button type="button" class="btn btn-danger"
+									data-bs-dismiss="modal">Cancel</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--  End content that should appear in Transfer Funds modal -->
+
+
+
+		<!-- Modal for help -->
+		<div class="modal fade" id="transferInfoModal" tabindex="-1"
+			aria-labelledby="transferInfoModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">TRANSFER FUNDS</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<video controls width="450" height="320">
+							<source th:src="@{/video/transferF.mp4}" type="video/mp4" src="">
+						</video>
+						<p>Send funds to anyone on the network with the click of a
+							button!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Got It!</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end -->
+
+
+		<!-- Begin Scholarships section-->
+		<div style="padding: 1em">
+			<h5>Grant or View Scholarships</h5>
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#grantScholarshipModal" id="butMa">Grant
+				Scholarship</button>
+
+			<!-- Info button -->
+			<button type="button" class="btn btn-primary btn-sm"
+				data-bs-toggle="modal" data-bs-target="#grantInfoModal">?</button>
+
+			<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+				data-bs-target="#viewScholarshipsModal" id="butMa">View
+				Scholarships</button>
+
+			<!-- Grant Scholarship Modal -->
+			<div class="modal fade" id="grantScholarshipModal" tabindex="-1"
+				aria-labelledby="grantScholarshipModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h3 class="modal-title">Grant a Scholarship</h3>
+							<br />
+						</div>
+						<div class="modal-body">
+							<p style="font-size: 0.85em;">
+								A scholarship is an amount in Ethereum tokens you approve the
+								recipient to spend directly from the organization (adminstrator)
+								account. No funds are transferred from the account until the
+								recipient spends the funds. For more information on
+								Scholarships, see our <a href="/help" target="_blank"> Help
+									Page </a>
+							</p>
+							<hr />
+							<form th:action="@{/grantScholarship}" method="post" action="">
+								<table class="table">
+									<tr>
+										<td>
+											<h5>
+												Recipient Email <label for="recipientEmail"> </label>
+											</h5> <span style="font-size: 0.75em"> The recipient must
+												have a currently valid Ethereum ID. </span> <input type="text"
+											name="recipientEmail" placeholder="student@csumb.edu">
+										</td>
+									</tr>
+									<tr>
+										<td><br />
+											<h5>
+												<span th:text="${session.contractType}"> </span> Tokens <label
+													for="scholarshipAmount"> </label>
+											</h5> <input type="number" name="scholarshipAmount"
+											placeholder="500"></td>
+									</tr>
+								</table>
+								<br />
+								<button type="submit" class="btn btn-primary"
+									style="margin: 0.2em" id="butMb">Grant Scholarship</button>
+								<button type="button" class="btn btn-danger"
+									data-bs-dismiss="modal">Cancel</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Grant Scholarship Modal content -->
+
+		<!-- View Scholarships Modal -->
+		<div class="modal fade" id="viewScholarshipsModal" tabindex="-1"
+			aria-labelledby="viewScholarshipsModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Currently Active Scholarships</h3>
+					</div>
+					<div class="modal-body">
+						<table class="table">
+							<th:block th:each="scholarship : ${session.scholarshipsList}">
+								<tr>
+									<td>
+										<p>
+											Recipient ID: <span
+												th:text="${scholarship.getRecipient_id()}"></span>
+										</p>
+									</td>
+									<td>
+										<p>
+											Amount: <span th:text="${scholarship.getAmount}"></span>
+										</p>
+									</td>
+									<td>
+										<p>
+											Granted: <span th:text="${scholarship.getDate_granted()}"></span>
+										</p>
+									</td>
+									<td>
+										<p>
+											Expires: <span th:if="${scholarship.getDate_expires()}"
+												th:text="${scholarship.getDate_expires()}"></span> <span
+												th:if="!${scholarship.getDate_expires()}" th:text="None"></span>
+										</p>
+									</td>
+								</tr>
+							</th:block>
+						</table>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- End Scholarships Content -->
+		<!-- Info Modal -->
+		<!-- Modal for help -->
+		<div class="modal fade" id="grantInfoModal" tabindex="-1"
+			aria-labelledby="grantInfoModal" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">GRANT FUNDS</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<video autoplay controls width="450" height="320">
+							<source th:src="@{/video/grant.mp4}" type="video/mp4" src="">
+						</video>
+						<p>Grant Financial Aid on your network!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-bs-dismiss="modal">Got It!</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end -->
+
+
+	</th:block>
+
+
+	<!-- Transaction Receipts Modals -->
+	<!-- Transfer Funds Receipts Modal -->
+	<input type="hidden" id="modalToShow" th:value="${session.modalToShow}">
+
+	<th:block th:if="${session.transactionReceiptList}">
+		<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+		<div class="modal fade bd-example-modal-lg" tabindex="-1"
+			role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+			id="fundsTransferModal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content" style="text-align: center;">
+					<br />
+					<h3>
+						<img src="images/eth-diamond.png" width="7%" height="7%" alt="">
+						Ethereum Transfer Receipts
+					</h3>
+					<hr />
+
+					<th:block
+						th:each="receipt, iteration : ${session.transactionReceiptList}">
+						<nobr>
+							<span style="text-decoration: underline;"> Transaction #</span><span
+								style="text-decoration: underline;" th:text="${iteration.count}"></span>
+						</nobr> 
 	      Hash: <span th:text="${receipt.getTransactionHash()}"></span>
 	      From: <span th:text="${receipt.getFrom()}"></span>
 	      To: <span th:text="${receipt.getTo()}"></span>
-         Amount: <nobr> $<span th:text="${session.transferAmount}"></span> </nobr>
-         <br />
-	      </th:block>
-         
-        </div>
-      </div>
-     </div>
-</th:block>
+         Amount: <nobr>
+							$<span th:text="${session.transferAmount}"></span>
+						</nobr>
+						<br />
+					</th:block>
 
-<!-- Grant Scholarship Receipts Modal -->  
-<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
-<th:block th:if="${session.scholarshipReceipt}"> 
-       <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="showScholarshipReceiptModal">
-         <div class="modal-dialog modal-lg">
-         <div class="modal-content" style="text-align: center;">
-         <br />
-         <h3 style="text-align: center;"> <img src="images/eth-diamond.png" width="7%"
-                  height="7%"> Ethereum Scholarship Receipt  </h3>
-         <hr />
-         Ethereum Transaction Hash: <span th:text="${session.scholarshipReceipt.getTransactionHash()}"></span>
-         <br />
-         Recipient Account: <span th:text="${session.scholarshipReceipt.getFrom()}"></span>
-         <br />
-         From Account: <span th:text="${session.scholarshipReceipt.getTo()}"></span>
-         <br />
-         Scholarship Allowance Amount: <nobr> $<span th:text="${session.scholarshipAmount}"></span> </nobr>
-         <br />
+				</div>
+			</div>
+		</div>
+	</th:block>
 
-        </div>
-      </div>
-     </div>
-</th:block>
+	<!-- Grant Scholarship Receipts Modal -->
+	<!-- Reference: https://getbootstrap.com/docs/4.0/components/modal/ -->
+	<th:block th:if="${session.scholarshipReceipt}">
+		<div class="modal fade bd-example-modal-lg" tabindex="-1"
+			role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+			id="showScholarshipReceiptModal">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content" style="text-align: center;">
+					<br />
+					<h3 style="text-align: center;">
+						<img src="images/eth-diamond.png" width="7%" height="7%" alt="">
+						Ethereum Scholarship Receipt
+					</h3>
+					<hr />
+					Ethereum Transaction Hash: <span
+						th:text="${session.scholarshipReceipt.getTransactionHash()}"></span>
+					<br /> Recipient Account: <span
+						th:text="${session.scholarshipReceipt.getFrom()}"></span> <br />
+					From Account: <span th:text="${session.scholarshipReceipt.getTo()}"></span>
+					<br /> Scholarship Allowance Amount:
+					<nobr>
+						$<span th:text="${session.scholarshipAmount}"></span>
+					</nobr>
+					<br />
+
+				</div>
+			</div>
+		</div>
+	</th:block>
 
 </body>
-   <div id="footerLogo">
-      <p >&#169;Zuess</p>
-    </div>  
+<div id="footerLogo">
+	<p>&#169;Zuess</p>
+</div>
 </html>
 
 <!--References:
