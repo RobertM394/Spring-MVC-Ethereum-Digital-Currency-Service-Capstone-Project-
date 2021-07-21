@@ -16,6 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import zuess_mvc_application.validation.EmailUniqueConstraint;
+import zuess_mvc_application.validation.PasswordValidConstraint;
 
 @Entity
 @Table(name="users")
@@ -26,15 +32,26 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
+	@EmailUniqueConstraint(message = "Please enter a unique Email.")
+	@Pattern(regexp = "[A-Za-z0-9\\.-]+@[A-Za-z0-9]+\\.[A-Za-z]{3}", message = "Please enter a valid email.")
+	@Size(max=50, message = "Email must be between 1 and 100 characters.")
 	@Column(nullable = false, unique = true, length = 50)
 	private String email;
+
+	//TODO: Figure out display of which aspect of password is missing.
 	
+	//REQURIES Min length 8 Allows upper, lower, number (Only works as limit)
+	@PasswordValidConstraint(message = "NOT VALID PASS")
 	@Column(nullable = false, length = 100)
 	private String password;
 	
+	@NotBlank(message = "First name is required.")
+	@Size(max=50, message = "First name must be less than 50 characters.")
 	@Column(nullable = false, length = 50, name = "first_name")
 	private String first_name;
 	
+	@NotBlank(message = "Last name is required.")
+	@Size(max=50, message = "Last name must be less than 50 characters.")
 	@Column(nullable = false, length = 50, name = "last_name")
 	private String last_name;
 	
@@ -157,6 +174,11 @@ public class User {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+	
+	public String getFull_name()
+	{
+		return first_name + " " + last_name;
 	}
 
 	@Override
