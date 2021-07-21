@@ -12,13 +12,17 @@
         
       <form th:action="@{/registration/submit}" th:object="${user}" method="post">
          <label for="firstName"> First Name:  </label><br />  
-         <input type="text" id="firstName" name="first_name" placeholder="John" th:field="*{first_name}"><br />  
+         <input type="text" id="firstName" name="first_name" placeholder="John" th:field="*{first_name}"><br />
+         <span th:if="${#fields.hasErrors('first_name')}" th:errors="*{first_name}"></span><br />
          <label for="lastName"> Last Name:  </label><br>
-         <input type="text" id="lastName" name="last_name" placeholder="Smith" th:field="*{last_name}"><br />  
+         <input type="text" id="lastName" name="last_name" placeholder="Smith" th:field="*{last_name}"><br />
+         <span th:if="${#fields.hasErrors('last_name')}" th:errors="*{last_name}"></span><br />
          <label for="email"> Email address:  </label><br>
          <input type="text" id="email" name="email" placeholder="username@zuess.com" th:field="*{email}"><br />  
+         <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span><br />
          <label for="password"> Password:  </label><br>
-         <input type="text" id="password" name="password" placeholder="password" th:field="*{password}"><br /> <br />  
+         <input type="text" id="password" name="password" placeholder="password" th:field="*{password}"><br />
+         <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span><br /><br />
          <button type="submit" class="btn btn-primary">Create Account</button>
       </form>
       <br>
