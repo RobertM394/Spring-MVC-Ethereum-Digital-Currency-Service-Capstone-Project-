@@ -15,6 +15,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -261,7 +263,8 @@ public class BlockchainService {
 			
 			long id = currentBlock.getId();
 			BigInteger blockNumber = currentBlock.getBlock().getNumber();
-			BigInteger timestamp = currentBlock.getBlock().getTimestamp();
+			BigInteger bigIntegerTime = currentBlock.getBlock().getTimestamp();
+			String timestamp = new SimpleDateFormat("MM-dd-yy H:mm a").format(new Date(bigIntegerTime.intValue() * 1000L));
 			BigInteger gasLimit = currentBlock.getBlock().getGasLimit();
 			BigInteger gasUsed = currentBlock.getBlock().getGasUsed();
 			BigInteger blockSize = currentBlock.getBlock().getSize();
@@ -284,7 +287,7 @@ public class BlockchainService {
  * https://hackernoon.com/ethereum-token-development-using-java-and-web3j-an-overview-spas324r
  * https://github.com/web3j/web3j/issues/833
  * https://www.codota.com/code/java/methods/org.web3j.protocol.Web3j/ethGasPrice
- * 
+ * https://stackoverflow.com/questions/25458832/how-can-i-convert-an-integer-e-g-19000101-to-java-util-date
  * 
  ***/
  

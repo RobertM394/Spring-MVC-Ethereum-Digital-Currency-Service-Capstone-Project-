@@ -1,12 +1,13 @@
 package zuess_mvc_application.domain;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 public class EthereumBlock {
 	
 	long id;
 	BigInteger blockNumber;
-	BigInteger timestamp;
+	String timestamp;
 	BigInteger gasLimit;
 	BigInteger gasUsed;
 	BigInteger blockSize;
@@ -14,7 +15,7 @@ public class EthereumBlock {
 	
 	public EthereumBlock() { }
 
-	public EthereumBlock(long id, BigInteger blockNumber, BigInteger timestamp, BigInteger gasLimit, BigInteger gasUsed,
+	public EthereumBlock(long id, BigInteger blockNumber, String timestamp, BigInteger gasLimit, BigInteger gasUsed,
 	      BigInteger blockSize, String receipts)
 	{
 		super();
@@ -47,12 +48,12 @@ public class EthereumBlock {
 		this.blockNumber = blockNumber;
 	}
 
-	public BigInteger getTimestamp()
+	public String getTimestamp()
 	{
 		return timestamp;
 	}
 
-	public void setTimestamp(BigInteger timestamp)
+	public void setTimestamp(String timestamp)
 	{
 		this.timestamp = timestamp;
 	}
@@ -96,4 +97,5 @@ public class EthereumBlock {
 	{
 		this.receipts = receipts;
 	}
+
 }
