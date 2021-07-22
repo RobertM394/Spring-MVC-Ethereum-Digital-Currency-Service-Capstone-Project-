@@ -98,6 +98,53 @@ public class StoreTransaction {
 		this.transaction_date = transaction_date;
 	}
 
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		result = prime * result + ((items_list == null) ? 0 : items_list.hashCode());
+		result = prime * result + scholarship_funds_used;
+		result = prime * result + ((transaction_date == null) ? 0 : transaction_date.hashCode());
+		result = prime * result + transaction_total;
+		result = prime * result + user_id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		StoreTransaction other = (StoreTransaction) obj;
+		if (id != other.id)
+			return false;
+		if (items_list == null)
+		{
+			if (other.items_list != null)
+				return false;
+		} else if (!items_list.equals(other.items_list))
+			return false;
+		if (scholarship_funds_used != other.scholarship_funds_used)
+			return false;
+		if (transaction_date == null)
+		{
+			if (other.transaction_date != null)
+				return false;
+		} else if (!transaction_date.equals(other.transaction_date))
+			return false;
+		if (transaction_total != other.transaction_total)
+			return false;
+		if (user_id != other.user_id)
+			return false;
+		return true;
+	}
+
 }
 
 
