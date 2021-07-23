@@ -202,8 +202,8 @@ public class ZuessWebController {
 			@RequestParam("ethPrivateKey") String ethPrivateKey
 			) throws Exception {
 		
-		if ( (!inputValidator.validateSingleField(ethPrivateKey, "ethPrivateKey")) 
-				|| !inputValidator.notEmpty(contractType, initialContractFunds, ethPrivateKey)) return "admin_portal";
+		if ( !(inputValidator.validateSingleField(ethPrivateKey, "ethPrivateKey")
+				&& inputValidator.notEmpty(contractType, initialContractFunds, ethPrivateKey)) ) return "admin_portal";
 
 		otterCoin = blockchainService.deploySmartContract(contractType, ethPrivateKey, initialContractFunds);
 		if (otterCoin != null) isContractDeployed = true;

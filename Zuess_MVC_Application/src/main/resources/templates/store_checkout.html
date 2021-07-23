@@ -16,12 +16,16 @@
 		</h3>
 		<hr />
 	</div>
-
 	<div class="flex-child" style="float: left; margin: 0.25em">
 		[[${session.user.getFirst_name()}]]'s Ethereum Funds:
-		$[[${session.user.getEth_account_balance()}]] <br />
+		$[[${session.user.getEth_account_balance()}]] 
+	   <a data-bs-target="#fundsInfoModal" data-bs-toggle="modal" href="#fundsInfoModal"> How to Use? </a>
+		<br /> 
+		  
 		[[${session.user.getFirst_name()}]]'s Ethereum Scholarship Funds:
-		$[[${session.scholarshipBalance}]] <br />
+		$[[${session.scholarshipBalance}]] 
+		<a data-bs-target="#scholarInfoModal" data-bs-toggle="modal" href="#scholarInfoModal"> How to Use? </a>
+		<br />
 	</div>
 	<br />
 	<br />
@@ -93,22 +97,13 @@
 								</form>
 								<br></br>
 
-								<!-- case buttons -->
-								<button type="button" class="btn btn-primary"
-									data-bs-toggle="modal" data-bs-target="#scholarInfoModal">1</button>
-								<p>How to use your scholarships</p>
-								<button type="button" class="btn btn-primary"
-									data-bs-toggle="modal" data-bs-target="#fundsInfoModal">2</button>
-								<p>Use Your funds</p>
-								<!-- end -->
-
 								<!-- Modal for help -->
 								<div class="modal fade" id="scholarInfoModal" tabindex="-1"
 									aria-labelledby="scholarInfoModal" aria-hidden="true">
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h5 class="modal-title">SCHOLARSHIP PAYMENT</h5>
+												<h5 class="modal-title">Ethereum Scholarships</h5>
 												<button type="button" class="btn-close"
 													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
@@ -117,8 +112,7 @@
 													<source th:src="@{/video/scholar.mp4}" type="video/mp4"
 														src="">
 												</video>
-												<p>With your own currency you decide what it can be
-													purposed for!</p>
+												<p>Decide how to spend your scholarship funds!</p>
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-secondary"
@@ -134,7 +128,7 @@
 									<div class="modal-dialog">
 										<div class="modal-content">
 											<div class="modal-header">
-												<h5 class="modal-title">FUNDS</h5>
+												<h5 class="modal-title">Ethereum Funds</h5>
 												<button type="button" class="btn-close"
 													data-bs-dismiss="modal" aria-label="Close"></button>
 											</div>
@@ -154,8 +148,6 @@
 									</div>
 								</div>
 								<!-- end -->
-
-
 
 								<div th:if="${session.transactionError} == true"
 									class="alert alert-warning" role="alert">
