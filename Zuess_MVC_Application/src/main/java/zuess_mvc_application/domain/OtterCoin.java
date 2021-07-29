@@ -2,8 +2,8 @@
  * Ethereum Smart Contracts are written initially in the Solidity language. To incorporate them into a Java application, 
  * you must compile the contract into binary using the Solidity Compiler, and then create a Java wrapper for the Smart Contract
  * using Truffle. Once created as a Java object, you can directly call Smart Contract functions in your Java/Spring app as we do here.
- * OtterCoin currently represents an ERC-20 compliant Smart Contract.
- * @author Robert Meis
+ * OtterCoin currently represents a fully-functional ERC-20 compliant Smart Contract.
+ * @Author Robert Meis
  */
 
 package zuess_mvc_application.domain;

@@ -1,5 +1,5 @@
 /***BlockchainService contains all the methods used to interact with the Blockchain network.
- * @author Robert Meis
+ * @Author Robert Meis
  * 
  * Sections: 
  * 1. ERC-20 Methods: this section contain all Smart Contract call methods on the OtterCoin Smart Contract 
