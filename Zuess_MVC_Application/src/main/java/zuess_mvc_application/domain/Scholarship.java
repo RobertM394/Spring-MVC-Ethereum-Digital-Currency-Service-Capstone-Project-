@@ -1,3 +1,10 @@
+/***
+ * Scholarship is an domain class object that is the database representation of a Zuess Scholarship. A Scholarship exists both as
+ * an Ethereum Allowance defined on an account in the Ethereum Blockchain, as well as this domain class object containing 
+ * both Ethereum and Zuess application data (such as Eth account ID and Zuess-relevant data such as Zuess user id (recipient_id)
+ * @Author Robert Meis
+ */
+
 package zuess_mvc_application.domain;
 
 import javax.persistence.Column;

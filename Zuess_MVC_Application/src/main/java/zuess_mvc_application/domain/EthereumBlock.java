@@ -1,7 +1,15 @@
+/***
+ * Ethereum Block is a domain class object used for the Blockchain Visualization page. Each EthereumBlock object 
+ * contains data representing one Ethereum block. Blockchain Data is retrieved using the BlockchainService method 
+ * public List<EthereumBlock> getAllBlocksFromBlockchain()
+ * @author Robert Meis
+ */
+
 package zuess_mvc_application.domain;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 public class EthereumBlock {
 	

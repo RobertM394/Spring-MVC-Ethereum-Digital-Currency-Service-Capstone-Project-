@@ -1,7 +1,22 @@
-/***BlockchainService contains all the methods used to interact with the 
- * blockchain network, including deploying a Smart Contract, calling Contract
- * functions, and calls to the blockchain not using the Contract.
+/***BlockchainService contains all the methods used to interact with the Blockchain network.
  * @author Robert Meis
+ * 
+ * Sections: 
+ * 1. ERC-20 Methods: this section contain all Smart Contract call methods on the OtterCoin Smart Contract 
+ * 
+ * 2. Custom Contract calls: to call an ERC-20 contract function such as "transfer" using a from/sender address other than the
+ * Ethereum ID of the account that deployed the contract requires the custom function calls in this section.
+ * For example, if a contract is deployed by the Admin account (Ethereum Account[0] by default), only the admin can transfer funds to another user.
+ * A custom function call is necessary to pass in a sender address other than the contract deployer address, so any two active Ethereum account users 
+ * can engage in peer-peer funds transfers. (See: transferUsingCustomFromAddress() )
+ * 
+ * 3. Ganache Blockchain Calls: this section contains direct calls to the Ganache (or other Ethereum network) Blockchain. These functions do not utilize
+ * a Smart Contract and tend to be information retrieval-related. For example, getEthereumUserAccounts() returns a list of 
+ * all Ethereum accounts on the Ethereum network (in our app, the Ganache test network).
+ * 
+ * 4. Blockchain Visualization: this section contains a method used to retrieve information about individual blocks on the Blockchain for the purpose of 
+ * displaying a current representation of the Ethereum Blockchain on our View Blockchain Page
+ * 
  */
 package zuess_mvc_application.services;
 
