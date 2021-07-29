@@ -1,3 +1,7 @@
+/***
+ * Inventory Service handles Store inventory item retrieval from the database
+ * @Author Robert Meis
+ */
 package zuess_mvc_application.services;
 
 import java.util.List;

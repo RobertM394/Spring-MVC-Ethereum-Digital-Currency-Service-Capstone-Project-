@@ -1,3 +1,10 @@
+/***
+ * InventoryItem is a domain class representing an inventory item available for sale in the store.
+ * The "scholarship_eligible" boolean attribute is used by the store to determine whether a purchase is available for 
+ * scholarship funds use.
+ * @Author Robert Meis
+ */
+
 package zuess_mvc_application.domain;
 
 import javax.persistence.Column;

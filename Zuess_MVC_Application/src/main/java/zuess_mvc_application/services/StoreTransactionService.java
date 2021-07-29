@@ -1,3 +1,9 @@
+/**
+ * Store Transaction Service contains methods to handle new store transactions purchased with Ethereum account
+ * main funds, as well as Scholarship (Ethereum Allowance) funds
+ * @author Robert Meis
+ */
+
 package zuess_mvc_application.services;
 
 import java.io.IOException;

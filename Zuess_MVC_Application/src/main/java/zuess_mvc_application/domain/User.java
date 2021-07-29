@@ -1,3 +1,9 @@
+/***
+ * The User object represents a Zuess user, and exists as a database entity. It contains some data related to the corresponding 
+ * account assigned to the user from the Blockchain, namely the "eth_account_id" and "eth_account_balance" fields.
+ * @Authors Robert Meis/Jesse Krepelka
+ */
+
 package zuess_mvc_application.domain;
 
 import java.util.ArrayList;

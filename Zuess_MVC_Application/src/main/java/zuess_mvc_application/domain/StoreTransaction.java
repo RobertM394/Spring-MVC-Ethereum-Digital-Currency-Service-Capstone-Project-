@@ -1,3 +1,9 @@
+/***
+ * StoreTransaction is a domain class object representing a store transaction on the Zuess/Spring app side (no Ethereum data is stored in
+ *  this object). The purpose of the StoreTransaction object is to store represent the database record of a single transaction.
+ *  @Author Robert Meis
+ */
+
 package zuess_mvc_application.domain;
 
 import javax.persistence.Entity;

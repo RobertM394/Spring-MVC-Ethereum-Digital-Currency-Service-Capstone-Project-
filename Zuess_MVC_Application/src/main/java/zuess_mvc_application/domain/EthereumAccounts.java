@@ -1,3 +1,8 @@
+/***
+ * EthereumAccounts is a domain class object containing a list of all active Ethereum accounts retrieved from the Blockchain Network
+ * @author Robert Meis
+ */
+
 package zuess_mvc_application.domain;
 
 import java.util.ArrayList;

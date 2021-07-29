@@ -1,3 +1,10 @@
+/***
+ * Scholarship Service handles scholarships (equivalent to an Ethereum ERC-20 Allowance)
+ * Contains methods to Grant new scholarships, sync scholarship information between the Ethereum Blockchain and 
+ * Database, and retrieve scholarship information.
+ * @Author Robert Meis
+ */
+
 package zuess_mvc_application.services;
 
 import java.sql.Date;
