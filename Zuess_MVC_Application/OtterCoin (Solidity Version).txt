@@ -1,0 +1,92 @@
+/*
+This is the original ERC-20 Smart Contract ("OtterCoin") written in Solidity.
+Before it can be used in a Java Spring Application, it must be compiled to binary 
+and exported as a Java object, using the Solidity compiler and Truffle/Web3J
+Reference: Code Your Own CryptoCurrency https://www.youtube.com/watch?v=XdKv5uwEk5A&t=2s
+*/
+
+//Completed ERC-20 Smart Contract
+//@Author Robert Meis
+
+pragma solidity >0.5.16;
+
+contract OtterCoin {
+   
+   /*ERC-20 required attributes*/
+   string public name = "OtterCoin";
+   string public symbol = "OTTC";
+   string public standard = 'OtterCoin v.1.0';
+   uint256 public totalSupply; 
+
+   event Transfer(
+      address indexed _from,
+      address indexed _to,
+      uint256 _value
+   );
+
+   event Approval(
+      address indexed _owner,
+      address indexed _spender,
+      uint256 _value
+   );
+
+   //mappings for balance and allowance
+   mapping(address => uint256) public balanceOf;
+   mapping(address => mapping(address => uint256)) public allowance;
+
+   constructor (uint256 _initialSupply) public {
+      balanceOf[msg.sender] = _initialSupply;
+
+      totalSupply = _initialSupply; 
+      // allocate the initial supply
+   }
+
+
+   //transfer()
+   //
+   //transfers amount from one user account to another. Returns bool success
+   function transfer(address _to, uint256 _value) public returns (bool success){
+
+      //Exception if account does not have enough 
+      require(balanceOf[msg.sender] >= _value);
+
+      //Transfer balance 
+      balanceOf[msg.sender] -= _value;
+      balanceOf[_to] += _value;
+      
+      //Transfer event
+      emit Transfer(msg.sender, _to, _value);
+
+      return true;
+   }
+
+   //approve()
+   //
+   //Approves allowance amount for third party to spend on behalf of caller. Returns bool success
+   function approve(address _spender, uint256 _value) public returns (bool success){
+      
+      allowance[msg.sender][_spender] = _value;
+      emit Approval(msg.sender, _spender, _value);
+
+      return true;
+   }
+
+   //transferFrom()
+   //
+   //transfers an amount allotted to caller in allowance of another token holder. Returns bool success
+   function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+
+      require(_value <= balanceOf[_from]);
+      require(_value <= allowance[_from][msg.sender]);
+      emit Transfer(_from, _to, _value);
+
+      //Change the balance
+      balanceOf[_from] -= _value;
+      balanceOf[_to] += _value;
+
+      //Update the allowance in allowance mapping
+      allowance[_from][msg.sender] -= _value;
+
+      return true;
+   }
+}
