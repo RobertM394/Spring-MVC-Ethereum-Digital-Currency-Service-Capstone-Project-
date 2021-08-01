@@ -17,16 +17,20 @@
 	</div>
 
 	<div id="content">
-		<div class="row">
+		<div class="row justify-content-center">
 			<div class="card" style="width: 18rem;">
-				<img th:src="@{images/blockchain.png}" class="card-img-top"
-					alt="..." src="">
+				<img th:src="@{images/blockchain.jpg}" width="auto" height="auto"
+					class="card-img-top" alt="..." src="">
 				<div class="card-body">
+					<br />
 					<h5 class="card-title">The Idea</h5>
 					<p class="card-text">What is Blockchain technology?</p>
+					</br>
+
 					<!-- Button trigger modal -->
 					<button type="button" class="btn btn-primary"
-						data-bs-toggle="modal" data-bs-target="#exampleModal">Learn More</button>
+						data-bs-toggle="modal" data-bs-target="#exampleModal">Learn
+						More</button>
 					<!-- Modal -->
 					<div class="modal fade" id="exampleModal" tabindex="-1"
 						aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -38,16 +42,62 @@
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
-									<iframe width="460" height="215"
-										src="https://www.youtube.com/embed/SSo_EIwHSd4"
-										title="YouTube video player" frameborder="0"
-										allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-										allowfullscreen></iframe>
+									<h5 class="card-title">Blockchain</h5>
+									<p style="font-size: 0.85em;">
+										A series of immutable data stored on a record managed by a
+										cluster of computers. These machines share and create a
+										decentralized system of data management. The ledgers are
+										stored on nodes bound together with strong cryptographic
+										concepts for security and time-stamped to update versions of
+										the ledger. <br></br> Blockchain principles to know: <br></br>
+										-Decentralized <br></br> -Transparent <br></br> -Immutable
+									</p>
+									<a href="https://www.investopedia.com/terms/b/blockchain.asp"
+										class="link-primary">Want to learn more?</a> <br></br>
+										
+									<h5 class="card-title">Smart Contracts</h5>
+									<p style="font-size: 0.85em;">
+										Smart Contracts are technology made possible by blockchain.
+										Essentially a contract written in code that when fufilled
+										places its information in the blockchain making it immutable.
+										These contracts are coded with specific context that when
+										deployed is non reversable. Because this technology works on
+										the blockchain all the pre-mentioned features of blockchain
+										are applied here. For this project you explored how a smart
+										contract functions as the rules for governing otter coin. <br></br>
+										What can you think of doing with your own smart contract?
+									</p>
+
+									<a
+										href="https://www.ibm.com/topics/smart-contracts"
+										class="link-primary">Want to learn more?</a> </br></br>
+										
+									<h5 class="card-title">Ethereum</h5>
+									<p style="font-size: 0.85em;">
+										"It's the world's programmable blockchain."</br> -ethereum.org
+										</br>
+										</br>
+										Ethereum(ETH) was what we used for this project 
+										it combines blockchain tech with smart contract
+										functionality. The resources and development are decentralized and open source,
+										meaning all you need is an idea and passion to code a blockchain app.
+										</br>
+
+									<a
+										href="https://ethereum.org/en/what-is-ethereum/"
+										class="link-primary">Want to learn more?</a> </br>
+						
+									</p>
+
+									<a
+										href="https://ethereum.org/en/developers/learning-tools/"
+										class="link-primary">ETH Developer Tools</a> </br>
+										
 								</div>
 								<div class="modal-footer">
 									<button type="button" class="btn btn-secondary"
 										data-bs-dismiss="modal">Close</button>
-								
+
 								</div>
 							</div>
 						</div>
@@ -57,24 +107,110 @@
 
 
 			<div class="card" style="width: 18rem;">
-				<img th:src="@{images/product.png}" class="card-img-top" alt="..."
-					src="">
+				<img th:src="@{images/services.jpg}" width="auto" height="auto"
+					class="card-img-top" alt="..." src="">
 				<div class="card-body">
+					<br />
 					<h5 class="card-title">The Product</h5>
 					<p class="card-text">See our Demo</p>
-					<a href="#" class="btn btn-primary">Learn More</a>
+					</br>
+					</br>
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#servicesModal">Learn
+						More</button>
+
+					<!-- Modal -->
+
+
+					<div class="modal fade" id="servicesModal" tabindex="-1"
+						aria-labelledby="servicesModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title">ZEUSS FEATURES!</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<h3>1) DEPLOY YOUR OWN SMART CONTRACT!</h3>
+									<video autoplays controls width="450" height="320" >
+										<source th:src="@{/video/deploys.mp4}" type="video/mp4" src="">
+									</video>
+									</br> 
+									</br>
+									<h3>2) TRANSFER FUNDS WITH EASE!</h3>
+									<video autoplays controls width="450" height="320">
+										<source th:src="@{/video/transferF.mp4}" type="video/mp4"
+											src="">
+									</video>
+									</br> 
+									</br>
+									<h3>3) GRANT SCHOLARSHIPS!</h3>
+									<video autoplays controls width="450" height="320" >
+										<source th:src="@{/video/grant.mp4}" type="video/mp4" src="">
+									</video>
+									</br> 
+									</br>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
+
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
 			</div>
 
 
 
 			<div class="card" style="width: 18rem;">
-				<img th:src="@{images/otterTeama.png}" class="card-img-top" alt="..." width= '300 px' height= '250 px'>
+				<img th:src="@{images/otterTeama.png}" class="card-img-top"
+					width="auto" height="auto" src="" alt="">
 				<div class="card-body">
-				<br/>
-					<h5 class="card-title">The Team</h5>
-					<br/>
-					<a href="#" class="btn btn-primary">Learn More</a>
+					</br>
+					<h5 class="card-title">Capstone Team</h5>
+					<p class="card-text">Future Computer Scientists</p>
+					</br>
+
+					<!-- Button trigger modal -->
+					<button type="button" class="btn btn-primary"
+						data-bs-toggle="modal" data-bs-target="#teamModal">
+						The Team</button>
+
+					<!-- Modal -->
+					<div class="modal fade" id="teamModal" tabindex="-1"
+						aria-labelledby="teamModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="teamModalLabel">Capstone Team</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<h3>Jesse Krepelka</h3>
+									<a href="https://www.linkedin.com/in/jesse-krepelka/"
+										class="link-primary">Jesse's LinkedIn</a></br></br>
+									</br>
+									<h3>Robert Meis</h3>
+									<a href="https://www.linkedin.com/in/robert-meis-1a9936191/"
+										class="link-primary">Roberts's LinkedIn</a> </br> </br>
+									</br>
+									<h3>Antonio Villagomez</h3>
+									<a href="https://www.linkedin.com/in/antonio-villagomez/"
+										class="link-primary">Antonio's LinkedIn</a>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary"
+										data-bs-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -82,7 +218,14 @@
 </body>
 </html>
 
+
+<!-- References: -->
 <!-- https://getbootstrap.com/docs/5.0/components/card/ -->
-<!-- References:
-@Antonio -- need references for the 3 images you downloaded. 
-Simply Explained : https://www.youtube.com/channel/UCnxrdFPXJMeHru_b4Q_vTPQ -->
+<!-- https://getbootstrap.com/docs/5.0/components/modal/ -->
+<!-- Images -->
+<!-- www.csumb.edu -->
+<!--https://www.rawpixel.com/?sort=shuffle&page=1&feed=creative-feed  -->
+<!-- Information on Tech -->
+<!-- https://www.ibm.com/topics/what-is-blockchain -->
+<!-- https://www.ibm.com/topics/smart-contracts -->
+<!-- https://ethereum.org/en/ -->
