@@ -20,7 +20,7 @@ $( document ).ready(function(){
 		<h3>
 			<span
 				style="font-size: 2em; text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.2);"
-				id="jumbo">Zuess User Portal </span> 
+				id="jumbo"><span th:text="${session.user.getFirst_name()}"></span>'s Digital Wallet </span> 
 		</h3>
 		<hr />
 	</div>
